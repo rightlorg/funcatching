@@ -12,3 +12,13 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::on_startGame_clicked()
+{
+    ui->centralWidget->hide();
+}
+
+void MainWindow::on_settings_clicked()
+{
+    ui->centralWidget->hide();
+}
