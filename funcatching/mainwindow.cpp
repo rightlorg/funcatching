@@ -1,7 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "settings.h"
+#include "readypage.h"
 #include <QtGui>
+
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::MainWindow)
@@ -18,7 +20,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_startGame_clicked()
 {
-    ui->centralWidget->close();
+    ui->startWidget->hide();
+    ReadyPage *readyPage = new ReadyPage;
+    ui->gridLayout_main->addWidget(readyPage);
+
     statusLabel->setText("game starting");
 }
 
