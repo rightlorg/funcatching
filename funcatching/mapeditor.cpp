@@ -1,60 +1,69 @@
 #include <QtGui>
-#include "map.h"
-mapEditor::mapEditor(QWidget *parent) :
-        QWidget(parent),
-      ui(new Ui::mapEditor)
+#include "mapeditor.h"
+MapEditor::MapEditor(QWidget *parent) :
+        QMainWindow(parent),
+      ui(new Ui::MapEditor)
 {
     ui->setupUi(this);
-    menuBar = new QMenuBar;
-    fileMenu = new QMenu;
-    toolMenu = new QMenu;
-    createMenuBar();
+  //  ui->tableWidget->setRowCount(999);//设置行数为999
+  //  ui->tableWidget->setColumnCount(999);//设置列数为999
+  //  QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));//编码设置为utf8
+  //  ui->tableWidget->setHorizontalHeaderLabels(QStringList() <<("1"));
+  //  ui->tableWidget->setVerticalHeaderLabels(QStringList()<<("1"));
+  //  ui->menubar->setGeometry(0,0,1000,20);
 }
-mapEditor::~mapEditor()
+MapEditor::~MapEditor()
 {
     delete ui;
 }
 
-void mapEditor::createMenuBar()
+void MapEditor::createMenuBar()
 {
-    menuBar = new QMenuBar(this);
-    menuBar->setGeometry(0,0,1000,20);
-
-    fileMenu = menuBar->addMenu(tr("File"));
+    menubar = new QMenuBar(this);
+    menubar->setGeometry(0,0,1000,20);
+    fileMenu = menubar->addMenu(tr("File"));
     actionNew = fileMenu->addAction("New");
     actionOpen = fileMenu->addAction("Open");
     actionSave = fileMenu->addAction("Save");
     actionQuit = fileMenu->addAction("Quit");
 
-    toolMenu = menuBar->addMenu(tr("Tool"));
+
+    toolMenu = menubar->addMenu(tr("Tool"));
 
     connect(actionOpen,SIGNAL(triggered()),this,SLOT(openFile()));
     connect(actionNew,SIGNAL(triggered()),this,SLOT(newFile()));
     connect(actionSave,SIGNAL(triggered()),this,SLOT(saveFile()));
     connect(actionQuit,SIGNAL(triggered()),this,SLOT(quitFile()));
 }
-void mapEditor::openFile()
+
+void MapEditor::createStatusBar()
+{
+    statusLabel->setText("game loading");
+    statusBar()->addWidget(statusLabel);
+}
+
+void MapEditor::openFile()
 {
 //   QString filename = QFileDialog::getOpenFileName(this,tr("choose the edit map"),".",tr("map(*.data)"));
 }
-void mapEditor::saveFile()
+void MapEditor::saveFile()
 {
 
 }
 
-void mapEditor::newFile()
+void MapEditor::newFile()
 {
 
 }
 
-void mapEditor::quitFile()
+void MapEditor::quitFile()
 {
 
     this->close();
     delete ui;
 }
 #if 0
-void settings::on_mapButton_clicked()
+void MapEditor::on_mapButton_clicked()
 {
     //map *mapDialog = new map;
     //delete ui;

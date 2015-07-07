@@ -21,9 +21,11 @@ class settings : public QDialog
 private slots:
     void on_backButton_clicked();
     void on_mapButton_clicked();
+    void on_setpicButton_clicked();
 
 private:
     Ui::settings *ui;
+    QString filename;
 };
 
 #endif // SETTTINGS_H

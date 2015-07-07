@@ -75,7 +75,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="setpicButton">
        <property name="text">
         <string>设置头像</string>
        </property>

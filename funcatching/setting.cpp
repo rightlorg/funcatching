@@ -1,6 +1,6 @@
 #include <QtGui>
 #include "settings.h"
-#include "map.h"
+#include "mapeditor.h"
 settings::settings(QWidget *parent) :
         QDialog(parent),
       ui(new Ui::settings)
@@ -18,9 +18,15 @@ void settings::on_backButton_clicked()
     this->close();
 }
 
+void settings::on_setpicButton_clicked()
+{
+    filename = QFileDialog::getOpenFileName(this,tr("choose your image"),".",tr("png(*.png)\n"
+                                                                                                                                     "jpg(*.jpg)"));
+}
+
 void settings::on_mapButton_clicked()
 {
-    mapEditor *map= new mapEditor;
+    MapEditor *map= new MapEditor;
     this->close();
     map->show();
 #if 0

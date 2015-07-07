@@ -15,15 +15,15 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     setting.cpp \
-    map.cpp \
-    readypage.cpp
+    readypage.cpp \
+    mapeditor.cpp
 
 HEADERS  += mainwindow.h \
     settings.h \
-    map.h \
-    readypage.h
+    readypage.h \
+    mapeditor.h
 
 FORMS    += mainwindow.ui \
-    map.ui \
     settings.ui \
-    readypage.ui
+    readypage.ui \
+    mapeditor.ui
