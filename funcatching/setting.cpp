@@ -21,7 +21,7 @@ void settings::on_backButton_clicked()
 void settings::on_setpicButton_clicked()
 {
     filename = QFileDialog::getOpenFileName(this,tr("choose your image"),".",tr("png(*.png)\n"
-                                                                                                                                     "jpg(*.jpg)"));
+                                                                                                                                     "jpeg(*.jpeg)"));
 }
 
 void settings::on_mapButton_clicked()

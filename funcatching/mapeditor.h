@@ -22,6 +22,10 @@ private slots:
    void saveFile();
    void quitFile();
    void newFile();
+   void on_treeWidget_activated(const QModelIndex &index);
+
+   void on_treeWidget_clicked(const QModelIndex &index);
+
 private:
    void createToolBar();
    void createMenuBar();
