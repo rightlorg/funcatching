@@ -1,51 +1,55 @@
 #include <QtGui>
 #include <QDebug>
 #include "mapeditor.h"
-
+#include <QDebug>
 MapEditor::MapEditor(QWidget *parent) :
         QMainWindow(parent),
       ui(new Ui::MapEditor)
 {
     ui->setupUi(this);
-   ui->tableWidget->setRowCount(999);//设置行数为999
-   ui->tableWidget->setColumnCount(999);//设置列数为999
-   ui->tableWidget->setHorizontalHeaderLabels(QStringList() <<("1"));
-   ui->tableWidget->setVerticalHeaderLabels(QStringList()<<("1"));
+    createTableWidget();
+    createStatusBar();
+    createMenuBar();
+     statusImage->load("./pix2.png");
+      //ui->label->setPixmap(QPixmap::fromImage(*statusImage));
 }
 MapEditor::~MapEditor()
 {
     delete ui;
-}
 
+}
+void MapEditor::createTableWidget()
+{
+    ui->tableWidget->setRowCount(999);//设置行数为999
+    ui->tableWidget->setColumnCount(999);//设置列数为999
+    ui->tableWidget->setHorizontalHeaderLabels(QStringList() <<("1"));
+    ui->tableWidget->setVerticalHeaderLabels(QStringList()<<("1"));
+
+    connect(ui->tableWidget,SIGNAL(itemPressed(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
+}
 void MapEditor::createMenuBar()
 {
-    menubar = new QMenuBar(this);
-    menubar->setGeometry(0,0,1000,20);
-    fileMenu = menubar->addMenu(tr("File"));
-    actionNew = fileMenu->addAction("New");
-    actionOpen = fileMenu->addAction("Open");
-    actionSave = fileMenu->addAction("Save");
-    actionQuit = fileMenu->addAction("Quit");
+    connect(ui->action_Open,SIGNAL(triggered()),this,SLOT(openFile()));
+    connect(ui->action_New,SIGNAL(triggered()),this,SLOT(newFile()));
+    connect(ui->action_Save,SIGNAL(triggered()),this,SLOT(saveFile()));
+    connect(ui->action_Quit,SIGNAL(triggered()),this,SLOT(quitFile()));
 
+    connect(ui->action_About_us,SIGNAL(triggered()),this,SLOT(aboutFile()));
+    connect(ui->actionVersion,SIGNAL(triggered()),this,SLOT(ver()));
 
-    toolMenu = menubar->addMenu(tr("Tool"));
-
-    connect(actionOpen,SIGNAL(triggered()),this,SLOT(openFile()));
-    connect(actionNew,SIGNAL(triggered()),this,SLOT(newFile()));
-    connect(actionSave,SIGNAL(triggered()),this,SLOT(saveFile()));
-    connect(actionQuit,SIGNAL(triggered()),this,SLOT(quitFile()));
+    connect(ui->actionTool_Dialog,SIGNAL(triggered()),this,SLOT(dockDialog()));
 }
-
 void MapEditor::createStatusBar()
 {
-    statusLabel->setText("game loading");
-    statusBar()->addWidget(statusLabel);
+    statusLabel = new QLabel;
+    statusLabel->setText(tr("ready"));
+    ui->statusbar->addWidget(statusLabel);
 }
-
 void MapEditor::openFile()
 {
-//   QString filename = QFileDialog::getOpenFileName(this,tr("choose the edit map"),".",tr("map(*.data)"));
+   //QString filename = QFileDialog::getOpenFileName(this,tr("choose the edit map"),".",tr("map(*.data)"));
 }
+
 void MapEditor::saveFile()
 {
 
@@ -58,10 +62,35 @@ void MapEditor::newFile()
 
 void MapEditor::quitFile()
 {
-
     this->close();
     delete ui;
 }
+void MapEditor::cell_paint(QTableWidgetItem *item)
+{
+    qDebug("clicked");
+}
+void MapEditor::dockDialog()
+{
+    if(ui->dockWidget->isHidden()){
+        ui->dockWidget->show();
+    }else{
+        ui->dockWidget->raise();
+        ui->dockWidget->activateWindow();
+    }
+}
+void MapEditor::aboutFile()
+{
+    QMessageBox::about(this,tr("about funcatching"),
+                       tr("Copyright &copy; Right and Leo."
+                       "<p>funcatching is a game which we made the first time"
+                       "<p>provided updating support and server support"));
+}
+void MapEditor::ver()
+{
+    QMessageBox::about(this,tr("about funcatching"),
+                       tr("funcatching 0.0.0 beta"));
+}
+
 #if 0
 void MapEditor::on_mapButton_clicked()
 {
@@ -98,13 +127,3 @@ void MapEditor::on_mapButton_clicked()
 
 }
 #endif
-
-
-void MapEditor::on_treeWidget_clicked(const QModelIndex &index)
-{
-    qDebug("a");
-}
-void MapEditor::on_treeWidget_activated(const QModelIndex &index)
-{
-    ;//input something here in the future
-}

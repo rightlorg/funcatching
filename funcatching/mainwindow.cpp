@@ -11,6 +11,29 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->setupUi(this);
         statusLabel = new QLabel;
         createStatusBar();
+        QString filename;
+            filename=QFileDialog::getOpenFileName(this,
+                                                  tr("选择图像"),
+                                                  ".",
+                                                  tr("Images (*.png *.bmp *.jpg *.tif *.GIF )"));
+            if(filename.isEmpty())
+            {
+                 return;
+            }
+            else
+            {
+       QImage* img=new QImage;
+
+               if(! ( img->load(filename) ) ) //加载图像
+               {
+                   QMessageBox::information(this,
+                                            tr("打开图像失败"),
+                                            tr("打开图像失败!"));
+                   delete img;
+                   return;
+               }
+               ui->label->setPixmap(QPixmap::fromImage(*img));
+            }
 }
 
 MainWindow::~MainWindow()

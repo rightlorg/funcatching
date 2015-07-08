@@ -5,7 +5,8 @@
 #include <QtGui>
 #include <ui_mapeditor.h>
 #include <QLabel>
-
+#include <QPainter>
+#include <QPixmap>
 class QMenuBar;
 
 namespace Ui {
@@ -24,25 +25,18 @@ private slots:
    void saveFile();
    void quitFile();
    void newFile();
-   void on_treeWidget_activated(const QModelIndex &index);
-
-   void on_treeWidget_clicked(const QModelIndex &index);
-
+   void dockDialog();
+   void aboutFile();
+   void ver();
+   void cell_paint(QTableWidgetItem* item);
 private:
-   void createToolBar();
    void createMenuBar();
+   void createTableWidget();
    void createStatusBar();
    QMenuBar *menuBar;
-   QString filename;
    QLabel *statusLabel;
-   QMenuBar *menubar;
-   QMenu *fileMenu;
-   QMenu *toolMenu;
-   //menubar  action
-   QAction *actionNew;
-   QAction *actionOpen;
-   QAction *actionSave;
-   QAction *actionQuit;
+   QImage *statusImage = new QImage;
+   QString filename;
    Ui::MapEditor *ui;
 };
 

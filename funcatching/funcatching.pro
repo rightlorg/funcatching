@@ -27,3 +27,7 @@ FORMS    += mainwindow.ui \
     settings.ui \
     readypage.ui \
     mapeditor.ui
+
+OTHER_FILES += \
+    pix.png \
+    pix2.png
