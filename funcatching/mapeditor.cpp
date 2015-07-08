@@ -104,3 +104,7 @@ void MapEditor::on_treeWidget_clicked(const QModelIndex &index)
 {
     qDebug("a");
 }
+void MapEditor::on_treeWidget_activated(const QModelIndex &index)
+{
+    ;//input something here in the future
+}
