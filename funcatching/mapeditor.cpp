@@ -1,6 +1,7 @@
 #include <QtGui>
 #include <QDebug>
 #include "mapeditor.h"
+
 MapEditor::MapEditor(QWidget *parent) :
         QMainWindow(parent),
       ui(new Ui::MapEditor)
@@ -8,7 +9,6 @@ MapEditor::MapEditor(QWidget *parent) :
     ui->setupUi(this);
    ui->tableWidget->setRowCount(999);//设置行数为999
    ui->tableWidget->setColumnCount(999);//设置列数为999
-   QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));//编码设置为utf8
    ui->tableWidget->setHorizontalHeaderLabels(QStringList() <<("1"));
    ui->tableWidget->setVerticalHeaderLabels(QStringList()<<("1"));
 }

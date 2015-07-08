@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QtGui>
 #include <ui_mapeditor.h>
+#include <QLabel>
+
 class QMenuBar;
 
 namespace Ui {

@@ -1,6 +1,8 @@
 #include <QtGui>
 #include "settings.h"
 #include "mapeditor.h"
+#include <QFileDialog>
+
 settings::settings(QWidget *parent) :
         QDialog(parent),
       ui(new Ui::settings)
