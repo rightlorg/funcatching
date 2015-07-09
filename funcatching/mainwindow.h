@@ -5,26 +5,26 @@
 #include <QMainWindow>
 
 namespace Ui {
-        class MainWindow;
+class MainWindow;
 }
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    void showStartPage();
-    ~MainWindow();
+	explicit MainWindow(QWidget *parent = 0);
+	void showStartPage();
+	~MainWindow();
 
 private slots:
-    void on_startGame_clicked();
-    void on_settings_clicked();
+	void on_startGame_clicked();
+	void on_settings_clicked();
 
 private:
-    void createStatusBar();
-    QLabel *statusLabel;
-    QPixmap *statusImage;
-    Ui::MainWindow *ui;
+	void createStatusBar();
+	QLabel *statusLabel;
+	QPixmap *statusImage;
+	Ui::MainWindow *ui;
 };
 
 #endif // MAINWINDOW_H

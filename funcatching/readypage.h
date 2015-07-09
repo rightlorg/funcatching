@@ -5,23 +5,24 @@
 #include <mainwindow.h>
 
 namespace Ui {
-class readyPage;
+class ReadyPage;
 }
 
 class ReadyPage : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit ReadyPage(MainWindow *parent = 0);
-    ~ReadyPage();
+	explicit ReadyPage(MainWindow *parent = 0);
+	void addMap();
+	~ReadyPage();
 
 private slots:
-    void on_back_clicked();
+	void on_back_clicked();
 
 private:
-    Ui::readyPage *ui;
-    MainWindow *mainwindow;
+	Ui::ReadyPage *ui;
+	MainWindow *mainwindow;
 };
 
 #endif // READYPAGE_H

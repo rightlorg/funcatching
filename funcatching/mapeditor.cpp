@@ -3,91 +3,91 @@
 #include "mapeditor.h"
 #include <QDebug>
 MapEditor::MapEditor(QWidget *parent) :
-        QMainWindow(parent),
-      ui(new Ui::MapEditor)
+	QMainWindow(parent),
+	ui(new Ui::MapEditor)
 {
-    ui->setupUi(this);
-    statusImage = new QImage;
-    createTableWidget();
-    createStatusBar();
-    createMenuBar();
-    itemstatusLabel = new QLabel;
-     //statusImage->load(":/image/pix2.png");
-      //ui->label->setPixmap(QPixmap::fromImage(*statusImage));
+	ui->setupUi(this);
+	statusImage = new QImage;
+	createTableWidget();
+	createStatusBar();
+	createMenuBar();
+	itemstatusLabel = new QLabel;
+	//statusImage->load(":/image/pix2.png");
+	//ui->label->setPixmap(QPixmap::fromImage(*statusImage));
 }
 
 MapEditor::~MapEditor()
 {
-    delete ui;
+	delete ui;
 
 }
 
 void MapEditor::createTableWidget()
 {
-    ui->tableWidget->setRowCount(20);//设置行数为999
-    ui->tableWidget->setColumnCount(20);//设置列数为999
-    ui->tableWidget->setHorizontalHeaderLabels(QStringList() <<("1"));
-    ui->tableWidget->setVerticalHeaderLabels(QStringList()<<("1"));
+	ui->tableWidget->setRowCount(20);//设置行数为999
+	ui->tableWidget->setColumnCount(20);//设置列数为999
+	ui->tableWidget->setHorizontalHeaderLabels(QStringList() <<("1"));
+	ui->tableWidget->setVerticalHeaderLabels(QStringList()<<("1"));
 
-    connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
+	connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 }
 
 void MapEditor::createMenuBar()
 {
-    connect(ui->action_Open,SIGNAL(triggered()),this,SLOT(openFile()));
-    connect(ui->action_New,SIGNAL(triggered()),this,SLOT(newFile()));
-    connect(ui->action_Save,SIGNAL(triggered()),this,SLOT(saveFile()));
-    connect(ui->action_Quit,SIGNAL(triggered()),this,SLOT(quitFile()));
+	connect(ui->action_Open,SIGNAL(triggered()),this,SLOT(openFile()));
+	connect(ui->action_New,SIGNAL(triggered()),this,SLOT(newFile()));
+	connect(ui->action_Save,SIGNAL(triggered()),this,SLOT(saveFile()));
+	connect(ui->action_Quit,SIGNAL(triggered()),this,SLOT(quitFile()));
 
-    connect(ui->action_About_us,SIGNAL(triggered()),this,SLOT(aboutFile()));
-    connect(ui->actionVersion,SIGNAL(triggered()),this,SLOT(ver()));
+	connect(ui->action_About_us,SIGNAL(triggered()),this,SLOT(aboutFile()));
+	connect(ui->actionVersion,SIGNAL(triggered()),this,SLOT(ver()));
 
-    connect(ui->actionTool_Dialog,SIGNAL(triggered()),this,SLOT(dockDialog()));
-    connect(ui->actionAdd_new_Column,SIGNAL(triggered()),this,SLOT(add_new_column()));
-    connect(ui->actionAdd_new_row,SIGNAL(triggered()),this,SLOT(add_new_row()));
+	connect(ui->actionTool_Dialog,SIGNAL(triggered()),this,SLOT(dockDialog()));
+	connect(ui->actionAdd_new_Column,SIGNAL(triggered()),this,SLOT(add_new_column()));
+	connect(ui->actionAdd_new_row,SIGNAL(triggered()),this,SLOT(add_new_row()));
 }
 
 void MapEditor::createStatusBar()
 {
-    statusLabel = new QLabel;
-    statusLabel->setText(tr("ready"));
-    ui->statusbar->addWidget(statusLabel);
+	statusLabel = new QLabel;
+	statusLabel->setText(tr("ready"));
+	ui->statusbar->addWidget(statusLabel);
 }
 
 void MapEditor::openFile()
 {
-   QString filename = QFileDialog::getOpenFileName(this,tr("choose the edit map"),".",tr("map(*.map)"));
+	QString filename = QFileDialog::getOpenFileName(this,tr("choose the edit map"),".",tr("map(*.map)"));
 }
 
 void MapEditor::saveFile()
 {
-    QString filename = QFileDialog::getOpenFileName(this,tr("choose an existing file to open"),".",tr("Spreadsheet files (*.sp)"));
-    QFile file(filename);
-    if(!file.open(QIODevice::WriteOnly))
-    {
-        QMessageBox::warning(this,tr("Saving files"),tr("failed to save file"));
-    }
-    else
-    {
-        QDataStream out(&file);
-        out.setVersion(QDataStream::Qt_4_8);
+	QString filename = QFileDialog::getOpenFileName(this,tr("choose an existing file to open"),".",tr("Spreadsheet files (*.sp)"));
+	QFile file(filename);
+	if(!file.open(QIODevice::WriteOnly))
+	{
+		QMessageBox::warning(this,tr("Saving files"),tr("failed to save file"));
+	}
+	else
+	{
+		QDataStream out(&file);
+		out.setVersion(QDataStream::Qt_4_8);
 
-        out<<quint32(MagicNum);
+		out<<quint32(MagicNum);
 
-         QApplication::setOverrideCursor(Qt::WaitCursor);
-         for(int row = 0;row<ui->tableWidget->rowCount();row++)
-        {
-            for(int column = 0;column<ui->tableWidget->columnCount();column++)
-             {
-                qDebug()<<ui->tableWidget->item(row,column)->text();
-                     //if(ui->tableWidget->item(row,column)->text()==ui->VDoor->text()){
-                        // qDebug()<<"su open";
-                         //out<<quint32(row)<<quint32(column);
-                     }
-              }
-          }
-         QApplication::restoreOverrideCursor();
-    }
+		QApplication::setOverrideCursor(Qt::WaitCursor);
+		for(int row = 0;row<ui->tableWidget->rowCount();row++)
+		{
+			for(int column = 0;column<ui->tableWidget->columnCount();column++)
+			{
+				qDebug()<<ui->tableWidget->item(row,column)->text();
+				//if(ui->tableWidget->item(row,column)->text()==ui->VDoor->text()){
+				// qDebug()<<"su open";
+				//out<<quint32(row)<<quint32(column);
+			}
+		}
+	}
+	QApplication::restoreOverrideCursor();
+}
 
 void MapEditor::newFile()
 {
@@ -96,132 +96,132 @@ void MapEditor::newFile()
 
 void MapEditor::quitFile()
 {
-    this->close();
-    delete ui;
+	this->close();
+	delete ui;
 }
 
 void MapEditor::cell_paint(QTableWidgetItem *item)
 {
-    item->setText(itemstatusLabel->text());
-    //item->setIcon(//unable to use
+	item->setText(itemstatusLabel->text());
+	//item->setIcon(//unable to use
 }
 
 void MapEditor::dockDialog()
 {
-    if(ui->dockWidget->isHidden()){
-        ui->dockWidget->show();
-    }else{
-        ui->dockWidget->raise();
-        ui->dockWidget->activateWindow();
-    }
+	if(ui->dockWidget->isHidden()){
+		ui->dockWidget->show();
+	}else{
+		ui->dockWidget->raise();
+		ui->dockWidget->activateWindow();
+	}
 }
 
 void MapEditor::aboutFile()
 {
-    QMessageBox::about(this,tr("about funcatching"),
-                       tr("Copyright &copy; Right and Leo."
-                       "<p>funcatching is a game which we made the first time"
-                       "<p>provided updating support and server support"));
+	QMessageBox::about(this,tr("about funcatching"),
+			   tr("Copyright &copy; Right and Leo."
+			      "<p>funcatching is a game which we made the first time"
+			      "<p>provided updating support and server support"));
 }
 
 void MapEditor::ver()
 {
-    QMessageBox::about(this,tr("about funcatching"),
-                       tr("funcatching 0.0.0 beta"));
+	QMessageBox::about(this,tr("about funcatching"),
+			   tr("funcatching 0.0.0 beta"));
 }
 
 #if 0
 void MapEditor::on_mapButton_clicked()
 {
-    //map *mapDialog = new map;
-    //delete ui;
-    //mapDialog->show();
+	//map *mapDialog = new map;
+	//delete ui;
+	//mapDialog->show();
 
-    filename = QFileDialog::getOpenFileName(this,tr("choose your image"),".",tr("png(*.png)"));
-    QSettings imageSet("Carrow Inc.","fun catching");
-    imageSet.setValue("imagePath",filename);
-    QString filename;
-        filename=QFileDialog::getOpenFileName(this,
-                                              tr("选择图像"),
-                                              ".",
-                                              tr("Images (*.png *.bmp *.jpg *.tif *.GIF )"));
-        if(filename.isEmpty())
-        {
-             return;
-        }
-        else
-        {
-            QImage* img=new QImage;
+	filename = QFileDialog::getOpenFileName(this,tr("choose your image"),".",tr("png(*.png)"));
+	QSettings imageSet("Carrow Inc.","fun catching");
+	imageSet.setValue("imagePath",filename);
+	QString filename;
+	filename=QFileDialog::getOpenFileName(this,
+					      tr("选择图像"),
+					      ".",
+					      tr("Images (*.png *.bmp *.jpg *.tif *.GIF )"));
+	if(filename.isEmpty())
+	{
+		return;
+	}
+	else
+	{
+		QImage* img=new QImage;
 
-            if(! ( img->load(filename) ) ) //加载图像
-            {
-                QMessageBox::information(this,
-                                         tr("打开图像失败"),
-                                         tr("打开图像失败!"));
-                delete img;
-                return;
-            }
-            ui->label->setPixmap(QPixmap::fromImage(*img));
-        }
+		if(! ( img->load(filename) ) ) //加载图像
+		{
+			QMessageBox::information(this,
+						 tr("打开图像失败"),
+						 tr("打开图像失败!"));
+			delete img;
+			return;
+		}
+		ui->label->setPixmap(QPixmap::fromImage(*img));
+	}
 
 }
 #endif
 
 void MapEditor::on_VGlass_clicked()
 {
-    itemstatusLabel->setText(tr("VGlass"));
-    statusLabel->setText(tr("vertical glass item choosed"));
+	itemstatusLabel->setText(tr("VGlass"));
+	statusLabel->setText(tr("vertical glass item choosed"));
 }
 
 void MapEditor::on_HGlass_clicked()
 {
-    itemstatusLabel->setText(tr("HGlass"));
-    statusLabel->setText(tr("Horizontal glass item choosed"));
+	itemstatusLabel->setText(tr("HGlass"));
+	statusLabel->setText(tr("Horizontal glass item choosed"));
 }
 
 void MapEditor::on_VWall_clicked()
 {
-    itemstatusLabel->setText(tr("VWall"));
-    statusLabel->setText(tr("Vertical wall item choosed"));
+	itemstatusLabel->setText(tr("VWall"));
+	statusLabel->setText(tr("Vertical wall item choosed"));
 }
 
 void MapEditor::on_HWall_clicked()
 {
-    itemstatusLabel->setText(tr("HWall"));
-    statusLabel->setText(tr("Horizontal wall item choosed"));
+	itemstatusLabel->setText(tr("HWall"));
+	statusLabel->setText(tr("Horizontal wall item choosed"));
 }
 
 void MapEditor::on_VDoor_clicked()
 {
-    itemstatusLabel->setText(tr("VDoor"));
-    statusLabel->setText(tr("Vertical door item choosed"));
+	itemstatusLabel->setText(tr("VDoor"));
+	statusLabel->setText(tr("Vertical door item choosed"));
 }
 
 void MapEditor::on_HDoor_clicked()
 {
-    itemstatusLabel->setText(tr("HDoor"));
-    statusLabel->setText(tr("Horizontal door item choosed"));
+	itemstatusLabel->setText(tr("HDoor"));
+	statusLabel->setText(tr("Horizontal door item choosed"));
 }
 
 void MapEditor::on_Floor_clicked()
 {
-    itemstatusLabel->setText(tr("Floor"));
-    statusLabel->setText(tr("Horizontal door item choosed"));
+	itemstatusLabel->setText(tr("Floor"));
+	statusLabel->setText(tr("Horizontal door item choosed"));
 }
 
 void MapEditor::add_new_row()
 {
-    int age=QInputDialog::getInteger(this,tr("Adding new rows"),tr("Please input the number of the rows you want to add"),
-                                     statusLabel->text().toInt(),0,100,1);
-    for(int i=0;i<age;i++)
-        ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+	int age=QInputDialog::getInteger(this,tr("Adding new rows"),tr("Please input the number of the rows you want to add"),
+					 statusLabel->text().toInt(),0,100,1);
+	for(int i=0;i<age;i++)
+		ui->tableWidget->insertRow(ui->tableWidget->rowCount());
 }
 
 void MapEditor::add_new_column()
 {
-    int age=QInputDialog::getInteger(this,tr("Adding new columns"),tr("Please input the number of the columns you want to add"),
-                                     statusLabel->text().toInt(),0,100,1);
-    for(int i=0;i<age;i++)
-        ui->tableWidget->insertColumn(ui->tableWidget->columnCount());
+	int age=QInputDialog::getInteger(this,tr("Adding new columns"),tr("Please input the number of the columns you want to add"),
+					 statusLabel->text().toInt(),0,100,1);
+	for(int i=0;i<age;i++)
+		ui->tableWidget->insertColumn(ui->tableWidget->columnCount());
 }
 
