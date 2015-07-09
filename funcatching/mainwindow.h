@@ -10,10 +10,11 @@ namespace Ui {
 
 class MainWindow : public QMainWindow
 {
-                Q_OBJECT
-        public:
-                explicit MainWindow(QWidget *parent = 0);
-                ~MainWindow();
+    Q_OBJECT
+public:
+    explicit MainWindow(QWidget *parent = 0);
+    void showStartPage();
+    ~MainWindow();
 
 private slots:
     void on_startGame_clicked();
@@ -22,7 +23,7 @@ private slots:
 private:
     void createStatusBar();
     QLabel *statusLabel;
-    QImage *statusImage = new QImage;
+    QImage *statusImage;
     Ui::MainWindow *ui;
 };
 

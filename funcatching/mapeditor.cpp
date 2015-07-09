@@ -7,17 +7,20 @@ MapEditor::MapEditor(QWidget *parent) :
       ui(new Ui::MapEditor)
 {
     ui->setupUi(this);
+    statusImage = new QImage;
     createTableWidget();
     createStatusBar();
     createMenuBar();
      statusImage->load("./pix2.png");
       //ui->label->setPixmap(QPixmap::fromImage(*statusImage));
 }
+
 MapEditor::~MapEditor()
 {
     delete ui;
 
 }
+
 void MapEditor::createTableWidget()
 {
     ui->tableWidget->setRowCount(999);//设置行数为999
@@ -27,6 +30,7 @@ void MapEditor::createTableWidget()
 
     connect(ui->tableWidget,SIGNAL(itemPressed(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 }
+
 void MapEditor::createMenuBar()
 {
     connect(ui->action_Open,SIGNAL(triggered()),this,SLOT(openFile()));
@@ -39,12 +43,14 @@ void MapEditor::createMenuBar()
 
     connect(ui->actionTool_Dialog,SIGNAL(triggered()),this,SLOT(dockDialog()));
 }
+
 void MapEditor::createStatusBar()
 {
     statusLabel = new QLabel;
     statusLabel->setText(tr("ready"));
     ui->statusbar->addWidget(statusLabel);
 }
+
 void MapEditor::openFile()
 {
    //QString filename = QFileDialog::getOpenFileName(this,tr("choose the edit map"),".",tr("map(*.data)"));
@@ -65,10 +71,12 @@ void MapEditor::quitFile()
     this->close();
     delete ui;
 }
+
 void MapEditor::cell_paint(QTableWidgetItem *item)
 {
     qDebug("clicked");
 }
+
 void MapEditor::dockDialog()
 {
     if(ui->dockWidget->isHidden()){
@@ -78,6 +86,7 @@ void MapEditor::dockDialog()
         ui->dockWidget->activateWindow();
     }
 }
+
 void MapEditor::aboutFile()
 {
     QMessageBox::about(this,tr("about funcatching"),
@@ -85,6 +94,7 @@ void MapEditor::aboutFile()
                        "<p>funcatching is a game which we made the first time"
                        "<p>provided updating support and server support"));
 }
+
 void MapEditor::ver()
 {
     QMessageBox::about(this,tr("about funcatching"),

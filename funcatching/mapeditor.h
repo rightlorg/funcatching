@@ -35,7 +35,7 @@ private:
    void createStatusBar();
    QMenuBar *menuBar;
    QLabel *statusLabel;
-   QImage *statusImage = new QImage;
+   QImage *statusImage;
    QString filename;
    Ui::MapEditor *ui;
 };
