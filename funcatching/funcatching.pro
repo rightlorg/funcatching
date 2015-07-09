@@ -29,5 +29,6 @@ FORMS    += mainwindow.ui \
     mapeditor.ui
 
 OTHER_FILES += \
-    pix.png \
-    pix2.png
+    pix2.png \
+    image/pix.png \
+    image/pix2.png

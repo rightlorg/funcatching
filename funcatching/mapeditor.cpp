@@ -11,7 +11,8 @@ MapEditor::MapEditor(QWidget *parent) :
     createTableWidget();
     createStatusBar();
     createMenuBar();
-     statusImage->load("./pix2.png");
+    itemstatusLabel = new QLabel;
+     //statusImage->load(":/image/pix2.png");
       //ui->label->setPixmap(QPixmap::fromImage(*statusImage));
 }
 
@@ -23,12 +24,12 @@ MapEditor::~MapEditor()
 
 void MapEditor::createTableWidget()
 {
-    ui->tableWidget->setRowCount(999);//设置行数为999
-    ui->tableWidget->setColumnCount(999);//设置列数为999
+    ui->tableWidget->setRowCount(20);//设置行数为999
+    ui->tableWidget->setColumnCount(20);//设置列数为999
     ui->tableWidget->setHorizontalHeaderLabels(QStringList() <<("1"));
     ui->tableWidget->setVerticalHeaderLabels(QStringList()<<("1"));
 
-    connect(ui->tableWidget,SIGNAL(itemPressed(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
+    connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 }
 
 void MapEditor::createMenuBar()
@@ -42,6 +43,8 @@ void MapEditor::createMenuBar()
     connect(ui->actionVersion,SIGNAL(triggered()),this,SLOT(ver()));
 
     connect(ui->actionTool_Dialog,SIGNAL(triggered()),this,SLOT(dockDialog()));
+    connect(ui->actionAdd_new_Column,SIGNAL(triggered()),this,SLOT(add_new_column()));
+    connect(ui->actionAdd_new_row,SIGNAL(triggered()),this,SLOT(add_new_row()));
 }
 
 void MapEditor::createStatusBar()
@@ -53,13 +56,38 @@ void MapEditor::createStatusBar()
 
 void MapEditor::openFile()
 {
-   //QString filename = QFileDialog::getOpenFileName(this,tr("choose the edit map"),".",tr("map(*.data)"));
+   QString filename = QFileDialog::getOpenFileName(this,tr("choose the edit map"),".",tr("map(*.map)"));
 }
 
 void MapEditor::saveFile()
 {
+    QString filename = QFileDialog::getOpenFileName(this,tr("choose an existing file to open"),".",tr("Spreadsheet files (*.sp)"));
+    QFile file(filename);
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        QMessageBox::warning(this,tr("Saving files"),tr("failed to save file"));
+    }
+    else
+    {
+        QDataStream out(&file);
+        out.setVersion(QDataStream::Qt_4_8);
 
-}
+        out<<quint32(MagicNum);
+
+         QApplication::setOverrideCursor(Qt::WaitCursor);
+         for(int row = 0;row<ui->tableWidget->rowCount();row++)
+        {
+            for(int column = 0;column<ui->tableWidget->columnCount();column++)
+             {
+                qDebug()<<ui->tableWidget->item(row,column)->text();
+                     //if(ui->tableWidget->item(row,column)->text()==ui->VDoor->text()){
+                        // qDebug()<<"su open";
+                         //out<<quint32(row)<<quint32(column);
+                     }
+              }
+          }
+         QApplication::restoreOverrideCursor();
+    }
 
 void MapEditor::newFile()
 {
@@ -74,7 +102,8 @@ void MapEditor::quitFile()
 
 void MapEditor::cell_paint(QTableWidgetItem *item)
 {
-    qDebug("clicked");
+    item->setText(itemstatusLabel->text());
+    //item->setIcon(//unable to use
 }
 
 void MapEditor::dockDialog()
@@ -137,3 +166,62 @@ void MapEditor::on_mapButton_clicked()
 
 }
 #endif
+
+void MapEditor::on_VGlass_clicked()
+{
+    itemstatusLabel->setText(tr("VGlass"));
+    statusLabel->setText(tr("vertical glass item choosed"));
+}
+
+void MapEditor::on_HGlass_clicked()
+{
+    itemstatusLabel->setText(tr("HGlass"));
+    statusLabel->setText(tr("Horizontal glass item choosed"));
+}
+
+void MapEditor::on_VWall_clicked()
+{
+    itemstatusLabel->setText(tr("VWall"));
+    statusLabel->setText(tr("Vertical wall item choosed"));
+}
+
+void MapEditor::on_HWall_clicked()
+{
+    itemstatusLabel->setText(tr("HWall"));
+    statusLabel->setText(tr("Horizontal wall item choosed"));
+}
+
+void MapEditor::on_VDoor_clicked()
+{
+    itemstatusLabel->setText(tr("VDoor"));
+    statusLabel->setText(tr("Vertical door item choosed"));
+}
+
+void MapEditor::on_HDoor_clicked()
+{
+    itemstatusLabel->setText(tr("HDoor"));
+    statusLabel->setText(tr("Horizontal door item choosed"));
+}
+
+void MapEditor::on_Floor_clicked()
+{
+    itemstatusLabel->setText(tr("Floor"));
+    statusLabel->setText(tr("Horizontal door item choosed"));
+}
+
+void MapEditor::add_new_row()
+{
+    int age=QInputDialog::getInteger(this,tr("Adding new rows"),tr("Please input the number of the rows you want to add"),
+                                     statusLabel->text().toInt(),0,100,1);
+    for(int i=0;i<age;i++)
+        ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+}
+
+void MapEditor::add_new_column()
+{
+    int age=QInputDialog::getInteger(this,tr("Adding new columns"),tr("Please input the number of the columns you want to add"),
+                                     statusLabel->text().toInt(),0,100,1);
+    for(int i=0;i<age;i++)
+        ui->tableWidget->insertColumn(ui->tableWidget->columnCount());
+}
+

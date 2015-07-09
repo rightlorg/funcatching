@@ -18,10 +18,16 @@
     <item>
      <widget class="QTableWidget" name="tableWidget">
       <attribute name="horizontalHeaderDefaultSectionSize">
-       <number>60</number>
+       <number>55</number>
       </attribute>
       <attribute name="horizontalHeaderMinimumSectionSize">
-       <number>60</number>
+       <number>55</number>
+      </attribute>
+      <attribute name="verticalHeaderDefaultSectionSize">
+       <number>30</number>
+      </attribute>
+      <attribute name="verticalHeaderMinimumSectionSize">
+       <number>30</number>
       </attribute>
      </widget>
     </item>
@@ -52,6 +58,10 @@
      <string>&amp;Tool</string>
     </property>
     <addaction name="actionTool_Dialog"/>
+    <addaction name="separator"/>
+    <addaction name="action_View"/>
+    <addaction name="actionAdd_new_row"/>
+    <addaction name="actionAdd_new_Column"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -71,9 +81,16 @@
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QPushButton" name="Glass">
+      <widget class="QPushButton" name="VGlass">
        <property name="text">
-        <string>Glass</string>
+        <string>VGlass</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="HGlass">
+       <property name="text">
+        <string>HGlass</string>
        </property>
       </widget>
      </item>
@@ -99,7 +116,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="DoorH">
+      <widget class="QPushButton" name="HDoor">
        <property name="text">
         <string>HDoor</string>
        </property>
@@ -213,6 +230,21 @@
   <action name="actionVersion">
    <property name="text">
     <string>Version</string>
+   </property>
+  </action>
+  <action name="action_View">
+   <property name="text">
+    <string>&amp;View</string>
+   </property>
+  </action>
+  <action name="actionAdd_new_row">
+   <property name="text">
+    <string>add new &amp;Row</string>
+   </property>
+  </action>
+  <action name="actionAdd_new_Column">
+   <property name="text">
+    <string>add new &amp;Column</string>
    </property>
   </action>
  </widget>
