@@ -75,19 +75,23 @@ void MapEditor::saveFile()
         out<<quint32(MagicNum);
 
          QApplication::setOverrideCursor(Qt::WaitCursor);
-         for(int row = 0;row<ui->tableWidget->rowCount();row++)
+         for(int row = 0;row<(ui->tableWidget->rowCount());row++)
         {
-            for(int column = 0;column<ui->tableWidget->columnCount();column++)
+            for(int column = 0;column<(ui->tableWidget->columnCount());++column)
              {
-                qDebug()<<ui->tableWidget->item(row,column)->text();
-                     //if(ui->tableWidget->item(row,column)->text()==ui->VDoor->text()){
-                        // qDebug()<<"su open";
-                         //out<<quint32(row)<<quint32(column);
-                     }
-              }
-          }
-         QApplication::restoreOverrideCursor();
-    }
+                QString str = ui->tableWidget->item(row,column)->text();
+                if(!str.isNull())
+                {
+                     out<<quint16(row)<<quint16(column);
+                    qDebug()<<column<<row<<str;
+                }
+                else
+                    continue;
+             }
+         }
+      }
+     QApplication::restoreOverrideCursor();
+}
 
 void MapEditor::newFile()
 {
