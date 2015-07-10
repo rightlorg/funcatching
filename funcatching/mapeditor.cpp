@@ -12,6 +12,8 @@ MapEditor::MapEditor(QWidget *parent) :
     createStatusBar();
     createMenuBar();
     itemstatusLabel = new QLabel;
+    itemstatusLabel->setText("VGlass");
+    ui->tableWidget->setCurrentCell(0,0);
      //statusImage->load(":/image/pix2.png");
       //ui->label->setPixmap(QPixmap::fromImage(*statusImage));
 }
@@ -24,10 +26,19 @@ MapEditor::~MapEditor()
 
 void MapEditor::createTableWidget()
 {
-    ui->tableWidget->setRowCount(20);//设置行数为999
-    ui->tableWidget->setColumnCount(20);//设置列数为999
+    ui->tableWidget->setRowCount(20);//设置行数为20
+    ui->tableWidget->setColumnCount(20);//设置列数为20
     ui->tableWidget->setHorizontalHeaderLabels(QStringList() <<("1"));
     ui->tableWidget->setVerticalHeaderLabels(QStringList()<<("1"));
+
+    for(int row = 0;row<ui->tableWidget->rowCount();++row){
+        for(int column = 0;column<ui->tableWidget->columnCount();++column){
+            QTableWidgetItem *item = new QTableWidgetItem;
+            item->setText("");
+            ui->tableWidget->setItem(row,column,item);
+            QString str = ui->tableWidget->item(row,column)->text();
+        }
+    }
 
     connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 }
@@ -80,10 +91,10 @@ void MapEditor::saveFile()
             for(int column = 0;column<(ui->tableWidget->columnCount());++column)
              {
                 QString str = ui->tableWidget->item(row,column)->text();
-                if(!str.isNull())
+                if(!str.isEmpty())
                 {
                      out<<quint16(row)<<quint16(column);
-                    qDebug()<<column<<row<<str;
+                     qDebug()<<column<<row<<str;
                 }
                 else
                     continue;
@@ -107,7 +118,7 @@ void MapEditor::quitFile()
 void MapEditor::cell_paint(QTableWidgetItem *item)
 {
     item->setText(itemstatusLabel->text());
-    //item->setIcon(//unable to use
+    //item->setIcon(//unable to use)
 }
 
 void MapEditor::dockDialog()
@@ -215,17 +226,25 @@ void MapEditor::on_Floor_clicked()
 
 void MapEditor::add_new_row()
 {
-    int age=QInputDialog::getInteger(this,tr("Adding new rows"),tr("Please input the number of the rows you want to add"),
+    int row=QInputDialog::getInteger(this,tr("Adding new rows"),tr("Please input the number of the rows you want to add"),
                                      statusLabel->text().toInt(),0,100,1);
-    for(int i=0;i<age;i++)
-        ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+    for(int i=0;i<row;i++){
+        int column = ui->tableWidget->columnCount()-1;
+        QTableWidgetItem *item = new QTableWidgetItem;
+        item->setText("");
+        ui->tableWidget->setItem(row,column,item);
+    }
 }
 
 void MapEditor::add_new_column()
 {
-    int age=QInputDialog::getInteger(this,tr("Adding new columns"),tr("Please input the number of the columns you want to add"),
+    int column=QInputDialog::getInteger(this,tr("Adding new columns"),tr("Please input the number of the columns you want to add"),
                                      statusLabel->text().toInt(),0,100,1);
-    for(int i=0;i<age;i++)
-        ui->tableWidget->insertColumn(ui->tableWidget->columnCount());
+    for(int i=0;i<column;i++){
+        int row = ui->tableWidget->rowCount()-1;
+        QTableWidgetItem *item = new QTableWidgetItem;
+        item->setText("");
+        ui->tableWidget->setItem(row,column,item);
+    }
 }
 
