@@ -16,12 +16,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     setting.cpp \
     readypage.cpp \
-    mapeditor.cpp
+    mapeditor.cpp \
+    game.cpp
 
 HEADERS  += mainwindow.h \
     settings.h \
     readypage.h \
-    mapeditor.h
+    mapeditor.h \
+    game.h
 
 FORMS    += mainwindow.ui \
     settings.ui \

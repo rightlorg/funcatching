@@ -14,6 +14,7 @@ class MainWindow : public QMainWindow
 public:
 	explicit MainWindow(QWidget *parent = 0);
 	void showStartPage();
+	void delWidget();
 	~MainWindow();
 
 private slots:
