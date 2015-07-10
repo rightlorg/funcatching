@@ -36,7 +36,6 @@ void MapEditor::createTableWidget()
             QTableWidgetItem *item = new QTableWidgetItem;
             item->setText("");
             ui->tableWidget->setItem(row,column,item);
-            QString str = ui->tableWidget->item(row,column)->text();
         }
     }
 
@@ -65,14 +64,46 @@ void MapEditor::createStatusBar()
     ui->statusbar->addWidget(statusLabel);
 }
 
-void MapEditor::openFile()
+bool MapEditor::openFile()
 {
    QString filename = QFileDialog::getOpenFileName(this,tr("choose the edit map"),".",tr("map(*.map)"));
+   QFile file(filename);
+   if(!file.open(QIODevice::ReadOnly)){
+       QMessageBox::warning(this,tr("Map editor"),
+                                                        tr("failed to read file %1:\n%2")
+                            .arg(file.fileName())
+                            .arg(file.errorString()));
+               return false;
+   }
+   QDataStream in(&file);
+   in.setVersion(QDataStream::Qt_4_8);
+
+   quint32 magic;
+   in>>magic;
+   if(magic!=MagicNum){
+       QMessageBox::warning(this,tr("Map editor"),
+                            tr("This file is mot a Map file\nPlease rechoose the edited file"));
+       return false;
+   }
+   createTableWidget();
+
+   quint16 row;
+   quint16 column;
+   QString str;
+
+   QApplication::setOverrideCursor(Qt::WaitCursor);
+   while(!in.atEnd()){
+       in>>row>>column>>str;
+       ui->tableWidget->item(row,column)->setText(str);
+       qDebug()<<row<<column<<str;
+   }
+   QApplication::restoreOverrideCursor();
+   return true;
 }
 
 void MapEditor::saveFile()
 {
-    QString filename = QFileDialog::getOpenFileName(this,tr("choose an existing file to open"),".",tr("Spreadsheet files (*.sp)"));
+    QString filename = QFileDialog::getOpenFileName(this,tr("choose an existing file to open"),".",tr("Map files (*.map)"));
     QFile file(filename);
     if(!file.open(QIODevice::WriteOnly))
     {
@@ -94,7 +125,7 @@ void MapEditor::saveFile()
                 if(!str.isEmpty())
                 {
                      out<<quint16(row)<<quint16(column);
-                     qDebug()<<column<<row<<str;
+                     qDebug()<<row<<column<<str;
                 }
                 else
                     continue;
