@@ -21,7 +21,7 @@ public:
 	explicit MapEditor(QWidget *parent = 0);
 	~MapEditor();
 private slots:
-	void openFile();
+    bool openFile();
 	void saveFile();
 	void quitFile();
 	void newFile();

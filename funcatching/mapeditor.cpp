@@ -257,25 +257,33 @@ void MapEditor::on_Floor_clicked()
 
 void MapEditor::add_new_row()
 {
+    disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
     int row=QInputDialog::getInteger(this,tr("Adding new rows"),tr("Please input the number of the rows you want to add"),
-                                     statusLabel->text().toInt(),0,100,1);
+                                     statusLabel->text().toInt(),1,100,1);
     for(int i=0;i<row;i++){
-        int column = ui->tableWidget->columnCount()-1;
-        QTableWidgetItem *item = new QTableWidgetItem;
-        item->setText("");
-        ui->tableWidget->setItem(row,column,item);
+        ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+        for(int column = 0;column<ui->tableWidget->columnCount();column++){
+            QTableWidgetItem *item = new QTableWidgetItem;
+            item->setText("");
+            ui->tableWidget->setItem(row,column,item);
+        }
     }
+    connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 }
 
 void MapEditor::add_new_column()
 {
-    int column=QInputDialog::getInteger(this,tr("Adding new columns"),tr("Please input the number of the columns you want to add"),
-                                     statusLabel->text().toInt(),0,100,1);
+    disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
+    int column=QInputDialog::getInteger(this,tr("Adding new rows"),tr("Please input the number of the rows you want to add"),
+                                     statusLabel->text().toInt(),1,100,1);
     for(int i=0;i<column;i++){
-        int row = ui->tableWidget->rowCount()-1;
-        QTableWidgetItem *item = new QTableWidgetItem;
-        item->setText("");
-        ui->tableWidget->setItem(row,column,item);
+        ui->tableWidget->insertColumn(ui->tableWidget->columnCount());
+        for(int row = 0;row<ui->tableWidget->rowCount();row++){
+            QTableWidgetItem *item = new QTableWidgetItem;
+            item->setText("");
+            ui->tableWidget->setItem(row,column,item);
+        }
     }
+    connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 }
 
