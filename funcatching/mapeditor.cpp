@@ -54,6 +54,7 @@ void MapEditor::createMenuBar()
     connect(ui->actionTool_Dialog,SIGNAL(triggered()),this,SLOT(dockDialog()));
     connect(ui->actionAdd_new_Column,SIGNAL(triggered()),this,SLOT(add_new_column()));
     connect(ui->actionAdd_new_row,SIGNAL(triggered()),this,SLOT(add_new_row()));
+    connect(ui->action_View,SIGNAL(triggered()),this,SLOT(viewButton()));
 }
 
 void MapEditor::createStatusBar()
@@ -314,3 +315,7 @@ void MapEditor::add_new_column()
     connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 }
 
+void MapEditor::viewButton()
+{
+
+}

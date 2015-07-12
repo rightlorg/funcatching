@@ -30,6 +30,7 @@ private slots:
 	void ver();
 	void cell_paint(QTableWidgetItem* item);
 	void add_new_row();
+    void viewButton();
 
 	void add_new_column();
 	void on_VGlass_clicked();
