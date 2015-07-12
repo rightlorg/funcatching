@@ -43,7 +43,7 @@ private slots:
 private:
 	enum{MagicNum = 0x2FA3120C};
 	void createMenuBar();
-	void createTableWidget();
+    void createTableWidget(int a,int b);
 	void createStatusBar();
 	QMenuBar *menuBar;
 	QLabel *statusLabel;

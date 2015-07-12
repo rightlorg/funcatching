@@ -8,7 +8,7 @@ MapEditor::MapEditor(QWidget *parent) :
 {
     ui->setupUi(this);
     statusImage = new QImage;
-    createTableWidget();
+    createTableWidget(20,20);
     createStatusBar();
     createMenuBar();
     itemstatusLabel = new QLabel;
@@ -24,15 +24,15 @@ MapEditor::~MapEditor()
 
 }
 
-void MapEditor::createTableWidget()
+void MapEditor::createTableWidget(int a,int b)
 {
-    ui->tableWidget->setRowCount(20);//设置行数为20
-    ui->tableWidget->setColumnCount(20);//设置列数为20
+    ui->tableWidget->setRowCount(a);//设置行数为20
+    ui->tableWidget->setColumnCount(b);//设置列数为20
     ui->tableWidget->setHorizontalHeaderLabels(QStringList() <<("1"));
     ui->tableWidget->setVerticalHeaderLabels(QStringList()<<("1"));
 
-    for(int row = 0;row<ui->tableWidget->rowCount();++row){
-        for(int column = 0;column<ui->tableWidget->columnCount();++column){
+    for(int row = 0;row<a;++row){
+        for(int column = 0;column<b;++column){
             QTableWidgetItem *item = new QTableWidgetItem;
             item->setText("");
             ui->tableWidget->setItem(row,column,item);
@@ -66,6 +66,7 @@ void MapEditor::createStatusBar()
 
 bool MapEditor::openFile()
 {
+
    QString filename = QFileDialog::getOpenFileName(this,tr("choose the edit map"),".",tr("map(*.map)"));
    QFile file(filename);
    if(!file.open(QIODevice::ReadOnly)){
@@ -79,13 +80,21 @@ bool MapEditor::openFile()
    in.setVersion(QDataStream::Qt_4_8);
 
    quint32 magic;
+   quint32 temp_row;
+   quint32 temp_column;
+
    in>>magic;
+
    if(magic!=MagicNum){
        QMessageBox::warning(this,tr("Map editor"),
                             tr("This file is mot a Map file\nPlease rechoose the edited file"));
        return false;
    }
-   createTableWidget();
+   in>>temp_row;
+   in>>temp_column;
+
+   createTableWidget(temp_row,temp_column);
+   disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 
    quint16 row;
    quint16 column;
@@ -98,6 +107,8 @@ bool MapEditor::openFile()
        qDebug()<<row<<column<<str;
    }
    QApplication::restoreOverrideCursor();
+
+   connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
    return true;
 }
 
@@ -115,9 +126,11 @@ void MapEditor::saveFile()
         out.setVersion(QDataStream::Qt_4_8);
 
         out<<quint32(MagicNum);
+        out<<quint32(ui->tableWidget->rowCount());
+        out<<quint32(ui->tableWidget->columnCount());
 
          QApplication::setOverrideCursor(Qt::WaitCursor);
-         for(int row = 0;row<(ui->tableWidget->rowCount());row++)
+         for(int row = 0;row<(ui->tableWidget->rowCount());++row)
         {
             for(int column = 0;column<(ui->tableWidget->columnCount());++column)
              {
@@ -265,7 +278,7 @@ void MapEditor::add_new_row()
         for(int column = 0;column<ui->tableWidget->columnCount();column++){
             QTableWidgetItem *item = new QTableWidgetItem;
             item->setText("");
-            ui->tableWidget->setItem(row,column,item);
+            ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,column,item);
         }
     }
     connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
@@ -281,7 +294,7 @@ void MapEditor::add_new_column()
         for(int row = 0;row<ui->tableWidget->rowCount();row++){
             QTableWidgetItem *item = new QTableWidgetItem;
             item->setText("");
-            ui->tableWidget->setItem(row,column,item);
+            ui->tableWidget->setItem(row,ui->tableWidget->columnCount()-1,item);
         }
     }
     connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
