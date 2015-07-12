@@ -118,6 +118,7 @@ bool MapEditor::openFile()
 void MapEditor::saveFile()
 {
     QString filename = QFileDialog::getOpenFileName(this,tr("choose an existing file to open"),".",tr("Map files (*.map)"));
+    qDebug()<<filename;
     QFile file(filename);
     if(!file.open(QIODevice::WriteOnly))
     {
@@ -162,8 +163,13 @@ void MapEditor::newFile()
 
 void MapEditor::quitFile()
 {
-    this->close();
-    delete ui;
+        int r = QMessageBox::warning(this,tr("Map editor"),
+                                     tr("Do you want to quit?"),
+                                     QMessageBox::Yes|QMessageBox::No);
+        if(QMessageBox::Yes==r){
+            this->close();
+            delete ui;
+        }
 }
 
 void MapEditor::cell_paint(QTableWidgetItem *item)
@@ -189,6 +195,7 @@ void MapEditor::aboutFile()
                        "<p>funcatching is a game which we made the first time"
                        "<p>provided updating support and server support"));
 }
+
 
 void MapEditor::ver()
 {

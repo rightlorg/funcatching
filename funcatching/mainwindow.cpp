@@ -11,9 +11,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->setupUi(this);
 	statusLabel = new QLabel;
 	createStatusBar();
-	//statusImage = new QPixmap;
-	//statusImage->load(":/image/pix2.png");
-	//ui->label->setPixmap(*statusImage);
+    statusImage = new QPixmap;
+    statusImage->load(":/image/pix.png");
+    ui->label->setPixmap(*statusImage);
 }
 
 MainWindow::~MainWindow()
