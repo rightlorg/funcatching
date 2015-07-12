@@ -21,13 +21,12 @@ MapEditor::MapEditor(QWidget *parent) :
 MapEditor::~MapEditor()
 {
     delete ui;
-
 }
 
 void MapEditor::createTableWidget(int a,int b)
 {
-    ui->tableWidget->setRowCount(a);//设置行数为20
-    ui->tableWidget->setColumnCount(b);//设置列数为20
+    ui->tableWidget->setRowCount(a);//设置行数为a
+    ui->tableWidget->setColumnCount(b);//设置列数为b
     ui->tableWidget->setHorizontalHeaderLabels(QStringList() <<("1"));
     ui->tableWidget->setVerticalHeaderLabels(QStringList()<<("1"));
 
@@ -66,9 +65,11 @@ void MapEditor::createStatusBar()
 
 bool MapEditor::openFile()
 {
+    disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 
    QString filename = QFileDialog::getOpenFileName(this,tr("choose the edit map"),".",tr("map(*.map)"));
    QFile file(filename);
+
    if(!file.open(QIODevice::ReadOnly)){
        QMessageBox::warning(this,tr("Map editor"),
                                                         tr("failed to read file %1:\n%2")
@@ -90,9 +91,11 @@ bool MapEditor::openFile()
                             tr("This file is mot a Map file\nPlease rechoose the edited file"));
        return false;
    }
+
    in>>temp_row;
    in>>temp_column;
 
+   newFile();
    createTableWidget(temp_row,temp_column);
    disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 
@@ -137,20 +140,24 @@ void MapEditor::saveFile()
                 QString str = ui->tableWidget->item(row,column)->text();
                 if(!str.isEmpty())
                 {
-                     out<<quint16(row)<<quint16(column);
+                     out<<quint16(row)<<quint16(column)<<str;
                      qDebug()<<row<<column<<str;
                 }
                 else
                     continue;
              }
          }
+         QApplication::restoreOverrideCursor();
       }
-     QApplication::restoreOverrideCursor();
 }
 
 void MapEditor::newFile()
 {
-
+    for(int a = 0;a<ui->tableWidget->rowCount();++a){
+        for(int b = 0;b<ui->tableWidget->columnCount();++b){
+            delete ui->tableWidget->item(a,b);
+        }
+    }
 }
 
 void MapEditor::quitFile()
