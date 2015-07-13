@@ -70,9 +70,18 @@
     <addaction name="action_About_us"/>
     <addaction name="actionVersion"/>
    </widget>
+   <widget class="QMenu" name="menuMeteria">
+    <property name="title">
+     <string>&amp;Meteria</string>
+    </property>
+    <addaction name="actionWood"/>
+    <addaction name="actionGlass"/>
+    <addaction name="actionClay"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Tool"/>
    <addaction name="menu_Help"/>
+   <addaction name="menuMeteria"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <attribute name="dockWidgetArea">
@@ -80,6 +89,13 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="nullButton">
+       <property name="text">
+        <string>Null</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QPushButton" name="VGlass">
        <property name="text">
@@ -245,6 +261,21 @@
   <action name="actionAdd_new_Column">
    <property name="text">
     <string>add new &amp;Column</string>
+   </property>
+  </action>
+  <action name="actionWood">
+   <property name="text">
+    <string>Wood</string>
+   </property>
+  </action>
+  <action name="actionGlass">
+   <property name="text">
+    <string>Glass</string>
+   </property>
+  </action>
+  <action name="actionClay">
+   <property name="text">
+    <string>Clay</string>
    </property>
   </action>
  </widget>

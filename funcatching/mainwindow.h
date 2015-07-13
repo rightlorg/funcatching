@@ -24,7 +24,6 @@ private slots:
 private:
 	void createStatusBar();
 	QLabel *statusLabel;
-	QPixmap *statusImage;
 	Ui::MainWindow *ui;
 };
 

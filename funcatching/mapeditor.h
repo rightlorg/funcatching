@@ -44,6 +44,7 @@ private slots:
 	void on_VDoor_clicked();
 	void on_HDoor_clicked();
 	void on_Floor_clicked();
+    void on_nullButton_clicked();
 
 private:
 	enum{MagicNum = 0x2FA3120C};
@@ -53,7 +54,7 @@ private:
 	QMenuBar *menuBar;
 	QLabel *statusLabel;
 	QLabel *itemstatusLabel;
-	QImage *statusImage;
+    QPixmap *statusImage;
 	QString filename;
 	Ui::MapEditor *ui;
 };

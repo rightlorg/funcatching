@@ -24,6 +24,8 @@ void settings::on_setpicButton_clicked()
 {
 	filename = QFileDialog::getOpenFileName(this,tr("choose your image"),".",tr("png(*.png)\n"
 										    "jpeg(*.jpeg)"));
+    QSettings settings("Carrow Inc.","Funcatching");
+    settings.setValue("head_image",filename);
 }
 
 void settings::on_mapButton_clicked()

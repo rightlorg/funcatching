@@ -7,15 +7,14 @@ MapEditor::MapEditor(QWidget *parent) :
       ui(new Ui::MapEditor)
 {
     ui->setupUi(this);
-    statusImage = new QImage;
+    statusImage = new QPixmap;
     createTableWidget(20,20);
     createStatusBar();
     createMenuBar();
     itemstatusLabel = new QLabel;
     itemstatusLabel->setText("VGlass");
     ui->tableWidget->setCurrentCell(0,0);
-     //statusImage->load(":/image/pix2.png");
-      //ui->label->setPixmap(QPixmap::fromImage(*statusImage));
+     statusImage->load("./image/pix2.png");
 }
 
 MapEditor::~MapEditor()
@@ -176,7 +175,7 @@ void MapEditor::quitFile()
 void MapEditor::cell_paint(QTableWidgetItem *item)
 {
     item->setText(itemstatusLabel->text());
-    //item->setIcon(//unable to use)
+    //item->setIcon(QIcon(*statusImage));
 }
 
 void MapEditor::dockDialog()
@@ -283,6 +282,12 @@ void MapEditor::on_Floor_clicked()
     statusLabel->setText(tr("Horizontal door item choosed"));
 }
 
+void MapEditor::on_nullButton_clicked()
+{
+    itemstatusLabel->setText(tr(""));
+    statusLabel->setText(tr("Clearing item choosed"));
+}
+
 void MapEditor::add_new_row()
 {
     disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
@@ -331,3 +336,5 @@ void MapEditor::closeEvent(QCloseEvent *event)
     else
         event->ignore();
 }
+
+

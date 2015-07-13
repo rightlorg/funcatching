@@ -52,7 +52,7 @@ void ReadyPage::on_listWidget_clicked(const QModelIndex &index)
 
 void ReadyPage::on_go_clicked()
 {
-	if (mapIndex != -1)
+    if (mapIndex != -1)
 	{
 		if (!dir.exists(maps[mapIndex]))
 		{
