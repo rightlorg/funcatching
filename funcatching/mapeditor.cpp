@@ -2,6 +2,7 @@
 #include <QDebug>
 #include "mapeditor.h"
 #include <QDebug>
+
 MapEditor::MapEditor(QWidget *parent) :
         QMainWindow(parent),
       ui(new Ui::MapEditor)

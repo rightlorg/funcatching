@@ -1,7 +1,10 @@
 #ifndef GAME_H
 #define GAME_H
-#include <QtGui>
-class Game
+#include <QString>
+#include <QPixmap>
+#include <QCloseEvent>
+
+class Game : public QObject
 {
     Q_OBJECT
 public:

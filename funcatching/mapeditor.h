@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QPainter>
 #include <QPixmap>
+
 class QMenuBar;
 
 namespace Ui {
