@@ -319,3 +319,15 @@ void MapEditor::viewButton()
 {
 
 }
+
+void MapEditor::closeEvent(QCloseEvent *event)
+{
+    int r = QMessageBox::warning(this,tr("Map editor"),
+                                 tr("Do you want to quit?"),
+                                 QMessageBox::Yes|QMessageBox::No);
+    if(QMessageBox::Yes==r){
+        event->accept();
+    }
+    else
+        event->ignore();
+}

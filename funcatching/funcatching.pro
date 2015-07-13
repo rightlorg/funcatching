@@ -30,7 +30,4 @@ FORMS    += mainwindow.ui \
     readypage.ui \
     mapeditor.ui
 
-OTHER_FILES += \
-    pix2.png \
-    image/pix.png \
-    image/pix2.png
+RESOURCES   +=funcatching.qrc

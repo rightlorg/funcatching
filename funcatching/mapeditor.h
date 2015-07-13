@@ -20,6 +20,10 @@ class MapEditor : public QMainWindow
 public:
 	explicit MapEditor(QWidget *parent = 0);
 	~MapEditor();
+
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private slots:
     bool openFile();
 	void saveFile();
