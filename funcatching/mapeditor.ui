@@ -62,6 +62,11 @@
     <addaction name="action_View"/>
     <addaction name="actionAdd_new_row"/>
     <addaction name="actionAdd_new_Column"/>
+    <addaction name="separator"/>
+    <addaction name="actionSet_Row_size"/>
+    <addaction name="actionSet_Column_size"/>
+    <addaction name="separator"/>
+    <addaction name="actionGo_to_cell"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -80,8 +85,8 @@
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Tool"/>
-   <addaction name="menu_Help"/>
    <addaction name="menuMeteria"/>
+   <addaction name="menu_Help"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <attribute name="dockWidgetArea">
@@ -276,6 +281,21 @@
   <action name="actionClay">
    <property name="text">
     <string>Clay</string>
+   </property>
+  </action>
+  <action name="actionSet_Row_size">
+   <property name="text">
+    <string>set Row size</string>
+   </property>
+  </action>
+  <action name="actionSet_Column_size">
+   <property name="text">
+    <string>set Column size</string>
+   </property>
+  </action>
+  <action name="actionGo_to_cell">
+   <property name="text">
+    <string>Go to cell</string>
    </property>
   </action>
  </widget>
