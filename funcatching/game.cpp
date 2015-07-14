@@ -1,8 +1,7 @@
 #include "game.h"
-#include <QMessageBox>
-#include <QSettings>
 
-Game::Game()
+Game::Game(QObject *parent, QString mapPath):
+	QObject(parent)
 {
 
 }
@@ -10,6 +9,26 @@ Game::Game()
 Game::~Game()
 {
 
+}
+
+void Game::genHeadPic(QImage image, Camp camp, QString playerName)
+{
+
+}
+
+QImage *Game::getHeadPic(QString path)
+{
+	QSettings settings("Funcatching Project", "Funcatching");
+	settings.beginGroup("HeadImage");
+	QString headPicPath = settings.value("head_image", "").toString();
+	QFile a(path);
+	if(!a.exists())
+	{
+		return NULL;
+	}
+	settings.endGroup();
+	QImage *headImage = new QImage(path);
+	return headImage;
 }
 
 //void Game::closeEvent(QCloseEvent *event)

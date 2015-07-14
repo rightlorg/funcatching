@@ -16,7 +16,7 @@ HEADERS += game.h \
 	readypage.h \
 	settings.h \
 	player.h \
-	preparing.h
+    map.h
 
 FORMS += mainwindow.ui \
 	mapeditor.ui \
@@ -30,6 +30,6 @@ SOURCES += game.cpp \
 	readypage.cpp \
 	settings.cpp \
 	player.cpp \
-	preparing.cpp
+    map.cpp
 
 RESOURCES += funcatching.qrc
