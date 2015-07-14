@@ -29,7 +29,7 @@ void MainWindow::on_startGame_clicked()
 void MainWindow::on_settings_clicked()
 {
 	// ui->centralWidget->hide();
-	settings *SettingsDialog = new settings;
+	Settings *SettingsDialog = new Settings;
 	statusLabel->setText("general settings");
 	SettingsDialog->exec();
 }

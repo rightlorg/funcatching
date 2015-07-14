@@ -2,7 +2,8 @@
 #define PREPARING_H
 
 #include <QDir>
-#include <QPixmap>
+#include <QImage>
+#include <QString>
 
 enum Camp
 {
@@ -11,6 +12,7 @@ enum Camp
 	None
 };
 
-extern void genHeadPic(QPixmap image, Camp camp);
+extern void genHeadPic(QImage image, Camp camp);
+extern  QImage getHeadPic(QString path);
 
 #endif // PREPARING_H

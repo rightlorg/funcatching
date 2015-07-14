@@ -8,23 +8,25 @@
 #include "ui_settings.h"
 
 namespace Ui {
-class settings;
+class Settings;
 }
 
-class settings : public QDialog
+class Settings : public QDialog
 {
 	Q_OBJECT
 public:
-	explicit settings(QWidget *parent = 0);
-	~settings();
+	explicit Settings(QWidget *parent = 0);
+	~Settings();
+
 
 private slots:
 	void on_backButton_clicked();
 	void on_mapButton_clicked();
 	void on_setpicButton_clicked();
+	void on_setnameButton_clicked();
 
 private:
-	Ui::settings *ui;
+	Ui::Settings *ui;
 	QString filename;
 };
 

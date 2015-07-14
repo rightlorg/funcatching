@@ -2,33 +2,35 @@
 #include "settings.h"
 #include "mapeditor.h"
 #include <QFileDialog>
+#include <QInputDialog>
 
-settings::settings(QWidget *parent) :
+Settings::Settings(QWidget *parent) :
 	QDialog(parent),
-	ui(new Ui::settings)
+	ui(new Ui::Settings)
 {
 	ui->setupUi(this);
 }
 
-settings::~settings()
+Settings::~Settings()
 {
 	delete ui;
 }
 
-void settings::on_backButton_clicked()
+void Settings::on_backButton_clicked()
 {
 	this->close();
 }
 
-void settings::on_setpicButton_clicked()
+void Settings::on_setpicButton_clicked()
 {
-	filename = QFileDialog::getOpenFileName(this,tr("choose your image"),".",tr("png(*.png)\n"
-										    "jpeg(*.jpeg)"));
-    QSettings settings("Carrow Inc.","Funcatching");
+	filename = QFileDialog::getOpenFileName(this,tr("choose your image"),".",tr("png(*.png)\n"));
+    QSettings settings("Funcatching Project","Funcatching");
+    settings.beginGroup("HeadImage");
     settings.setValue("head_image",filename);
+    settings.endGroup();
 }
 
-void settings::on_mapButton_clicked()
+void Settings::on_mapButton_clicked()
 {
 	MapEditor *map= new MapEditor;
 	this->close();
@@ -61,4 +63,14 @@ void settings::on_mapButton_clicked()
 		ui->label->setPixmap(QPixmap::fromImage(*img));
 	}
 #endif
+}
+
+void Settings::on_setnameButton_clicked()
+{
+	bool ok = false;
+	QSettings settings("Funcatching Project", "Funcatching");
+	settings.beginGroup("Player Name");
+	settings.setValue("name", QInputDialog::getText(this, tr("Enter your name"), tr("Enter your name"),
+											QLineEdit::Normal, tr("haha"), &ok));
+	settings.endGroup();
 }
