@@ -4,6 +4,7 @@
 #include <QListWidgetItem>
 #include <QModelIndex>
 #include <QDebug>
+#include <game.h>
 
 ReadyPage::ReadyPage(MainWindow *parent) :
 	QWidget(parent),
@@ -60,7 +61,8 @@ void ReadyPage::on_go_clicked()
 											QMessageBox::Abort);
 			goto EXIT;
 		}
-
+		
+		Game *game = new Game(mainwindow, maps[mapIndex]);
 		mainwindow->delWidget();
 		this->close();
 	}

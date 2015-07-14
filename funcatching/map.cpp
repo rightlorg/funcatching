@@ -3,6 +3,12 @@
 Map::Map(QObject *parent, QString path) :
 	QObject(parent)
 {
+
+}
+
+Map::~Map()
+{
+
 }
 
 bool Map::isMap(QDataStream mapStream)

@@ -36,6 +36,9 @@ private slots:
 	void cell_paint(QTableWidgetItem* item);
 	void add_new_row();
     void viewButton();
+    void setColumnSize();
+    void setRowSize();
+    void gotoCell();
 
 	void add_new_column();
 	void on_VGlass_clicked();
@@ -46,6 +49,10 @@ private slots:
 	void on_HDoor_clicked();
 	void on_Floor_clicked();
     void on_nullButton_clicked();
+
+    void on_Clay_clicked();
+    void on_Glass_clicked();
+    void on_Wood_clicked();
 
 private:
 	enum{MagicNum = 0x2FA3120C};

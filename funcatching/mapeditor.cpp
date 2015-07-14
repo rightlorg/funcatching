@@ -1,6 +1,7 @@
 #include <QtGui>
 #include <QDebug>
 #include "mapeditor.h"
+#include "gotocell.h"
 #include <QDebug>
 
 MapEditor::MapEditor(QWidget *parent) :
@@ -16,6 +17,8 @@ MapEditor::MapEditor(QWidget *parent) :
     itemstatusLabel->setText("VGlass");
     ui->tableWidget->setCurrentCell(0,0);
      statusImage->load("./image/pix2.png");
+
+     setWindowIcon(QIcon("./image/pix.png"));
 }
 
 MapEditor::~MapEditor()
@@ -54,7 +57,22 @@ void MapEditor::createMenuBar()
     connect(ui->actionTool_Dialog,SIGNAL(triggered()),this,SLOT(dockDialog()));
     connect(ui->actionAdd_new_Column,SIGNAL(triggered()),this,SLOT(add_new_column()));
     connect(ui->actionAdd_new_row,SIGNAL(triggered()),this,SLOT(add_new_row()));
+    connect(ui->actionSet_Column_size,SIGNAL(triggered()),this,SLOT(setColumnSize()));
+    connect(ui->actionSet_Row_size,SIGNAL(triggered()),this,SLOT(setRowSize()));
+    connect(ui->actionGo_to_cell,SIGNAL(triggered()),this,SLOT(gotoCell()));
     connect(ui->action_View,SIGNAL(triggered()),this,SLOT(viewButton()));
+
+    connect(ui->actionClay,SIGNAL(triggered()),this,SLOT(on_Clay_clicked()));
+    connect(ui->actionGlass,SIGNAL(triggered()),this,SLOT(on_Glass_clicked()));
+    connect(ui->actionWood,SIGNAL(triggered()),this,SLOT(on_Wood_clicked()));
+
+    ui->actionWood->setCheckable(true);
+    ui->actionGlass->setCheckable(true);
+    ui->actionClay->setCheckable(true);
+
+    ui->actionWood->setChecked(1);
+    ui->actionGlass->setChecked(0);
+    ui->actionClay->setChecked(0);
 }
 
 void MapEditor::createStatusBar()
@@ -279,8 +297,8 @@ void MapEditor::on_HDoor_clicked()
 
 void MapEditor::on_Floor_clicked()
 {
-    itemstatusLabel->setText(tr("Floor"));
-    statusLabel->setText(tr("Horizontal door item choosed"));
+    itemstatusLabel->setText(tr("WFloor"));
+    on_Wood_clicked();
 }
 
 void MapEditor::on_nullButton_clicked()
@@ -308,7 +326,7 @@ void MapEditor::add_new_row()
 void MapEditor::add_new_column()
 {
     disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
-    int column=QInputDialog::getInteger(this,tr("Adding new rows"),tr("Please input the number of the rows you want to add"),
+    int column=QInputDialog::getInteger(this,tr("Adding new columns"),tr("Please input the number of the columns you want to add"),
                                      statusLabel->text().toInt(),1,100,1);
     for(int i=0;i<column;i++){
         ui->tableWidget->insertColumn(ui->tableWidget->columnCount());
@@ -338,4 +356,66 @@ void MapEditor::closeEvent(QCloseEvent *event)
         event->ignore();
 }
 
+void MapEditor::on_Wood_clicked()
+{
+    if(itemstatusLabel->text()=="CFloor"||itemstatusLabel->text()=="GFloor"){
+        itemstatusLabel->setText("WFloor");
+        statusLabel->setText("Wooden Floor item choosed");
+    }
+    ui->actionClay->setChecked(0);
+    ui->actionGlass->setChecked(0);
+    ui->actionWood->setChecked(1);
+}
+
+void MapEditor::on_Clay_clicked()
+{
+    if(itemstatusLabel->text()=="WFloor"||itemstatusLabel->text()=="GFloor"){
+        itemstatusLabel->setText("CFloor");
+        statusLabel->setText("Clay Floor item choosed");
+    }
+    ui->actionWood->setChecked(0);
+    ui->actionGlass->setChecked(0);
+    ui->actionClay->setChecked(1);
+}
+
+void MapEditor::on_Glass_clicked()
+{
+    if(itemstatusLabel->text()=="WFloor"||itemstatusLabel->text()=="CFloor"){
+        itemstatusLabel->setText("GFloor");
+        statusLabel->setText("Glass Floor item choosed");
+    }
+    ui->actionWood->setChecked(0);
+    ui->actionClay->setChecked(0);
+    ui->actionGlass->setChecked(1);
+}
+
+void MapEditor::setColumnSize()
+{
+    int columnsize=QInputDialog::getInteger(this,tr("Setting column size"),tr("Please input the size of column(from 50 to 150)"),
+                                     statusLabel->text().toInt(),75,150,50);
+    for(int column = 0;column<ui->tableWidget->columnCount();++column)
+        ui->tableWidget->setColumnWidth(column,columnsize);
+}
+
+void MapEditor::setRowSize()
+{
+    int rowsize=QInputDialog::getInteger(this,tr("Setting row size"),tr("Please input the size of row(from 20 to 60)"),
+                                     statusLabel->text().toInt(),35,60,20);
+    for(int row = 0;row<ui->tableWidget->rowCount();++row)
+        ui->tableWidget->setRowHeight(row,rowsize);
+}
+
+void MapEditor::gotoCell()
+{
+    GoToCellDialog *gotocell = new GoToCellDialog(this);
+    if(gotocell->exec()){
+        int column = gotocell->columnEdit->text().toInt()-1;
+        int row = gotocell->rowEdit->text().toInt()-1;
+        if(column<ui->tableWidget->columnCount()&&row<ui->tableWidget->rowCount())
+            ui->tableWidget->setCurrentCell(row,column);
+        else
+            QMessageBox::warning(this,tr("go to cell"),tr("unexpected input"));
+    }
+
+}
 

@@ -28,9 +28,6 @@ public:
 	QList<QStringList> loadMap(QDataStream mapStream);
 	QString at(int x, int y, int z);
 
-
-
-
 signals:
 
 public slots:
