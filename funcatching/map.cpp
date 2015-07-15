@@ -58,7 +58,7 @@ QList<QStringList> *Map::loadMap()
 
 		if(magic!=MagicNum){
 			QMessageBox::warning(NULL,tr("Map editor"),
-					     tr("This file is mot a Map file\nPlease rechoose the edited file"));
+					     tr("This file is not a Map file\nPlease rechoose the map"));
 			return NULL;
 		}
 	}

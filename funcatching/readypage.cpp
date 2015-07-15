@@ -58,18 +58,16 @@ void ReadyPage::on_go_clicked()
 											QMessageBox::Abort);
 			goto EXIT;
 		}
-		
-		Game *game = new Game(this, maps[mapIndex]);
 //		mainwindow->hideWidget();
 //		mainwindow->showWidget();
-//		this->hide();
-
+		this->hide();
+		Game *game = new Game(this, maps[mapIndex]);
 	}
 	EXIT: ;
 }
 
 void ReadyPage::back()
 {
-	mainwindow->showWidget();
-//	this->show();
+//	mainwindow->showWidget();
+	this->show();
 }

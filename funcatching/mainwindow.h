@@ -14,7 +14,7 @@ class MainWindow : public QMainWindow
 public:
 	explicit MainWindow(QWidget *parent = 0);
 	void showStartPage();
-	void hideWidget();
+//	void hideWidget();
 	void showWidget();
 	~MainWindow();
 
