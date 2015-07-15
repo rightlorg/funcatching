@@ -1,15 +1,20 @@
 #include "game.h"
 
-Game::Game(QObject *parent, QString mapPath):
+Game::Game(ReadyPage *parent, QString mapPath):
 	QObject(parent)
 {
-	map.loadMap(mapPath);
-
+	readypage = parent;
+	map = new Map(NULL, mapPath);
+	if(map->loadMap() == NULL)
+	{
+		readypage->back();
+		delete this;
+	}
 }
 
 Game::~Game()
 {
-
+	delete map;
 }
 
 void Game::genHeadPic(QImage image, Camp camp, QString playerName)

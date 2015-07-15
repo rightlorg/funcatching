@@ -10,12 +10,13 @@
 #include <QDir>
 #include <QImage>
 #include "map.h"
+#include "readypage.h"
 
 class Game : public QObject
 {
     Q_OBJECT
 public:
-	explicit Game(QObject *parent, QString mapPath);
+	explicit Game(ReadyPage *parent, QString mapPath);
 	~Game();
 
 	enum Camp
@@ -32,7 +33,8 @@ public:
 private:
 	void genHeadPic(QImage image, Camp camp, QString playerName);
 	QImage *getHeadPic(QString path);
-	Map map;
+	Map *map;
+	ReadyPage *readypage;
 };
 
 #endif // GAME_H
