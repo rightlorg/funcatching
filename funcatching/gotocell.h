@@ -15,6 +15,8 @@ class GoToCellDialog : public QDialog, public Ui::GoToCellDialog
 
 public:
     GoToCellDialog(QWidget *parent = 0);
+    int getColumn();
+    int getRow();
 
 private slots:
     void on_rowEdit_textChanged();

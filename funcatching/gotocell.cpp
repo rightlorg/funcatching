@@ -28,3 +28,13 @@ void GoToCellDialog::on_rowEdit_textChanged()
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(
             (ui->columnEdit->hasAcceptableInput())&&(ui->rowEdit->hasAcceptableInput()));
 }
+
+int GoToCellDialog::getColumn()
+{
+	return ui->columnEdit->text().toInt() - 1;
+}
+
+int GoToCellDialog::getRow()
+{
+	return ui->rowEdit->text().toInt() - 1;
+}

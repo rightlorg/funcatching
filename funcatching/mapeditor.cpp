@@ -409,12 +409,12 @@ void MapEditor::gotoCell()
 {
     GoToCellDialog *gotocell = new GoToCellDialog(this);
     if(gotocell->exec()){
-        int column = gotocell->columnEdit->text().toInt()-1;
-        int row = gotocell->rowEdit->text().toInt()-1;
-        if(column<ui->tableWidget->columnCount()&&row<ui->tableWidget->rowCount())
-            ui->tableWidget->setCurrentCell(row,column);
-        else
-            QMessageBox::warning(this,tr("go to cell"),tr("unexpected input"));
+	int column = gotocell->getColumn();
+	int row = gotocell->getRow();
+	if(column<ui->tableWidget->columnCount() && row<ui->tableWidget->rowCount())
+	    ui->tableWidget->setCurrentCell(row,column);
+	else
+	    QMessageBox::warning(this,tr("go to cell"),tr("unexpected input"));
     }
 
 }
