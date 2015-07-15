@@ -60,6 +60,7 @@ void MapEditor::createMenuBar()
     connect(ui->actionSet_Row_size,SIGNAL(triggered()),this,SLOT(setRowSize()));
     connect(ui->actionGo_to_cell,SIGNAL(triggered()),this,SLOT(gotoCell()));
     connect(ui->action_View,SIGNAL(triggered()),this,SLOT(viewButton()));
+    connect(ui->action_Bat,SIGNAL(triggered()),this,SLOT(bat_table()));
 
     connect(ui->actionClay,SIGNAL(triggered()),this,SLOT(on_Clay_clicked()));
     connect(ui->actionGlass,SIGNAL(triggered()),this,SLOT(on_Glass_clicked()));
@@ -416,5 +417,10 @@ void MapEditor::gotoCell()
 	    QMessageBox::warning(this,tr("go to cell"),tr("unexpected input"));
     }
 
+}
+
+void MapEditor::bat_table()
+{
+    //ui->tableWidget->QTabelWidgetSelectionRange range = selectedRange();
 }
 

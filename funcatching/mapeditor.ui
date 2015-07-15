@@ -66,6 +66,8 @@
     <addaction name="actionSet_Row_size"/>
     <addaction name="actionSet_Column_size"/>
     <addaction name="separator"/>
+    <addaction name="action_Bat"/>
+    <addaction name="separator"/>
     <addaction name="actionGo_to_cell"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
@@ -296,6 +298,11 @@
   <action name="actionGo_to_cell">
    <property name="text">
     <string>Go to cell</string>
+   </property>
+  </action>
+  <action name="action_Bat">
+   <property name="text">
+    <string>&amp;Bat</string>
    </property>
   </action>
  </widget>
