@@ -21,7 +21,7 @@ bool Map::saveMap(QList<QStringList>)
 
 }
 
-QList<QStringList> Map::loadMap(QDataStream mapStream)
+QList<QStringList> Map::loadMap(QString mapStream)
 {
 
 }

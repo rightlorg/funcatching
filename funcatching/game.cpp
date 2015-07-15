@@ -3,6 +3,7 @@
 Game::Game(QObject *parent, QString mapPath):
 	QObject(parent)
 {
+	map.loadMap(mapPath);
 
 }
 

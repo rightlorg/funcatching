@@ -2,7 +2,6 @@
 #include <QDebug>
 #include "mapeditor.h"
 #include "gotocell.h"
-#include <QDebug>
 
 MapEditor::MapEditor(QWidget *parent) :
         QMainWindow(parent),

@@ -9,6 +9,7 @@
 #include <QSettings>
 #include <QDir>
 #include <QImage>
+#include "map.h"
 
 class Game : public QObject
 {
@@ -31,6 +32,7 @@ public:
 private:
 	void genHeadPic(QImage image, Camp camp, QString playerName);
 	QImage *getHeadPic(QString path);
+	Map map;
 };
 
 #endif // GAME_H
