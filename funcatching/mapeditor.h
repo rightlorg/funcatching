@@ -34,13 +34,13 @@ private slots:
 	void dockDialog();
 	void aboutFile();
 	void ver();
-    void cell_paint(QTableWidgetItem* item);
 	void add_new_row();
     void viewButton();
     void setColumnSize();
     void setRowSize();
     void gotoCell();
     void bat_table();
+    void cell_paint(QTableWidgetItem *item);
 
 	void add_new_column();
 	void on_VGlass_clicked();

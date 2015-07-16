@@ -17,9 +17,9 @@ MapEditor::MapEditor(QWidget *parent) :
     itemstatusLabel = new QLabel;
     itemstatusLabel->setText("VGlass");
     ui->tableWidget->setCurrentCell(0,0);
-     statusImage->load("./image/pix2.png");
+     statusImage->load(":/new/prefix1/image/pix2.png");
 
-     setWindowIcon(QIcon("./image/pix.png"));
+     setWindowIcon(QIcon(":/new/prefix1/image/pix.png"));
 }
 
 MapEditor::~MapEditor()
@@ -41,7 +41,6 @@ void MapEditor::createTableWidget(int a,int b)
             ui->tableWidget->setItem(row,column,item);
         }
     }
-
     connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 }
 
@@ -130,8 +129,7 @@ bool MapEditor::openFile()
    QApplication::setOverrideCursor(Qt::WaitCursor);
    while(!in.atEnd()){
        in>>row>>column>>str;
-       ui->tableWidget->item(row,column)->setText(str);
-       qDebug()<<row<<column<<str;
+	       ui->tableWidget->item(row,column)->setText(str);
    }
    QApplication::restoreOverrideCursor();
 
@@ -196,21 +194,6 @@ void MapEditor::quitFile()
         }
 }
 
-void MapEditor::cell_paint(QTableWidgetItem *item)
-{
-    if(itemstatusLabel->text().isEmpty()){
-        qDebug()<<"AA";
-        item->setBackgroundColor(QColor(qRgb(255,255,255)));
-    }else{
-        label = new QLabel;
-        label->setPixmap(*statusImage);
-        ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-        //item->setText(itemstatusLabel->text());
-        //item->setIcon(QIcon("pix.png"));
-        item->setText("");
-    }
-}
-
 void MapEditor::dockDialog()
 {
     if(ui->dockWidget->isHidden()){
@@ -235,43 +218,6 @@ void MapEditor::ver()
     QMessageBox::about(this,tr("about funcatching"),
                        tr("funcatching 0.0.0 beta"));
 }
-
-#if 0
-void MapEditor::on_mapButton_clicked()
-{
-    //map *mapDialog = new map;
-    //delete ui;
-    //mapDialog->show();
-
-    filename = QFileDialog::getOpenFileName(this,tr("choose your image"),".",tr("png(*.png)"));
-    QSettings imageSet("Carrow Inc.","fun catching");
-    imageSet.setValue("imagePath",filename);
-    QString filename;
-        filename=QFileDialog::getOpenFileName(this,
-                                              tr("选择图像"),
-                                              ".",
-                                              tr("Images (*.png *.bmp *.jpg *.tif *.GIF )"));
-        if(filename.isEmpty())
-        {
-             return;
-        }
-        else
-        {
-            QImage* img=new QImage;
-
-            if(! ( img->load(filename) ) ) //加载图像
-            {
-                QMessageBox::information(this,
-                                         tr("打开图像失败"),
-                                         tr("打开图像失败!"));
-                delete img;
-                return;
-            }
-            ui->label->setPixmap(QPixmap::fromImage(*img));
-        }
-
-}
-#endif
 
 void MapEditor::on_VGlass_clicked()
 {
@@ -325,7 +271,7 @@ void MapEditor::add_new_row()
 {
     disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
     int row=QInputDialog::getInteger(this,tr("Adding new rows"),tr("Please input the number of the rows you want to add"),
-                                     statusLabel->text().toInt(),1,100,1);
+				     statusLabel->text().toInt(),1,300,1);
     for(int i=0;i<row;i++){
         ui->tableWidget->insertRow(ui->tableWidget->rowCount());
         for(int column = 0;column<ui->tableWidget->columnCount();column++){
@@ -341,7 +287,7 @@ void MapEditor::add_new_column()
 {
     disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
     int column=QInputDialog::getInteger(this,tr("Adding new columns"),tr("Please input the number of the columns you want to add"),
-                                     statusLabel->text().toInt(),1,100,1);
+				     statusLabel->text().toInt(),1,300,1);
     for(int i=0;i<column;i++){
         ui->tableWidget->insertColumn(ui->tableWidget->columnCount());
         for(int row = 0;row<ui->tableWidget->rowCount();row++){
@@ -356,6 +302,12 @@ void MapEditor::add_new_column()
 void MapEditor::viewButton()
 {
 
+}
+
+void MapEditor::cell_paint(QTableWidgetItem *item)
+{
+//	QModelIndex<QTableWidgetItem> mode = item;
+//	on_tableWidget_clicked(mode);
 }
 
 void MapEditor::closeEvent(QCloseEvent *event)
@@ -446,6 +398,17 @@ void MapEditor::bat_table()
 
 void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 {
-    qDebug() << index.column();
-    qDebug() << index.row();
+	QTableWidgetItem *item = ui->tableWidget->item(index.row(),index.column());
+	// if(itemstatusLabel->text().isEmpty()){
+	//     qDebug()<<"AA";
+	//     item->setBackgroundColor(QColor(qRgb(255,255,255)));
+	// }else{
+	//     label = new QLabel;
+	//     label->setPixmap(*statusImage);
+	//     ui->tableWidget->setCellWidget(item->row(), item->column(), label);
+	//     //item->setText(itemstatusLabel->text());
+	//     //item->setIcon(QIcon("pix.png"));
+	//     item->setText("");
+	// }
+	item->setText(itemstatusLabel->text());
 }

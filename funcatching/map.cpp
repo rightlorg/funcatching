@@ -67,21 +67,24 @@ bool Map::loadMap()
 		int rowIndex;
 		QString str;
 		in >> totalColumn;
+		{
+			quint32 tmp;
+			in >> tmp;
+		}
 		while(!in.atEnd())
 		{
 			//检查是否要换行
 			if(columnIndex == totalColumn)
 			{
 				QStringList newRow;
-				map.at(i).append(newRow);
+				map[i].append(newRow);
 				rowIndex++;
 				columnIndex = 0;
 			}
 			in >> str;
 			qDebug() << str;
-			map.at(i).at(rowIndex).append(str);
+			map[i][rowIndex].append(str);
 			columnIndex++;
-
 		}
 
 

@@ -18,13 +18,13 @@
     <item>
      <widget class="QTableWidget" name="tableWidget">
       <attribute name="horizontalHeaderDefaultSectionSize">
-       <number>55</number>
+       <number>45</number>
       </attribute>
       <attribute name="horizontalHeaderMinimumSectionSize">
        <number>55</number>
       </attribute>
       <attribute name="verticalHeaderDefaultSectionSize">
-       <number>30</number>
+       <number>40</number>
       </attribute>
       <attribute name="verticalHeaderMinimumSectionSize">
        <number>30</number>
@@ -40,7 +40,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
