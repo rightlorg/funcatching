@@ -1,5 +1,6 @@
 #include <QtGui>
 #include <QDebug>
+#include <QTableWidgetSelectionRange>
 #include "mapeditor.h"
 #include "gotocell.h"
 
@@ -18,6 +19,12 @@ MapEditor::MapEditor(QWidget *parent) :
      statusImage->load("./image/pix2.png");
 
      setWindowIcon(QIcon("./image/pix.png"));
+
+     QSettings settings("Funcatching Project", "Funcatching");
+     settings.beginGroup("Player Name");
+     QString str = settings.value("name").toString();
+     settings.endGroup();
+     qDebug()<<str;
 }
 
 MapEditor::~MapEditor()
@@ -73,6 +80,9 @@ void MapEditor::createMenuBar()
     ui->actionWood->setChecked(1);
     ui->actionGlass->setChecked(0);
     ui->actionClay->setChecked(0);
+
+    ui->action_Bat->setShortcut(tr("Ctrl+B"));
+    ui->action_Save->setShortcut(QKeySequence::Save);
 }
 
 void MapEditor::createStatusBar()
@@ -421,6 +431,11 @@ void MapEditor::gotoCell()
 
 void MapEditor::bat_table()
 {
-    //ui->tableWidget->QTabelWidgetSelectionRange range = selectedRange();
+    QList<QTableWidgetSelectionRange> ranges = ui->tableWidget->selectedRanges();
+    QTableWidgetSelectionRange range = ranges.first();
+    for(int row = 0;row<range.rowCount();++row){
+        for(int column = 0;column<range.columnCount();++column){
+            ui->tableWidget->item(row+range.topRow(),column+range.leftColumn())->setText(itemstatusLabel->text());
+        }
+    }
 }
-

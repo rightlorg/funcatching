@@ -9,7 +9,7 @@ GoToCellDialog::GoToCellDialog(QWidget *parent)
     ui->setupUi(this);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 
-    QRegExp regExp("[1-9][0-9]{0,2}");
+    QRegExp regExp("[1-9][0-9]{0,7}");
     ui->columnEdit->setValidator(new QRegExpValidator(regExp, this));
     ui->rowEdit->setValidator(new QRegExpValidator(regExp, this));
 
