@@ -1,5 +1,6 @@
 #include <QtGui>
 #include <QDebug>
+#include <QTableWidgetSelectionRange>
 #include "mapeditor.h"
 #include "gotocell.h"
 
@@ -74,6 +75,9 @@ void MapEditor::createMenuBar()
     ui->actionWood->setChecked(1);
     ui->actionGlass->setChecked(0);
     ui->actionClay->setChecked(0);
+
+    ui->action_Bat->setShortcut(tr("Ctrl+B"));
+    ui->action_Save->setShortcut(QKeySequence::Save);
 }
 
 void MapEditor::createStatusBar()
@@ -194,8 +198,17 @@ void MapEditor::quitFile()
 
 void MapEditor::cell_paint(QTableWidgetItem *item)
 {
-    item->setText(itemstatusLabel->text());
-    //item->setIcon(QIcon(*statusImage));
+    if(itemstatusLabel->text().isEmpty()){
+        qDebug()<<"AA";
+        item->setBackgroundColor(QColor(qRgb(255,255,255)));
+    }else{
+        label = new QLabel;
+        label->setPixmap(*statusImage);
+        ui->tableWidget->setCellWidget(item->row(), item->column(), label);
+        //item->setText(itemstatusLabel->text());
+        //item->setIcon(QIcon("pix.png"));
+        item->setText("");
+    }
 }
 
 void MapEditor::dockDialog()
@@ -422,9 +435,14 @@ void MapEditor::gotoCell()
 
 void MapEditor::bat_table()
 {
-    //ui->tableWidget->QTabelWidgetSelectionRange range = selectedRange();
+    QList<QTableWidgetSelectionRange> ranges = ui->tableWidget->selectedRanges();
+    QTableWidgetSelectionRange range = ranges.first();
+    for(int row = 0;row<range.rowCount();++row){
+        for(int column = 0;column<range.columnCount();++column){
+            ui->tableWidget->item(row+range.topRow(),column+range.leftColumn())->setText(itemstatusLabel->text());
+        }
+    }
 }
-
 
 void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 {
