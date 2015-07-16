@@ -19,12 +19,6 @@ MapEditor::MapEditor(QWidget *parent) :
      statusImage->load("./image/pix2.png");
 
      setWindowIcon(QIcon("./image/pix.png"));
-
-     QSettings settings("Funcatching Project", "Funcatching");
-     settings.beginGroup("Player Name");
-     QString str = settings.value("name").toString();
-     settings.endGroup();
-     qDebug()<<str;
 }
 
 MapEditor::~MapEditor()
@@ -203,8 +197,17 @@ void MapEditor::quitFile()
 
 void MapEditor::cell_paint(QTableWidgetItem *item)
 {
-    item->setText(itemstatusLabel->text());
-    //item->setIcon(QIcon(*statusImage));
+    if(itemstatusLabel->text().isEmpty()){
+        qDebug()<<"AA";
+        item->setBackgroundColor(QColor(qRgb(255,255,255)));
+    }else{
+        label = new QLabel;
+        label->setPixmap(*statusImage);
+        ui->tableWidget->setCellWidget(item->row(), item->column(), label);
+        //item->setText(itemstatusLabel->text());
+        //item->setIcon(QIcon("pix.png"));
+        item->setText("");
+    }
 }
 
 void MapEditor::dockDialog()

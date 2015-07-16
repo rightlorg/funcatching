@@ -33,7 +33,7 @@ private slots:
 	void dockDialog();
 	void aboutFile();
 	void ver();
-	void cell_paint(QTableWidgetItem* item);
+    void cell_paint(QTableWidgetItem* item);
 	void add_new_row();
     void viewButton();
     void setColumnSize();
@@ -63,6 +63,7 @@ private:
 	QMenuBar *menuBar;
 	QLabel *statusLabel;
 	QLabel *itemstatusLabel;
+    QLabel *label;
     QPixmap *statusImage;
 	QString filename;
 	Ui::MapEditor *ui;
