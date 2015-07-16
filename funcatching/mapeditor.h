@@ -39,6 +39,7 @@ private slots:
     void setColumnSize();
     void setRowSize();
     void gotoCell();
+    void bat_table();
 
 	void add_new_column();
 	void on_VGlass_clicked();
