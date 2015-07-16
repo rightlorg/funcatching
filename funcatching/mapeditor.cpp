@@ -8,6 +8,7 @@ MapEditor::MapEditor(QWidget *parent) :
       ui(new Ui::MapEditor)
 {
     ui->setupUi(this);
+    selection = -1;				//没有选择方块
     statusImage = new QPixmap;
     createTableWidget(20,20);
     createStatusBar();
@@ -424,3 +425,9 @@ void MapEditor::bat_table()
     //ui->tableWidget->QTabelWidgetSelectionRange range = selectedRange();
 }
 
+
+void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
+{
+    qDebug() << index.column();
+    qDebug() << index.row();
+}

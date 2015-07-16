@@ -4,7 +4,6 @@ Map::Map(QObject *parent, QString path) :
 	QObject(parent)
 {
 	mapPath  = path;
-	map = new QList<DoubleStringList>;
 }
 
 Map::~Map()
@@ -14,10 +13,10 @@ Map::~Map()
 
 bool Map::saveMap(QList<QStringList>)
 {
-
+	return true;
 }
 
-QList<QStringList> *Map::loadMap()
+bool Map::loadMap()
 {
 	//读取每层地图文件名
 	QDir dir;
@@ -27,18 +26,18 @@ QList<QStringList> *Map::loadMap()
 	filter << "*.map";
 	dir.setNameFilters(filter);
 	dir.setSorting(QDir::Name);
-	floors << dir.entryList();
+	floorPath << dir.entryList();
 	//将文件名转换成文件的绝对路径
-	for(int i = 0; i < floors.size(); i++)
+	for(int i = 0; i < floorPath.size(); i++)
 	{
-		floors[i] = dir.absoluteFilePath(floors[i]);
+		floorPath[i] = dir.absoluteFilePath(floorPath[i]);
 	}
 
 
 	QFile file;
-	for(int i = 0; i < floors.size(); i++)
+	for(int i = 0; i < floorPath.size(); i++)
 	{
-		file.setFileName(floors[i]);
+		file.setFileName(floorPath[i]);
 		if(!file.open(QIODevice::ReadOnly))
 		{
 			QMessageBox::warning(NULL,tr("Map editor"),
@@ -47,20 +46,47 @@ QList<QStringList> *Map::loadMap()
 					     .arg(file.errorString()));
 			return NULL;
 		}
+
+		//添加新层
+		QList<QStringList> newFloor;
+		map.append(newFloor);
+
+
 		QDataStream in(&file);
 		in.setVersion(QDataStream::Qt_4_8);
-
 		quint32 magic;
-		quint32 temp_row;
-		quint32 temp_column;
-
-		in>>magic;
-
+		in >> magic;
 		if(magic!=MagicNum){
 			QMessageBox::warning(NULL,tr("Map editor"),
 					     tr("This file is not a Map file\nPlease rechoose the map"));
 			return NULL;
 		}
+
+		quint32 totalColumn;
+		quint32 columnIndex;
+		int rowIndex;
+		QString str;
+		in >> totalColumn;
+		while(!in.atEnd())
+		{
+			//检查是否要换行
+			if(columnIndex == totalColumn)
+			{
+				QStringList newRow;
+				map.at(i).append(newRow);
+				rowIndex++;
+				columnIndex = 0;
+			}
+			in >> str;
+			qDebug() << str;
+			map.at(i).at(rowIndex).append(str);
+			columnIndex++;
+
+		}
+
+
+
+
 	}
 }
 

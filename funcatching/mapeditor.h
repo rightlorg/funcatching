@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QPainter>
 #include <QPixmap>
+#include <QModelIndex>
 
 class QMenuBar;
 
@@ -55,6 +56,8 @@ private slots:
     void on_Glass_clicked();
     void on_Wood_clicked();
 
+    void on_tableWidget_clicked(const QModelIndex &index);
+
 private:
 	enum{MagicNum = 0x2FA3120C};
 	void createMenuBar();
@@ -65,6 +68,7 @@ private:
 	QLabel *itemstatusLabel;
     QPixmap *statusImage;
 	QString filename;
+	int selection;
 	Ui::MapEditor *ui;
 };
 
