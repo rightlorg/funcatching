@@ -18,6 +18,7 @@ class ReadyPage : public QWidget
 public:
 	explicit ReadyPage(MainWindow *parent = 0);
 	void addMap();
+	void back();
 	~ReadyPage();
 
 private slots:

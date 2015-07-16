@@ -29,9 +29,6 @@ void ReadyPage::on_back_clicked()
 
 void ReadyPage::addMap()
 {
-	QStringList filter;
-	filter << "*.map";
-	dir.setNameFilters(filter);
 	dir.setSorting(QDir::Time);
 	if (!dir.cd("map"))
 	{
@@ -39,7 +36,7 @@ void ReadyPage::addMap()
 		QMessageBox::warning(NULL, tr("警告"), tr("未发现map文件夹"),
 											QMessageBox::Abort);
 	}
-	maps = dir.entryList();
+	maps = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 	for(int i  = 0; i < maps.size(); i++)
 	{
 		new QListWidgetItem(maps[i], ui->listWidget);
@@ -61,10 +58,16 @@ void ReadyPage::on_go_clicked()
 											QMessageBox::Abort);
 			goto EXIT;
 		}
-		
-		Game *game = new Game(mainwindow, maps[mapIndex]);
-		mainwindow->delWidget();
-		this->close();
+//		mainwindow->hideWidget();
+//		mainwindow->showWidget();
+		this->hide();
+		Game *game = new Game(this, maps[mapIndex]);
 	}
 	EXIT: ;
+}
+
+void ReadyPage::back()
+{
+//	mainwindow->showWidget();
+	this->show();
 }

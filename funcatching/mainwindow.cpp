@@ -45,7 +45,12 @@ void MainWindow::showStartPage()
 	ui->startWidget->show();
 }
 
-void MainWindow::delWidget()
+//void MainWindow::hideWidget()
+//{
+//	ui->startWidget->hide();
+//}
+
+void MainWindow::showWidget()
 {
-	ui->centralWidget->close();
+	ui->startWidget->show();
 }
