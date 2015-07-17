@@ -25,7 +25,7 @@ Map::~Map()
 
 }
 
-bool Map::saveMap(QList<QStringList>)
+bool Map::saveMap()
 {
 	QFile file;
 
@@ -76,7 +76,7 @@ bool Map::loadMap()
 					     tr("failed to read file %1:\n%2")
 					     .arg(file.fileName())
 					     .arg(file.errorString()));
-			return NULL;
+			return false;
 		}
 
 		//添加新层
@@ -91,15 +91,19 @@ bool Map::loadMap()
 		if(magic!=MagicNum){
 			QMessageBox::warning(NULL,tr("Map editor"),
 					     tr("This file is not a Map file\nPlease rechoose the map"));
-			return NULL;
+			return false;
 		}
 
 		quint32 totalColumn;
-		quint32 columnIndex;
-		int rowIndex;
+		quint32 columnIndex = 0;
+		quint32 rowIndex = 0;
 		QString str;
 		in >> totalColumn;
 		in >> tmp;				//抛弃垃圾值
+		{
+			QStringList newRow;
+			map[i].append(newRow);
+		}
 		while(!in.atEnd())
 		{
 			//检查是否要换行
@@ -116,6 +120,7 @@ bool Map::loadMap()
 			map[i][rowIndex].append(str);
 			columnIndex++;
 		}
+		file.close();
 	}
 	return true;
 }

@@ -5,7 +5,7 @@ Game::Game(ReadyPage *parent, QString mapPath):
 {
 	readypage = parent;
 	map = new Map(NULL, mapPath);
-	if(map->loadMap() == NULL)
+	if(!map->loadMap())
 	{
 		readypage->back();
 		delete this;

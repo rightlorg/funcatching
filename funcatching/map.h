@@ -27,7 +27,7 @@ class Map : public QObject
 public:
 	explicit Map(QObject *parent = 0, QString path = "");
 	~Map();
-	bool saveMap(QList<QStringList>);
+	bool saveMap();
 	bool loadMap();
 	QString at(int x, int y, int z);
 

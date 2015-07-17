@@ -377,30 +377,30 @@ void MapEditor::gotoCell()
 
 void MapEditor::bat_table(int _row,int _column,int judge)
 {
-    QList<QTableWidgetSelectionRange> ranges = ui->tableWidget->selectedRanges();
-    QTableWidgetSelectionRange range = ranges.first();
-    for(int row = 0;row<range.rowCount();++row){
-        for(int column = 0;column<range.columnCount();++column){
-            //ui->tableWidget->item(row+range.topRow(),column+range.leftColumn())->setText(itemstatusLabel->text());
-            if(judge==0)
-                QTableWidgetItem *item = ui->tableWidget->item(_row,_column);
-            else
-                QTableWidgetItem *item = ui->tableWidget->item(row+range.topRow(),column+range.leftColumn());
-            if(itemstatusLabel->text().isEmpty()){
-                qDebug()<<"AA";
-                item->setBackgroundColor(QColor(qRgb(255,255,255)));
-                item->setText("");
-                ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+//    QList<QTableWidgetSelectionRange> ranges = ui->tableWidget->selectedRanges();
+//    QTableWidgetSelectionRange range = ranges.first();
+//    for(int row = 0;row<range.rowCount();++row){
+//        for(int column = 0;column<range.columnCount();++column){
+//            //ui->tableWidget->item(row+range.topRow(),column+range.leftColumn())->setText(itemstatusLabel->text());
+//            if(judge==0)
+//                QTableWidgetItem *item = ui->tableWidget->item(_row,_column);
+//            else
+//                QTableWidgetItem *item = ui->tableWidget->item(row+range.topRow(),column+range.leftColumn());
+//            if(itemstatusLabel->text().isEmpty()){
+//                qDebug()<<"AA";
+//                item->setBackgroundColor(QColor(qRgb(255,255,255)));
+//                item->setText("");
+//                ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-            }else{
-                label = new QLabel;
-                label->setPixmap(*statusImage);
-                ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-                item->setText(itemstatusLabel->text());
-                ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-            }
-        }
-    }
+//            }else{
+//                label = new QLabel;
+//                label->setPixmap(*statusImage);
+//                ui->tableWidget->setCellWidget(item->row(), item->column(), label);
+//                item->setText(itemstatusLabel->text());
+//                ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+//            }
+//        }
+//    }
 }
 
 void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
