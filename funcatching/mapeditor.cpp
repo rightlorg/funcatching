@@ -161,13 +161,8 @@ void MapEditor::saveFile()
             for(int column = 0;column<(ui->tableWidget->columnCount());++column)
              {
                 QString str = ui->tableWidget->item(row,column)->text();
-                if(!str.isEmpty())
-                {
-                     out<<quint16(row)<<quint16(column)<<str;
-                     qDebug()<<row<<column<<str;
-                }
-                else
-                    continue;
+		out<<quint16(row)<<quint16(column)<<str;
+		qDebug()<<row<<column<<str;
              }
          }
          QApplication::restoreOverrideCursor();

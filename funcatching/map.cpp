@@ -3,25 +3,10 @@
 Map::Map(QObject *parent, QString path) :
 	QObject(parent)
 {
-	mapPath  = path;
-}
-
-Map::~Map()
-{
-
-}
-
-bool Map::saveMap(QList<QStringList>)
-{
-	return true;
-}
-
-bool Map::loadMap()
-{
 	//读取每层地图文件名
 	QDir dir;
 	dir.cd("map");
-	dir.cd(mapPath);
+	dir.cd(path);
 	QStringList filter;
 	filter << "*.map";
 	dir.setNameFilters(filter);
@@ -33,8 +18,55 @@ bool Map::loadMap()
 		floorPath[i] = dir.absoluteFilePath(floorPath[i]);
 	}
 
+}
 
+Map::~Map()
+{
+
+}
+
+bool Map::saveMap(QList<QStringList>)
+{
 	QFile file;
+
+	for(int i = 0; i < floorPath.size(); i++)
+	{
+		file.setFileName(floorPath[i]);
+		if(!file.open(QIODevice::WriteOnly))
+		{
+			QMessageBox::warning(NULL,tr("Map editor"),
+					     tr("failed to save file"));
+			return false;
+		}
+
+		QDataStream out(&file);
+		out.setVersion(QDataStream::Qt_4_8);
+		out << MagicNum;
+
+		quint32 totalColumn = map[i].size();
+		quint32 totalRow = map[i][0].size();
+
+		out << totalRow;
+		out << totalColumn;
+
+		for(quint32 rowIndex = 0; rowIndex < totalRow; rowIndex++)
+		{
+			for(quint32 columnIndex = 0; columnIndex < totalColumn; totalColumn++)
+			{
+				out << rowIndex << columnIndex;
+				out << map[i][rowIndex][columnIndex];
+			}
+		}
+	}
+
+	return true;
+}
+
+bool Map::loadMap()
+{
+	QFile file;
+	quint32 tmp;
+
 	for(int i = 0; i < floorPath.size(); i++)
 	{
 		file.setFileName(floorPath[i]);
@@ -67,10 +99,7 @@ bool Map::loadMap()
 		int rowIndex;
 		QString str;
 		in >> totalColumn;
-		{
-			quint32 tmp;
-			in >> tmp;
-		}
+		in >> tmp;				//抛弃垃圾值
 		while(!in.atEnd())
 		{
 			//检查是否要换行
@@ -81,16 +110,14 @@ bool Map::loadMap()
 				rowIndex++;
 				columnIndex = 0;
 			}
+			in >> tmp >> tmp;				//抛弃垃圾值
 			in >> str;
 			qDebug() << str;
 			map[i][rowIndex].append(str);
 			columnIndex++;
 		}
-
-
-
-
 	}
+	return true;
 }
 
 QString Map::at(int x, int y, int z)
