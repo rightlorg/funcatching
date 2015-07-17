@@ -8,6 +8,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QModelIndex>
+#include <qabstractitemview.h>
 
 class QMenuBar;
 
@@ -39,8 +40,7 @@ private slots:
     void setColumnSize();
     void setRowSize();
     void gotoCell();
-    void bat_table();
-    void cell_paint(QTableWidgetItem *item);
+    void bat_table(int row,int column,int judge);
 
 	void add_new_column();
 	void on_VGlass_clicked();

@@ -5,8 +5,8 @@
 #include "gotocell.h"
 
 MapEditor::MapEditor(QWidget *parent) :
-        QMainWindow(parent),
-      ui(new Ui::MapEditor)
+    QMainWindow(parent),
+    ui(new Ui::MapEditor)
 {
     ui->setupUi(this);
     selection = -1;				//没有选择方块
@@ -17,9 +17,9 @@ MapEditor::MapEditor(QWidget *parent) :
     itemstatusLabel = new QLabel;
     itemstatusLabel->setText("VGlass");
     ui->tableWidget->setCurrentCell(0,0);
-     statusImage->load(":/new/prefix1/image/pix2.png");
+    statusImage->load(":/new/prefix1/image/pix2.png");
 
-     setWindowIcon(QIcon(":/new/prefix1/image/pix.png"));
+    setWindowIcon(QIcon(":/new/prefix1/image/pix.png"));
 }
 
 MapEditor::~MapEditor()
@@ -41,7 +41,7 @@ void MapEditor::createTableWidget(int a,int b)
             ui->tableWidget->setItem(row,column,item);
         }
     }
-    connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
+    //connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 }
 
 void MapEditor::createMenuBar()
@@ -61,7 +61,7 @@ void MapEditor::createMenuBar()
     connect(ui->actionSet_Row_size,SIGNAL(triggered()),this,SLOT(setRowSize()));
     connect(ui->actionGo_to_cell,SIGNAL(triggered()),this,SLOT(gotoCell()));
     connect(ui->action_View,SIGNAL(triggered()),this,SLOT(viewButton()));
-    connect(ui->action_Bat,SIGNAL(triggered()),this,SLOT(bat_table()));
+    connect(ui->action_Bat,SIGNAL(triggered()),this,SLOT(bat_table(0,0,-1)));
 
     connect(ui->actionClay,SIGNAL(triggered()),this,SLOT(on_Clay_clicked()));
     connect(ui->actionGlass,SIGNAL(triggered()),this,SLOT(on_Glass_clicked()));
@@ -77,6 +77,7 @@ void MapEditor::createMenuBar()
 
     ui->action_Bat->setShortcut(tr("Ctrl+B"));
     ui->action_Save->setShortcut(QKeySequence::Save);
+    ui->action_Open->setShortcut(tr("Ctrl+O"));
 }
 
 void MapEditor::createStatusBar()
@@ -90,51 +91,51 @@ bool MapEditor::openFile()
 {
     disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 
-   QString filename = QFileDialog::getOpenFileName(this,tr("choose the edit map"),".",tr("map(*.map)"));
-   QFile file(filename);
+    QString filename = QFileDialog::getOpenFileName(this,tr("choose the edit map"),".",tr("map(*.map)"));
+    QFile file(filename);
 
-   if(!file.open(QIODevice::ReadOnly)){
-       QMessageBox::warning(this,tr("Map editor"),
-                                                        tr("failed to read file %1:\n%2")
-                            .arg(file.fileName())
-                            .arg(file.errorString()));
-               return false;
-   }
-   QDataStream in(&file);
-   in.setVersion(QDataStream::Qt_4_8);
+    if(!file.open(QIODevice::ReadOnly)){
+        QMessageBox::warning(this,tr("Map editor"),
+                             tr("failed to read file %1:\n%2")
+                             .arg(file.fileName())
+                             .arg(file.errorString()));
+        return false;
+    }
+    QDataStream in(&file);
+    in.setVersion(QDataStream::Qt_4_8);
 
-   quint32 magic;
-   quint32 temp_row;
-   quint32 temp_column;
+    quint32 magic;
+    quint32 temp_row;
+    quint32 temp_column;
 
-   in>>magic;
+    in>>magic;
 
-   if(magic!=MagicNum){
-       QMessageBox::warning(this,tr("Map editor"),
-                            tr("This file is mot a Map file\nPlease rechoose the edited file"));
-       return false;
-   }
+    if(magic!=MagicNum){
+        QMessageBox::warning(this,tr("Map editor"),
+                             tr("This file is mot a Map file\nPlease rechoose the edited file"));
+        return false;
+    }
 
-   in>>temp_row;
-   in>>temp_column;
+    in>>temp_row;
+    in>>temp_column;
 
-   newFile();
-   createTableWidget(temp_row,temp_column);
-   disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
+    newFile();
+    createTableWidget(temp_row,temp_column);
+    disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 
-   quint16 row;
-   quint16 column;
-   QString str;
+    quint16 row;
+    quint16 column;
+    QString str;
 
-   QApplication::setOverrideCursor(Qt::WaitCursor);
-   while(!in.atEnd()){
-       in>>row>>column>>str;
-	       ui->tableWidget->item(row,column)->setText(str);
-   }
-   QApplication::restoreOverrideCursor();
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    while(!in.atEnd()){
+        in>>row>>column>>str;
+        ui->tableWidget->item(row,column)->setText(str);
+    }
+    QApplication::restoreOverrideCursor();
 
-   connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
-   return true;
+    connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
+    return true;
 }
 
 void MapEditor::saveFile()
@@ -155,18 +156,18 @@ void MapEditor::saveFile()
         out<<quint32(ui->tableWidget->rowCount());
         out<<quint32(ui->tableWidget->columnCount());
 
-         QApplication::setOverrideCursor(Qt::WaitCursor);
-         for(int row = 0;row<(ui->tableWidget->rowCount());++row)
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+        for(int row = 0;row<(ui->tableWidget->rowCount());++row)
         {
             for(int column = 0;column<(ui->tableWidget->columnCount());++column)
-             {
+            {
                 QString str = ui->tableWidget->item(row,column)->text();
-		out<<quint16(row)<<quint16(column)<<str;
-		qDebug()<<row<<column<<str;
-             }
-         }
-         QApplication::restoreOverrideCursor();
-      }
+                out<<quint16(row)<<quint16(column)<<str;
+                qDebug()<<row<<column<<str;
+            }
+        }
+        QApplication::restoreOverrideCursor();
+    }
 }
 
 void MapEditor::newFile()
@@ -180,13 +181,13 @@ void MapEditor::newFile()
 
 void MapEditor::quitFile()
 {
-        int r = QMessageBox::warning(this,tr("Map editor"),
-                                     tr("Do you want to quit?"),
-                                     QMessageBox::Yes|QMessageBox::No);
-        if(QMessageBox::Yes==r){
-            this->close();
-            delete ui;
-        }
+    int r = QMessageBox::warning(this,tr("Map editor"),
+                                 tr("Do you want to quit?"),
+                                 QMessageBox::Yes|QMessageBox::No);
+    if(QMessageBox::Yes==r){
+        this->close();
+        delete ui;
+    }
 }
 
 void MapEditor::dockDialog()
@@ -203,8 +204,8 @@ void MapEditor::aboutFile()
 {
     QMessageBox::about(this,tr("about funcatching"),
                        tr("Copyright &copy; Right and Leo."
-                       "<p>funcatching is a game which we made the first time"
-                       "<p>provided updating support and server support"));
+                          "<p>funcatching is a game which we made the first time"
+                          "<p>provided updating support and server support"));
 }
 
 
@@ -266,7 +267,7 @@ void MapEditor::add_new_row()
 {
     disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
     int row=QInputDialog::getInteger(this,tr("Adding new rows"),tr("Please input the number of the rows you want to add"),
-				     statusLabel->text().toInt(),1,300,1);
+                                     statusLabel->text().toInt(),1,300,1);
     for(int i=0;i<row;i++){
         ui->tableWidget->insertRow(ui->tableWidget->rowCount());
         for(int column = 0;column<ui->tableWidget->columnCount();column++){
@@ -282,7 +283,7 @@ void MapEditor::add_new_column()
 {
     disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
     int column=QInputDialog::getInteger(this,tr("Adding new columns"),tr("Please input the number of the columns you want to add"),
-				     statusLabel->text().toInt(),1,300,1);
+                                        statusLabel->text().toInt(),1,300,1);
     for(int i=0;i<column;i++){
         ui->tableWidget->insertColumn(ui->tableWidget->columnCount());
         for(int row = 0;row<ui->tableWidget->rowCount();row++){
@@ -297,12 +298,6 @@ void MapEditor::add_new_column()
 void MapEditor::viewButton()
 {
 
-}
-
-void MapEditor::cell_paint(QTableWidgetItem *item)
-{
-//	QModelIndex<QTableWidgetItem> mode = item;
-//	on_tableWidget_clicked(mode);
 }
 
 void MapEditor::closeEvent(QCloseEvent *event)
@@ -353,7 +348,7 @@ void MapEditor::on_Glass_clicked()
 void MapEditor::setColumnSize()
 {
     int columnsize=QInputDialog::getInteger(this,tr("Setting column size"),tr("Please input the size of column(from 50 to 150)"),
-                                     statusLabel->text().toInt(),75,150,50);
+                                            statusLabel->text().toInt(),75,150,50);
     for(int column = 0;column<ui->tableWidget->columnCount();++column)
         ui->tableWidget->setColumnWidth(column,columnsize);
 }
@@ -361,7 +356,7 @@ void MapEditor::setColumnSize()
 void MapEditor::setRowSize()
 {
     int rowsize=QInputDialog::getInteger(this,tr("Setting row size"),tr("Please input the size of row(from 20 to 60)"),
-                                     statusLabel->text().toInt(),35,60,20);
+                                         statusLabel->text().toInt(),35,60,20);
     for(int row = 0;row<ui->tableWidget->rowCount();++row)
         ui->tableWidget->setRowHeight(row,rowsize);
 }
@@ -370,40 +365,63 @@ void MapEditor::gotoCell()
 {
     GoToCellDialog *gotocell = new GoToCellDialog(this);
     if(gotocell->exec()){
-	int column = gotocell->getColumn();
-	int row = gotocell->getRow();
-	if(column<ui->tableWidget->columnCount() && row<ui->tableWidget->rowCount())
-	    ui->tableWidget->setCurrentCell(row,column);
-	else
-	    QMessageBox::warning(this,tr("go to cell"),tr("unexpected input"));
+        int column = gotocell->getColumn();
+        int row = gotocell->getRow();
+        if(column<ui->tableWidget->columnCount() && row<ui->tableWidget->rowCount())
+            ui->tableWidget->setCurrentCell(row,column);
+        else
+            QMessageBox::warning(this,tr("go to cell"),tr("unexpected input"));
     }
 
 }
 
-void MapEditor::bat_table()
+void MapEditor::bat_table(int _row,int _column,int judge)
 {
     QList<QTableWidgetSelectionRange> ranges = ui->tableWidget->selectedRanges();
     QTableWidgetSelectionRange range = ranges.first();
     for(int row = 0;row<range.rowCount();++row){
         for(int column = 0;column<range.columnCount();++column){
-            ui->tableWidget->item(row+range.topRow(),column+range.leftColumn())->setText(itemstatusLabel->text());
+            //ui->tableWidget->item(row+range.topRow(),column+range.leftColumn())->setText(itemstatusLabel->text());
+            if(judge==0)
+                QTableWidgetItem *item = ui->tableWidget->item(_row,_column);
+            else
+                QTableWidgetItem *item = ui->tableWidget->item(row+range.topRow(),column+range.leftColumn());
+            if(itemstatusLabel->text().isEmpty()){
+                qDebug()<<"AA";
+                item->setBackgroundColor(QColor(qRgb(255,255,255)));
+                item->setText("");
+                ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+            }else{
+                label = new QLabel;
+                label->setPixmap(*statusImage);
+                ui->tableWidget->setCellWidget(item->row(), item->column(), label);
+                item->setText(itemstatusLabel->text());
+                ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+            }
         }
     }
 }
 
 void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 {
-	QTableWidgetItem *item = ui->tableWidget->item(index.row(),index.column());
-	// if(itemstatusLabel->text().isEmpty()){
-	//     qDebug()<<"AA";
-	//     item->setBackgroundColor(QColor(qRgb(255,255,255)));
-	// }else{
-	//     label = new QLabel;
-	//     label->setPixmap(*statusImage);
-	//     ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-	//     //item->setText(itemstatusLabel->text());
-	//     //item->setIcon(QIcon("pix.png"));
-	//     item->setText("");
-	// }
-	item->setText(itemstatusLabel->text());
+    // QTableWidgetItem *item = ui->tableWidget->item(index.row(),index.column());
+    // if(itemstatusLabel->text().isEmpty()){
+    //       qDebug()<<"AA";
+    //       //ui->tableWidget->setEditTriggers(QAbstractItemView::editTriggers());
+    //       item->setBackgroundColor(QColor(qRgb(255,255,255)));
+    //       item->setText("");
+    //       ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    //
+    // }else{
+    //     label = new QLabel;
+    //     label->setPixmap(*statusImage);
+    //       //ui->tableWidget->setEditTriggers(QAbstractItemView::editTriggers());
+    //     ui->tableWidget->setCellWidget(item->row(), item->column(), label);
+    //       item->setText(itemstatusLabel->text());
+    //       ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    // }
+    int row = index.row();
+    int column = index.column();
+    bat_table(row,column,0);
 }
