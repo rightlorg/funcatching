@@ -31,16 +31,14 @@ private slots:
     bool openFile();
 	void saveFile();
 	void quitFile();
-	void newFile();
 	void dockDialog();
 	void aboutFile();
 	void ver();
 	void add_new_row();
-    void viewButton();
     void setColumnSize();
     void setRowSize();
     void gotoCell();
-    void bat_table(int row,int column,int judge);
+    void bat_table();
 
 	void add_new_column();
 	void on_VGlass_clicked();

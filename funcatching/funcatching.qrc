@@ -2,11 +2,12 @@
     <qresource prefix="/new/prefix1">
         <file>image/pix.png</file>
         <file>image/pix2.png</file>
-        <file>image/default.png</file>
-        <file>image/P_AudioMd.png</file>
-        <file>image/P_NewPro_N.png</file>
-        <file>image/P_OpenPro_N.png</file>
-        <file>image/P_VideoSubClipMd.png</file>
-        <file>image/quest.png</file>
+        <file>image/grass.PNG</file>
+        <file>image/HDoor.png</file>
+        <file>image/VDoor.PNG</file>
+        <file>image/white.png</file>
+        <file>image/gotocell.png</file>
+        <file>image/open.png</file>
+        <file>image/save.png</file>
     </qresource>
 </RCC>

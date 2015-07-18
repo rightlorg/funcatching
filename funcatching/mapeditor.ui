@@ -40,14 +40,13 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>19</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="action_New"/>
     <addaction name="action_Open"/>
     <addaction name="action_Save"/>
     <addaction name="separator"/>
@@ -59,7 +58,6 @@
     </property>
     <addaction name="actionTool_Dialog"/>
     <addaction name="separator"/>
-    <addaction name="action_View"/>
     <addaction name="actionAdd_new_row"/>
     <addaction name="actionAdd_new_Column"/>
     <addaction name="separator"/>
