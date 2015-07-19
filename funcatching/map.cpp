@@ -65,7 +65,6 @@ bool Map::saveMap()
 bool Map::loadMap()
 {
 	QFile file;
-	quint32 tmp;
 
 	for(int i = 0; i < floorPath.size(); i++)
 	{
@@ -94,12 +93,16 @@ bool Map::loadMap()
 			return false;
 		}
 
-		quint32 totalColumn;
-		quint32 columnIndex = 0;
-		quint32 rowIndex = 0;
+		quint32 totalColumn = 0;
+		int columnIndex = 0;
+		int rowIndex = 0;
 		QString str;
+		{
+			quint32 tmp;
+			in >> tmp;				//抛弃垃圾值
+		}
+		quint16 tmp;
 		in >> totalColumn;
-		in >> tmp;				//抛弃垃圾值
 		{
 			QStringList newRow;
 			map[i].append(newRow);
@@ -114,8 +117,7 @@ bool Map::loadMap()
 				rowIndex++;
 				columnIndex = 0;
 			}
-			in >> tmp >> tmp;				//抛弃垃圾值
-			in >> str;
+			in >> tmp >> tmp >> str;			//抛弃垃圾值
 			qDebug() << str;
 			map[i][rowIndex].append(str);
 			columnIndex++;

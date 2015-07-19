@@ -33,8 +33,9 @@ void ReadyPage::addMap()
 	if (!dir.cd("map"))
 	{
 		dir.mkdir("map");
-		QMessageBox::warning(NULL, tr("警告"), tr("未发现map文件夹"),
+		QMessageBox::warning(NULL, tr("警告"), tr("未发现map文件夹，已在当前目录新建"),
 											QMessageBox::Abort);
+		return;
 	}
 	maps = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 	for(int i  = 0; i < maps.size(); i++)
@@ -56,14 +57,11 @@ void ReadyPage::on_go_clicked()
 		{
 			QMessageBox::warning(NULL, tr("警告"), tr("文件不存在"),
 											QMessageBox::Abort);
-			goto EXIT;
+			return;
 		}
-//		mainwindow->hideWidget();
-//		mainwindow->showWidget();
 		this->hide();
 		Game *game = new Game(this, maps[mapIndex]);
 	}
-	EXIT: ;
 }
 
 void ReadyPage::back()
