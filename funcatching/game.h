@@ -2,13 +2,12 @@
 #define GAME_H
 
 #include <QString>
-//#include <QPixmap>
-//#include <QCloseEvent>
 #include <QObject>
 #include <QMessageBox>
 #include <QSettings>
 #include <QDir>
 #include <QImage>
+#include <QTcpSocket>
 #include "map.h"
 #include "readypage.h"
 
@@ -16,25 +15,28 @@ class Game : public QObject
 {
     Q_OBJECT
 public:
-	explicit Game(ReadyPage *parent, QString mapPath);
-	~Game();
+    explicit Game(ReadyPage *parent, QString mapPath);
+    ~Game();
 
-	enum Camp
-	{
-		Catcher,
-		Hider,
-		None
-	};
+    enum Camp
+    {
+        Catcher,
+        Hider,
+        None
+    };
 
-public:
-    void connectServer();
+private slots:
     void firstDataSubmit();
 
 private:
-	bool genHeadPic(QImage image, Camp camp, QString playerName);
-	QImage *getHeadPic(QString path);
-	Map *map;
-	ReadyPage *readypage;
+    bool genHeadPic(QImage image, Camp camp, QString playerName);
+    void connectServer();
+    QImage *getHeadPic();
+    QImage *headImage;
+    QTcpSocket tcpSocket;
+    Map *map;
+    ReadyPage *readypage;
+    quint32 nextBlockSize;
 };
 
 #endif // GAME_H
