@@ -16,9 +16,9 @@ MapEditor::MapEditor(QWidget *parent) :
     itemstatusLabel = new QLabel;
     itemstatusLabel->setText("VGlass");
     ui->tableWidget->setCurrentCell(0,0);
-    statusImage->load(":/new/prefix1/image/pix2.png");
+    statusImage->load(":/image/pix2.png");
 
-    setWindowIcon(QIcon(":/new/prefix1/image/pix.png"));
+    setWindowIcon(QIcon(":/image/pix.png"));
 }
 
 MapEditor::~MapEditor()
@@ -78,7 +78,7 @@ void MapEditor::createMenuBar()
     ui->action_Open->setShortcut(tr("Ctrl+O"));
     ui->action_Save->setShortcut(QKeySequence::Save);
 
-    ui->actionOpen->setIcon(QIcon(":/new/prefix1/image/open.png"));
+    ui->actionOpen->setIcon(QIcon(":/image/open.png"));
 }
 
 void MapEditor::createStatusBar()
@@ -232,7 +232,7 @@ void MapEditor::on_HWall_clicked()
 
 void MapEditor::on_VDoor_clicked()
 {
-    statusImage->load(":/new/prefix1/image/VDoor.png");
+    statusImage->load(":/image/VDoor.png");
     itemstatusLabel->setText(tr("VDoor"));
     statusLabel->setText(tr("Vertical door item choosed"));
 }
@@ -251,7 +251,7 @@ void MapEditor::on_Floor_clicked()
 
 void MapEditor::on_nullButton_clicked()
 {
-    statusImage->load(":/new/prefix1/image/white.png");
+    statusImage->load(":/image/white.png");
     itemstatusLabel->setText(tr(""));
     statusLabel->setText(tr("Clearing item choosed"));
 }
