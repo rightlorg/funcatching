@@ -49,6 +49,7 @@ private slots:
 	void on_HDoor_clicked();
 	void on_Floor_clicked();
     void on_nullButton_clicked();
+    void on_grass_clicked();
 
     void on_Clay_clicked();
     void on_Glass_clicked();
@@ -61,6 +62,7 @@ private:
 	void createMenuBar();
     void createTableWidget(int a,int b);
 	void createStatusBar();
+    void initialize_item(int row,int column,QString status);
 	QMenuBar *menuBar;
 	QLabel *statusLabel;
 	QLabel *itemstatusLabel;

@@ -59,7 +59,6 @@ void MapEditor::createMenuBar()
     connect(ui->actionSet_Column_size,SIGNAL(triggered()),this,SLOT(setColumnSize()));
     connect(ui->actionSet_Row_size,SIGNAL(triggered()),this,SLOT(setRowSize()));
     connect(ui->actionGo_to_cell,SIGNAL(triggered()),this,SLOT(gotoCell()));
-    connect(ui->action_View,SIGNAL(triggered()),this,SLOT(viewButton()));
     connect(ui->action_Bat,SIGNAL(triggered()),this,SLOT(bat_table()));
 
     connect(ui->actionClay,SIGNAL(triggered()),this,SLOT(on_Clay_clicked()));
@@ -77,8 +76,6 @@ void MapEditor::createMenuBar()
     ui->action_Bat->setShortcut(tr("Ctrl+B"));
     ui->action_Open->setShortcut(tr("Ctrl+O"));
     ui->action_Save->setShortcut(QKeySequence::Save);
-
-    ui->actionOpen->setIcon(QIcon(":/image/open.png"));
 }
 
 void MapEditor::createStatusBar()
@@ -124,6 +121,7 @@ bool MapEditor::openFile()
             bat_table();
         }
     }
+
     createTableWidget(temp_row,temp_column);
 
     quint16 row;
@@ -133,7 +131,7 @@ bool MapEditor::openFile()
     QApplication::setOverrideCursor(Qt::WaitCursor);
     while(!in.atEnd()){
         in>>row>>column>>str;
-        ui->tableWidget->item(row,column)->setText(str);
+        initialize_item(row,column,str);
     }
     QApplication::restoreOverrideCursor();
     ui->tableWidget->setCurrentCell(0,0);
@@ -164,6 +162,7 @@ void MapEditor::saveFile()
             {
                 QString str = ui->tableWidget->item(row,column)->text();
                 out<<quint16(row)<<quint16(column)<<str;
+
             }
         }
         QApplication::restoreOverrideCursor();
@@ -224,6 +223,13 @@ void MapEditor::on_VWall_clicked()
     statusLabel->setText(tr("Vertical wall item choosed"));
 }
 
+void MapEditor::on_grass_clicked()
+{
+    statusImage->load(":/image/grass.png");
+    itemstatusLabel->setText(tr("grass"));
+    statusLabel->setText(tr("grass item choosed"));
+}
+
 void MapEditor::on_HWall_clicked()
 {
     itemstatusLabel->setText(tr("HWall"));
@@ -251,7 +257,7 @@ void MapEditor::on_Floor_clicked()
 
 void MapEditor::on_nullButton_clicked()
 {
-    statusImage->load(":/image/white.png");
+    statusImage->load(":/image/VDoor.png");
     itemstatusLabel->setText(tr(""));
     statusLabel->setText(tr("Clearing item choosed"));
 }
@@ -365,37 +371,43 @@ void MapEditor::gotoCell()
 
 void MapEditor::bat_table()
 {
-   QList<QTableWidgetSelectionRange> ranges = ui->tableWidget->selectedRanges();
-   QTableWidgetSelectionRange range = ranges.first();
-   for(int row = 0;row<range.rowCount();++row){
-       for(int column = 0;column<range.columnCount();++column){
-           QTableWidgetItem *item = ui->tableWidget->item(row+range.topRow(),column+range.leftColumn());
-           if(itemstatusLabel->text().isEmpty()){
-               item->setBackgroundColor(QColor(qRgb(255,255,255)));
-               item->setText("");
-               ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-           }else{
-               label = new QLabel;
-               label->setPixmap(*statusImage);
-               ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-               item->setText(itemstatusLabel->text());
-               ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-           }
-       }
-   }
+    QList<QTableWidgetSelectionRange> ranges = ui->tableWidget->selectedRanges();
+    QTableWidgetSelectionRange range = ranges.first();
+    for(int row = 0;row<range.rowCount();++row){
+        for(int column = 0;column<range.columnCount();++column){
+            QTableWidgetItem *item = ui->tableWidget->item(row+range.topRow(),column+range.leftColumn());
+            {
+                label = new QLabel;
+                label->setPixmap(*statusImage);
+                ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(1),ui->tableWidget->columnWidth(1)));
+                ui->tableWidget->setCellWidget(item->row(), item->column(), label);
+                item->setText(itemstatusLabel->text());
+                ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+            }
+        }
+    }
 }
 
 void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 {
     QTableWidgetItem *item = ui->tableWidget->item(index.row(),index.column());
-    if(itemstatusLabel->text().isEmpty()){
-          item->setBackgroundColor(QColor(qRgb(255,255,255)));
-          item->setText("");
-    }else{
+    {
         label = new QLabel;
         label->setPixmap(*statusImage);
+        ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(1),ui->tableWidget->columnWidth(1)));
         ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-          item->setText(itemstatusLabel->text());
+        item->setText(itemstatusLabel->text());
     }
 }
+
+    void MapEditor::initialize_item(int row,int column,QString status)
+    {
+        if(status.toAscii()=="grass"){
+            label = new QLabel;
+            QTableWidgetItem *item = ui->tableWidget->item(row,column);
+            label->setPixmap(QPixmap(":/image/grass"));
+            ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(1),ui->tableWidget->columnWidth(1)));
+            ui->tableWidget->setCellWidget(item->row(), item->column(), label);
+            item->setText("grass");
+        }
+    }

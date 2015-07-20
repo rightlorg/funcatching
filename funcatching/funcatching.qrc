@@ -2,9 +2,9 @@
     <qresource prefix="/">
         <file>image/pix.png</file>
         <file>image/pix2.png</file>
-        <file>image/grass.PNG</file>
+        <file>image/grass.png</file>
         <file>image/HDoor.png</file>
-        <file>image/VDoor.PNG</file>
+        <file>image/VDoor.png</file>
         <file>image/white.png</file>
         <file>image/gotocell.png</file>
         <file>image/open.png</file>
