@@ -17,6 +17,12 @@
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QTableWidget" name="tableWidget">
+      <property name="iconSize">
+       <size>
+        <width>100</width>
+        <height>100</height>
+       </size>
+      </property>
       <attribute name="horizontalHeaderDefaultSectionSize">
        <number>45</number>
       </attribute>
@@ -98,6 +104,13 @@
       <widget class="QPushButton" name="nullButton">
        <property name="text">
         <string>Null</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="grass">
+       <property name="text">
+        <string>grass</string>
        </property>
       </widget>
      </item>
