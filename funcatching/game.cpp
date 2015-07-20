@@ -17,7 +17,7 @@ Game::~Game()
 	delete map;
 }
 
-void Game::genHeadPic(QImage image, Camp camp, QString playerName)
+bool Game::genHeadPic(QImage image, Camp camp, QString playerName)
 {
 
 }

@@ -5,7 +5,7 @@
 //	|
 //	|
 //	|
-//	|o
+//	|
 //------------------------------------>R(x)
 //	|
 
@@ -30,6 +30,7 @@ public:
 	bool saveMap();
 	bool loadMap();
 	QString at(int x, int y, int z);
+	bool change(int x, int y, int z);
 
 signals:
 

@@ -3,7 +3,7 @@
 
 #include <QString>
 //#include <QPixmap>
-#include <QCloseEvent>
+//#include <QCloseEvent>
 #include <QObject>
 #include <QMessageBox>
 #include <QSettings>
@@ -31,7 +31,7 @@ public:
     void firstDataSubmit();
 
 private:
-	void genHeadPic(QImage image, Camp camp, QString playerName);
+	bool genHeadPic(QImage image, Camp camp, QString playerName);
 	QImage *getHeadPic(QString path);
 	Map *map;
 	ReadyPage *readypage;
