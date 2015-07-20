@@ -76,6 +76,10 @@ void MapEditor::createMenuBar()
     ui->action_Bat->setShortcut(tr("Ctrl+B"));
     ui->action_Open->setShortcut(tr("Ctrl+O"));
     ui->action_Save->setShortcut(QKeySequence::Save);
+
+    ui->actionGo_to_cell->setIcon(QIcon(":/image/gotocell.png"));
+    ui->action_Open->setIcon(QIcon(":/image/open.png"));
+    ui->action_Save->setIcon(QIcon(":/image/save.png"));
 }
 
 void MapEditor::createStatusBar()
@@ -366,13 +370,13 @@ void MapEditor::gotoCell()
         else
             QMessageBox::warning(this,tr("go to cell"),tr("unexpected input"));
     }
-
 }
 
 void MapEditor::bat_table()
 {
     QList<QTableWidgetSelectionRange> ranges = ui->tableWidget->selectedRanges();
     QTableWidgetSelectionRange range = ranges.first();
+    ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(0),ui->tableWidget->columnWidth(0)));
     for(int row = 0;row<range.rowCount();++row){
         for(int column = 0;column<range.columnCount();++column){
             QTableWidgetItem *item = ui->tableWidget->item(row+range.topRow(),column+range.leftColumn());
@@ -391,6 +395,7 @@ void MapEditor::bat_table()
 void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 {
     QTableWidgetItem *item = ui->tableWidget->item(index.row(),index.column());
+    ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(0),ui->tableWidget->columnWidth(0)));
     {
         label = new QLabel;
         label->setPixmap(*statusImage);
@@ -400,14 +405,18 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
     }
 }
 
-    void MapEditor::initialize_item(int row,int column,QString status)
-    {
-        if(status.toAscii()=="grass"){
-            label = new QLabel;
-            QTableWidgetItem *item = ui->tableWidget->item(row,column);
-            label->setPixmap(QPixmap(":/image/grass"));
-            ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(1),ui->tableWidget->columnWidth(1)));
-            ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-            item->setText("grass");
-        }
+void MapEditor::initialize_item(int row,int column,QString status)
+{
+    label = new QLabel;
+    QTableWidgetItem *item = ui->tableWidget->item(row,column);
+    ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(0),ui->tableWidget->columnWidth(0)));
+    if(status.toAscii()=="grass"){
+        label->setPixmap(QPixmap(":/image/grass"));
+        ui->tableWidget->setCellWidget(item->row(), item->column(), label);
+        item->setText("grass");
+    }else if(status.toAscii()=="VDoor"){
+        label->setPixmap(QPixmap(":/image/grass"));
+        ui->tableWidget->setCellWidget(item->row(), item->column(), label);
+        item->setText("grass");
     }
+}
