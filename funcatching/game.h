@@ -14,6 +14,8 @@
 #include "map.h"
 #include "readypage.h"
 #include "mainwindow.h"
+#include <QColor>
+#include <QPixmap>
 
 class Game : public QObject
 {
@@ -45,6 +47,8 @@ private:
     QGraphicsScene *scene;
     QGraphicsView *view;
     QString player_name;
+
+	void initSceneBackground();
 };
 
 #endif // GAME_H
