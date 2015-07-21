@@ -14,6 +14,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include "mainwindow.h"
+#include <QColor>
+#include <QPixmap>
 
 class Game : public QObject
 {
@@ -34,6 +36,8 @@ private slots:
 
 private:
 	bool genHeadPic(QImage image, Camp camp, QString playerName);
+
+	void initSceneBackground();
 	void connectServer();
 	QImage *getHeadPic();
 	QImage *headImage;

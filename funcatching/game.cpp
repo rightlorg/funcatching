@@ -1,11 +1,12 @@
 #include "game.h"
-#include "QGLWidget"
+#include <QGLWidget>
 
 Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow, QString mapPath):
 	QObject(parent_readypage)
 {
 	readypage = parent_readypage;
 	mainwindow  = parent_mainwindow;
+
 	map = new Map(NULL, mapPath);
 	if(!map->loadMap())
 	{
@@ -14,11 +15,13 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow, QString m
 	}
 	scene = new QGraphicsScene(mainwindow);
 	view = new QGraphicsView(scene, mainwindow);
-	    view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
-//	    view->show();
+	view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
 	mainwindow->addviewWidget(view);
+	initSceneBackground();
+
 	headImage =  new QImage;
 	headImage = getHeadPic();
+
 	connectServer();
 	connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
 }
@@ -31,6 +34,12 @@ Game::~Game()
 bool Game::genHeadPic(QImage image, Camp camp, QString playerName)
 {
 
+}
+
+void Game::initSceneBackground()
+{
+//	scene->setForegroundBrush(QColor(200, 255, 255));
+	scene->setBackgroundBrush(QPixmap(":/image/pix.png"));
 }
 
 QImage *Game::getHeadPic()
@@ -58,4 +67,3 @@ void Game::firstDataSubmit()
 	quint32 imageSize;
 	disconnect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
 }
-
