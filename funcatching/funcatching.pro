@@ -14,7 +14,7 @@ HEADERS += game.h \
            player.h \
            readypage.h \
            settings.h \
-    gotocell.h \
+        gotocell.h \
 	map.h
 FORMS += mainwindow.ui mapeditor.ui readypage.ui settings.ui \
     gotocell.ui

@@ -261,7 +261,7 @@ void MapEditor::on_Floor_clicked()
 
 void MapEditor::on_nullButton_clicked()
 {
-    statusImage->load(":/image/VDoor.png");
+    statusImage->load(":/image/white.png");
     itemstatusLabel->setText(tr(""));
     statusLabel->setText(tr("Clearing item choosed"));
 }

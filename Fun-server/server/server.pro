@@ -1,23 +1,24 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2015-07-21T08:25:28
+# Project created by QtCreator 2015-07-21T16:06:21
 #
 #-------------------------------------------------
 
-QT           += network opengl
-
-TARGET =
 TEMPLATE = app
+TARGET =
+DEPENDPATH += .
+INCLUDEPATH += .
+QT           += network opengl
+#greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
 
 SOURCES += main.cpp \
     server.cpp \
     clientsocket.cpp
 
-FORMS += \
-    server.ui
-
-HEADERS += \
+HEADERS  += \
     server.h \
     clientsocket.h
 
-RESOURCES +=
+FORMS    += \
+    server.ui

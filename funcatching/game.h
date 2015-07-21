@@ -8,42 +8,43 @@
 #include <QDir>
 #include <QImage>
 #include <QTcpSocket>
-#include "map.h"
-#include "readypage.h"
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
+#include "map.h"
+#include "readypage.h"
 #include "mainwindow.h"
 
 class Game : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	explicit Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow, QString mapPath);
-	~Game();
+    explicit Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow, QString mapPath);
+    ~Game();
 
-	enum Camp
-	{
-		Catcher,
-		Hider,
-		None
-	};
+    enum Camp
+    {
+        Catcher,
+        Hider,
+        None
+    };
 
 private slots:
-	void firstDataSubmit();
+    void firstDataSubmit();
 
 private:
-	bool genHeadPic(QImage image, Camp camp, QString playerName);
-	void connectServer();
-	QImage *getHeadPic();
-	QImage *headImage;
-	QTcpSocket tcpSocket;
-	Map *map;
-	ReadyPage *readypage;
-	quint32 nextBlockSize;
-	MainWindow *mainwindow;
-	QGraphicsScene *scene;
-	QGraphicsView *view;
+    bool genHeadPic(QImage image, Camp camp, QString playerName);
+    void connectServer();
+    QImage *getHeadPic();
+    QImage *headImage;
+    QTcpSocket tcpSocket;
+    Map *map;
+    ReadyPage *readypage;
+    quint32 nextBlockSize;
+    MainWindow *mainwindow;
+    QGraphicsScene *scene;
+    QGraphicsView *view;
+    QString player_name;
 };
 
 #endif // GAME_H
