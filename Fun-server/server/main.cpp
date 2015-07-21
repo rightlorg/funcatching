@@ -1,11 +1,8 @@
-#include "server.h"
-#include <QApplication>
+#include "clientsocket.h"
+#include <QCoreApplication>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    server w;
-    w.show();
-
+    QCoreApplication a(argc, argv);
     return a.exec();
 }

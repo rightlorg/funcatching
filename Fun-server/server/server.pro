@@ -4,21 +4,17 @@
 #
 #-------------------------------------------------
 
+QT       += core network
+QT       -= gui
+TARGET = server
+CONFIG   += console
+CONFIG   -= app_bundle
+
 TEMPLATE = app
-TARGET =
-DEPENDPATH += .
-INCLUDEPATH += .
-QT           += network opengl
-#greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-
 SOURCES += main.cpp \
-    server.cpp \
     clientsocket.cpp
 
 HEADERS  += \
-    server.h \
     clientsocket.h
 
-FORMS    += \
-    server.ui
+FORMS    +=

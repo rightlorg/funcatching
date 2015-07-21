@@ -1,6 +1,5 @@
 #ifndef CLIENTSOCKET_H
 #define CLIENTSOCKET_H
-#include <QtGui>
 #include <QTcpSocket>
 class ClientSocket : public QTcpSocket
 {
