@@ -39,7 +39,7 @@ bool Game::genHeadPic(QImage image, Camp camp, QString playerName)
 void Game::initSceneBackground()
 {
 //	scene->setForegroundBrush(QColor(200, 255, 255));
-	scene->setBackgroundBrush(QPixmap(":/image/pix.png"));
+	scene->setBackgroundBrush(QPixmap(":/image/pix3.png"));
 }
 
 QImage *Game::getHeadPic()

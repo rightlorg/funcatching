@@ -7,5 +7,15 @@
         <file>image/gotocell.png</file>
         <file>image/open.png</file>
         <file>image/save.png</file>
+        <file>tex/2-1.png</file>
+        <file>tex/1.png</file>
+        <file>tex/2-2.png</file>
+        <file>tex/3-1.png</file>
+        <file>tex/3-2.png</file>
+        <file>tex/3-3.png</file>
+        <file>tex/3.png</file>
+        <file>tex/4.png</file>
+        <file>tex/5.png</file>
+        <file>image/pix3.png</file>
     </qresource>
 </RCC>
