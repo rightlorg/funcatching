@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT           += network opengl
-
+QT          -=gui
 TARGET =
 TEMPLATE = app
 
