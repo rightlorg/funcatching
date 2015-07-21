@@ -54,3 +54,8 @@ void MainWindow::showWidget()
 {
 	ui->startWidget->show();
 }
+
+void MainWindow::addviewWidget(QGraphicsView *view)
+{
+	ui->gridLayout_main->addWidget(view);
+}

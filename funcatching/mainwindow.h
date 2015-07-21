@@ -3,6 +3,7 @@
 
 #include <QLabel>
 #include <QMainWindow>
+#include <QGraphicsView>
 
 namespace Ui {
 class MainWindow;
@@ -16,6 +17,7 @@ public:
 	void showStartPage();
 //	void hideWidget();
 	void showWidget();
+	void addviewWidget(QGraphicsView *view);
 	~MainWindow();
 
 private slots:

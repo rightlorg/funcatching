@@ -6,7 +6,7 @@ TEMPLATE = app
 TARGET = 
 DEPENDPATH += .
 INCLUDEPATH += .
-QT           += network
+QT           += network opengl
 # Input
 HEADERS += game.h \
            mainwindow.h \
