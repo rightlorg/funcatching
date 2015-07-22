@@ -1,27 +1,17 @@
-//#ifndef SERVER_H
-//#define SERVER_H
+#ifndef SERVER_H
+#define SERVER_H
+#include <QTcpServer>
 
-//#include <QMainWindow>
+class server : public QTcpServer
+{
+    Q_OBJECT
 
-//namespace Ui {
-//class server;
-//}
+public:
+    explicit server(QWidget *parent = 0);
+    ~server();
 
-//class server : public QMainWindow
-//{
-//    Q_OBJECT
+private:
+    void incomingConnection(int socketId);
+};
 
-//public:
-//    explicit server(QWidget *parent = 0);
-//    ~server();
-
-//private slots:
-//    void run_order();
-//private:
-//    void server_setup();
-//    void label_setup();
-//    bool acceptable(QString order);
-//    Ui::server *ui;
-//};
-
-//#endif // SERVER_H
+#endif // SERVER_H

@@ -69,7 +69,7 @@ void Game::initSceneBackground()
 
 void Game::connectServer()
 {
-	tcpSocket.connectToHost("127.0.0.1",6176);
+    tcpSocket.connectToHost(QHostAddress::LocalHost,2048);
 }
 
 void Game::initBlock()
