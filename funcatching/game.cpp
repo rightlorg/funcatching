@@ -74,7 +74,13 @@ void Game::connectServer()
 
 void Game::initBlock()
 {
+	int rowsize = map->mapRowSize(0);
+	int columnsize = map->mapRowSize(0);
+	for(int i = 0; i < rowsize; i++) {
+		for (int j = 0; j < columnsize; j++) {
 
+		}
+	}
 }
 
 void Game::initPlayer()

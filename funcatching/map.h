@@ -31,7 +31,8 @@ public:
 	bool loadMap();
 	QString at(int x, int y, int z);
 	bool change(int x, int y, int z);
-
+	int mapRowSize(int floor);
+	int mapColumnSize(int floor);
 signals:
 
 public slots:

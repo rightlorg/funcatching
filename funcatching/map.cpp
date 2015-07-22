@@ -131,3 +131,13 @@ QString Map::at(int x, int y, int z)
 {
 
 }
+
+int Map::mapRowSize(int floor)
+{
+	return map[floor].size();
+}
+
+int Map::mapColumnSize(int floor)
+{
+	return map[floor][0].size();
+}
