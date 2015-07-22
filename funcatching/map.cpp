@@ -110,7 +110,7 @@ bool Map::loadMap()
 		while(!in.atEnd())
 		{
 			//检查是否要换行
-			if(columnIndex == totalColumn)
+			if(columnIndex == (int)totalColumn)
 			{
 				QStringList newRow;
 				map[i].append(newRow);
@@ -129,7 +129,7 @@ bool Map::loadMap()
 
 QString Map::at(int x, int y, int z)
 {
-
+//	return;
 }
 
 int Map::mapRowSize(int floor)
