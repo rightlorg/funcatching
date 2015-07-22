@@ -5,9 +5,10 @@
 #include <QImage>
 #include <QString>
 #include <QSettings>
+#include <QGraphicsPixmapItem>
 
 
-class Player : public QObject
+class Player : public QObject, public QGraphicsPixmapItem
 {
 	Q_OBJECT
 public:

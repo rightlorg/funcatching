@@ -15,22 +15,26 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 		delete this;
 	}
 
-//	scene = new QGraphicsScene(mainwindow);
-//	view = new QGraphicsView(scene, mainwindow);
-//	view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
-//	mainwindow->addviewWidget(view);
+	scene = new QGraphicsScene(mainwindow);
+	view = new QGraphicsView(scene, mainwindow);
+	view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+	mainwindow->addviewWidget(view);
+	QPixmap aa(":/tex/3.png");
+//	scene->addPixmap(aa);
+//	scene->addPixmap();
+	initSceneBackground();
 
-//	initSceneBackground();
+	if(gametype == SinglePlayer) {
+		initBlock();
+//		QGraphicsPixmapItem block();
+//		block.setPos(32,32);
+//		scene->addItem(&block);
 
-//	if(gametype == SinglePlayer) {
-//		initBlock();
-//		initPlayer();
-//	} else {
-//		connectServer();
-//		connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
-//	}
-    connectServer();
-    connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
+		initPlayer();
+	} else {
+		connectServer();
+		connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
+	}
 }
 
 Game::~Game()
@@ -46,7 +50,7 @@ void Game::initSceneBackground()
 {
 //	scene->setForegroundBrush(QColor(200, 255, 255));
 	scene->setBackgroundBrush(QPixmap(":/image/pix3.png"));
-	scene->setSceneRect(-100, -100, 200, 200);
+//	scene->setSceneRect(-100, -100, 200, 200);
 }
 
 void Game::getHeadPic()
@@ -76,7 +80,10 @@ void Game::initBlock()
 	int columnsize = map->mapRowSize(0);
 	for(int i = 0; i < rowsize; i++) {
 		for (int j = 0; j < columnsize; j++) {
-
+			QGraphicsPixmapItem *block = new QGraphicsPixmapItem(QPixmap(":/tex/3.png"));
+//			QGraphicsPixmapItem block(QPixmap(":/tex/3.png"),NULL,scene);
+			block->setPos(32 * j, 32 * i);
+			scene->addItem(block);
 		}
 	}
 }
