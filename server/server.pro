@@ -4,15 +4,20 @@
 #
 #-------------------------------------------------
 
-QT       += core
-
-QT       -= gui
-
-TARGET = server
-CONFIG   += console
-CONFIG   -= app_bundle
-
+QT           += network opengl
+QT          -=gui
+TARGET =
 TEMPLATE = app
 
+SOURCES += main.cpp \
+    server.cpp \
+    clientsocket.cpp
 
-SOURCES += main.cpp
+FORMS += \
+    server.ui
+
+HEADERS += \
+    server.h \
+    clientsocket.h
+
+RESOURCES +=
