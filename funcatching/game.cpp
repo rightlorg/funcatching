@@ -19,17 +19,10 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	view = new QGraphicsView(scene, mainwindow);
 	view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
 	mainwindow->addviewWidget(view);
-    QPixmap aa(":/tex/3.png");
-//	scene->addPixmap(aa);
-//	scene->addPixmap();
 	initSceneBackground();
 
 	if(gametype == SinglePlayer) {
-		initBlock();
-//		QGraphicsPixmapItem block();
-//		block.setPos(32,32);
-//		scene->addItem(&block);
-
+        initBlock();
 		initPlayer();
 	} else {
 		connectServer();
@@ -76,16 +69,15 @@ void Game::connectServer()
 
 void Game::initBlock()
 {
-	int rowsize = map->mapRowSize(0);
-	int columnsize = map->mapRowSize(0);
-	for(int i = 0; i < rowsize; i++) {
-		for (int j = 0; j < columnsize; j++) {
-			QGraphicsPixmapItem *block = new QGraphicsPixmapItem(QPixmap(":/tex/3.png"));
-//			QGraphicsPixmapItem block(QPixmap(":/tex/3.png"),NULL,scene);
-			block->setPos(32 * j, 32 * i);
-			scene->addItem(block);
-		}
-	}
+//	int rowsize = map->mapRowSize(0);
+//    int columnsize = map->mapRowSize(0);
+//	for(int i = 0; i < rowsize; i++) {
+//		for (int j = 0; j < columnsize; j++) {
+//			QGraphicsPixmapItem *block = new QGraphicsPixmapItem(QPixmap(":/tex/3.png"));
+//			block->setPos(32 * j, 32 * i);
+//			scene->addItem(block);
+//		}
+//	}
 }
 
 void Game::initPlayer()

@@ -60,7 +60,7 @@ void ReadyPage::on_go_clicked()
 			return;
 		}
 		this->hide();
-		Game *game = new Game(this, mainwindow, maps[mapIndex], Game::SinglePlayer);
+        Game *game = new Game(this, mainwindow, maps[mapIndex], Game::SinglePlayer);
 	}
 }
 
