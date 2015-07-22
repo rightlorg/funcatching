@@ -21,7 +21,8 @@ class Game : public QObject
 {
     Q_OBJECT
 public:
-    explicit Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow, QString mapPath);
+    explicit Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
+											QString mapPath, int gametype);
     ~Game();
 
     enum Camp
@@ -31,14 +32,22 @@ public:
         None
     };
 
+    enum GameType
+    {
+	    SinglePlayer,
+	    Multiplayer
+    };
+
 private slots:
     void firstDataSubmit();
 
 private:
-    bool genHeadPic(QImage image, Camp camp, QString playerName);
+//    bool genHeadPic(QImage image, Camp camp, QString playerName);
     void connectServer();
-    QImage *getHeadPic();
-    QImage *headImage;
+    void initBlock();
+    void initPlayer();
+//    QImage *getHeadPic();
+//    QImage *headImage;
     QTcpSocket tcpSocket;
     Map *map;
     ReadyPage *readypage;

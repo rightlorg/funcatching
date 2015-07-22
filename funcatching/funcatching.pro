@@ -15,7 +15,8 @@ HEADERS += game.h \
            readypage.h \
            settings.h \
         gotocell.h \
-	map.h
+	map.h \
+    block.h
 FORMS += mainwindow.ui mapeditor.ui readypage.ui settings.ui \
     gotocell.ui
 SOURCES += game.cpp \
@@ -26,5 +27,6 @@ SOURCES += game.cpp \
            readypage.cpp \
            settings.cpp \
     gotocell.cpp \
-	map.cpp
+	map.cpp \
+    block.cpp
 RESOURCES += funcatching.qrc

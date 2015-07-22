@@ -9,7 +9,7 @@ namespace Ui {
 class GoToCellDialog;
 }
 
-class GoToCellDialog : public QDialog, public Ui::GoToCellDialog
+class GoToCellDialog : public QDialog/*, public Ui::GoToCellDialog*/
 {
     Q_OBJECT
 
