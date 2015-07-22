@@ -42,6 +42,7 @@ void MapEditor::createTableWidget(int a,int b)
     }
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     //connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
+    ui->tableWidget->setAutoFillBackground(true);
 }
 
 void MapEditor::createMenuBar()
@@ -255,13 +256,15 @@ void MapEditor::on_HDoor_clicked()
 
 void MapEditor::on_Floor_clicked()
 {
+	    statusImage->load(":/tex/3.png");
+	    *statusImage = statusImage->scaled(45, 40);
     itemstatusLabel->setText(tr("WFloor"));
     on_Wood_clicked();
 }
 
 void MapEditor::on_nullButton_clicked()
 {
-    statusImage->load(":/image/VDoor.png");
+    statusImage->load(":/image/white.png");
     itemstatusLabel->setText(tr(""));
     statusLabel->setText(tr("Clearing item choosed"));
 }
@@ -300,14 +303,14 @@ void MapEditor::add_new_column()
 
 void MapEditor::closeEvent(QCloseEvent *event)
 {
-    int r = QMessageBox::warning(this,tr("Map editor"),
-                                 tr("Do you want to quit?"),
-                                 QMessageBox::Yes|QMessageBox::No);
-    if(QMessageBox::Yes==r){
-        event->accept();
-    }
-    else
-        event->ignore();
+//    int r = QMessageBox::warning(this,tr("Map editor"),
+//                                 tr("Do you want to quit?"),
+//                                 QMessageBox::Yes|QMessageBox::No);
+//    if(QMessageBox::Yes==r){
+//        event->accept();
+//    }
+//    else
+//        event->ignore();
 }
 
 void MapEditor::on_Wood_clicked()
@@ -398,6 +401,7 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
     ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(0),ui->tableWidget->columnWidth(0)));
     {
         label = new QLabel;
+//	label->resize(45,40);
         label->setPixmap(*statusImage);
         ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(1),ui->tableWidget->columnWidth(1)));
         ui->tableWidget->setCellWidget(item->row(), item->column(), label);
