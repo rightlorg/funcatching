@@ -11,13 +11,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     server.cpp \
-    clientsocket.cpp
+    clientThread.cpp
 
 FORMS += \
     server.ui
 
 HEADERS += \
     server.h \
-    clientsocket.h
+    clientThread.h
 
 RESOURCES +=
