@@ -5,7 +5,6 @@
 server::server(QWidget *parent):
     QTcpServer(parent)
 {
-    qDebug()<<"a";
 }
 
 server::~server()
@@ -15,6 +14,6 @@ server::~server()
 void server::incomingConnection(int socketId)
 {
     qDebug()<<"connect start";
-    ClientThread *socket = new ClientThread(this);
-    socket->setSocketDescriptor(socketId);
+    ClientThread *socket = new ClientThread(socketId,this);
+    socket->run();
 }

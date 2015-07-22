@@ -47,7 +47,7 @@ private:
     void connectServer();
     void initBlock();
     void initPlayer();
-//    QImage *getHeadPic();
+    void getHeadPic();
 //    QImage *headImage;
     QTcpSocket tcpSocket;
     Map *map;
@@ -57,6 +57,7 @@ private:
     QGraphicsScene *scene;
     QGraphicsView *view;
     QString player_name;
+    QImage *headImage;
 
 	void initSceneBackground();
 };

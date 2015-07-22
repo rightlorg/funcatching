@@ -31,10 +31,6 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 //	}
     connectServer();
     connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
-
-//	headImage =  new QImage;
-//	headImage = getHeadPic();
-
 }
 
 Game::~Game()
@@ -53,20 +49,20 @@ void Game::initSceneBackground()
 	scene->setSceneRect(-100, -100, 200, 200);
 }
 
-//QImage *Game::getHeadPic()
-//{
-//    QSettings settings("Funcatching Project", "Funcatching");
-//    settings.beginGroup("HeadImage");
-//    QString path = settings.value("head_image", "").toString();
-//    QFile a(path);
-//    if(!a.exists())
-//    {
-//        return NULL;
-//    }
-//    settings.endGroup();
-//    QImage *headImage = new QImage(path);
-//    return headImage;
-//}
+void Game::getHeadPic()
+{
+    QSettings settings("Funcatching Project", "Funcatching");
+    settings.beginGroup("HeadImage");
+    QString path = settings.value("head_image", "").toString();
+    QFile a(path);
+    if(!a.exists())
+    {
+        return;
+    }
+    settings.endGroup();
+    headImage =  new QImage;
+    headImage->load(path);
+}
 
 void Game::connectServer()
 {
@@ -89,15 +85,16 @@ void Game::firstDataSubmit()
     QByteArray block;
     QDataStream out(&block,QIODevice::WriteOnly);
 
-    qDebug()<<"connect successfully";
-
     QSettings settings("Funcatching Project", "Funcatching");
     settings.beginGroup("Player Name");
     player_name = settings.value("name").toString();
     settings.endGroup();
 
     out.setVersion(QDataStream::Qt_4_8);
-//    out<<quint32(0)<<player_name<<headImage;
+    out<<quint32(0)<<player_name<<headImage;
+    out.device()->seek(0);
+    out<<quint32(block.size()-sizeof(quint16));
+    tcpSocket.write(block);
 
     disconnect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
 }

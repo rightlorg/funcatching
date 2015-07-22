@@ -4,23 +4,45 @@
 QTextStream cinn(stdin,QIODevice::ReadOnly);
 QTextStream coutt(stdout,QIODevice::WriteOnly);
 
-ClientThread::ClientThread(QObject *parent) : QThread(parent)
+ClientThread::ClientThread(int socketId,QObject *parent)
+    : QThread(parent),
+      QTcpSocket(parent)
 {
-    connect(this,SIGNAL(readyRead()),this,SLOT(readClient()));
-    connect(this,SIGNAL(disconnected()),this,SLOT(deleteLater()));
-    coutt<<"connected successfully";
+    qDebug()<<"connected successfully";
+    firstData();
+}
+
+void ClientThread::run()
+{
+    if (!tcpSocket.setSocketDescriptor(socketId)) {
+        emit error(tcpSocket.error());
+        return;
+    }
     nextBlockSize = 0;
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_8);
+
+    tcpSocket.write(block);
+    tcpSocket.disconnectFromHost();
+    tcpSocket.waitForDisconnected();
 }
 
-void ClientThread::readClient()
+void ClientThread::firstData()
 {
-    qDebug()<<"asdfad";
-//    QDataStream in(this);
-//    in.setVersion(QDataStream::Qt_4_8);
+    nextBlockSize = 0;
 
-//    if(nextBlockSize==0){
-//        if(bytesAvailable() < sizeof(quint32))
-//            return;
-//        in >> nextBlockSize;
-//    }
+    QDataStream in(&tcpSocket);
+    in.setVersion(QDataStream::Qt_4_8);
+    in>>nextBlockSize;
+    if(nextBlockSize>bytesAvailable())
+        return ;
+//    QString *playername;
+    QByteArray block;
+    in>>block;
 }
+
+
+
+
+
