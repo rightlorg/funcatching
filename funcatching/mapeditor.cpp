@@ -16,13 +16,13 @@ MapEditor::MapEditor(QWidget *parent) :
     itemstatusLabel = new QLabel;
     itemstatusLabel->setText("VGlass");
     ui->tableWidget->setCurrentCell(0,0);
-    statusImage->load(":/image/pix2.png");
 
     setWindowIcon(QIcon(":/image/pix.png"));
 }
 
 MapEditor::~MapEditor()
 {
+    ui->tableWidget->clearContents();
     delete ui;
 }
 
@@ -119,13 +119,7 @@ bool MapEditor::openFile()
 
     in>>temp_row;
     in>>temp_column;
-    on_nullButton_clicked();
-    for(int a = 0;a<ui->tableWidget->rowCount();++a){
-        for(int b = 0;b<ui->tableWidget->columnCount();++b){
-            ui->tableWidget->setCurrentCell(a,b);
-            bat_table();
-        }
-    }
+    ui->tableWidget->clearContents();
 
     createTableWidget(temp_row,temp_column);
 
@@ -256,8 +250,8 @@ void MapEditor::on_HDoor_clicked()
 
 void MapEditor::on_Floor_clicked()
 {
-        statusImage->load(":/tex/3.png");
-        *statusImage = statusImage->scaled(45, 40);
+    statusImage->load(":/tex/3.png");
+    *statusImage = statusImage->scaled(45, 40);
     itemstatusLabel->setText(tr("WFloor"));
     on_Wood_clicked();
 }
@@ -303,14 +297,14 @@ void MapEditor::add_new_column()
 
 void MapEditor::closeEvent(QCloseEvent *event)
 {
-//    int r = QMessageBox::warning(this,tr("Map editor"),
-//                                 tr("Do you want to quit?"),
-//                                 QMessageBox::Yes|QMessageBox::No);
-//    if(QMessageBox::Yes==r){
-//        event->accept();
-//    }
-//    else
-//        event->ignore();
+    //    int r = QMessageBox::warning(this,tr("Map editor"),
+    //                                 tr("Do you want to quit?"),
+    //                                 QMessageBox::Yes|QMessageBox::No);
+    //    if(QMessageBox::Yes==r){
+    //        event->accept();
+    //    }
+    //    else
+    //        event->ignore();
 }
 
 void MapEditor::on_Wood_clicked()

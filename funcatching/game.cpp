@@ -19,7 +19,7 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	view = new QGraphicsView(scene, mainwindow);
 	view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
 	mainwindow->addviewWidget(view);
-	QPixmap aa(":/tex/3.png");
+    QPixmap aa(":/tex/3.png");
 //	scene->addPixmap(aa);
 //	scene->addPixmap();
 	initSceneBackground();

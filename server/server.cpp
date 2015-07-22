@@ -13,7 +13,6 @@ server::~server()
 
 void server::incomingConnection(int socketId)
 {
-    qDebug()<<"connect start";
     ClientThread *socket = new ClientThread(socketId,this);
-    socket->run();
+    socket->start();
 }
