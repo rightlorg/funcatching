@@ -1,10 +1,11 @@
 #include "server.h"
 #include "ui_server.h"
-#include "clientsocket.h"
+#include "clientThread.h"
 
 server::server(QWidget *parent):
     QTcpServer(parent)
 {
+    qDebug()<<"a";
 }
 
 server::~server()
@@ -13,6 +14,7 @@ server::~server()
 
 void server::incomingConnection(int socketId)
 {
-    ClientSocket *socket = new ClientSocket(this);
+    qDebug()<<"connect start";
+    ClientThread *socket = new ClientThread(this);
     socket->setSocketDescriptor(socketId);
 }

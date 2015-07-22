@@ -256,8 +256,8 @@ void MapEditor::on_HDoor_clicked()
 
 void MapEditor::on_Floor_clicked()
 {
-	    statusImage->load(":/tex/3.png");
-	    *statusImage = statusImage->scaled(45, 40);
+        statusImage->load(":/tex/3.png");
+        *statusImage = statusImage->scaled(45, 40);
     itemstatusLabel->setText(tr("WFloor"));
     on_Wood_clicked();
 }
@@ -386,10 +386,8 @@ void MapEditor::bat_table()
             {
                 label = new QLabel;
                 label->setPixmap(*statusImage);
-                ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(1),ui->tableWidget->columnWidth(1)));
                 ui->tableWidget->setCellWidget(item->row(), item->column(), label);
                 item->setText(itemstatusLabel->text());
-                ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
             }
         }
     }
@@ -398,12 +396,9 @@ void MapEditor::bat_table()
 void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 {
     QTableWidgetItem *item = ui->tableWidget->item(index.row(),index.column());
-    ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(0),ui->tableWidget->columnWidth(0)));
     {
         label = new QLabel;
-//	label->resize(45,40);
         label->setPixmap(*statusImage);
-        ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(1),ui->tableWidget->columnWidth(1)));
         ui->tableWidget->setCellWidget(item->row(), item->column(), label);
         item->setText(itemstatusLabel->text());
     }

@@ -15,21 +15,22 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 		delete this;
 	}
 
-	scene = new QGraphicsScene(mainwindow);
-	view = new QGraphicsView(scene, mainwindow);
-	view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
-	mainwindow->addviewWidget(view);
+//	scene = new QGraphicsScene(mainwindow);
+//	view = new QGraphicsView(scene, mainwindow);
+//	view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+//	mainwindow->addviewWidget(view);
 
-	initSceneBackground();
+//	initSceneBackground();
 
-	if(gametype == SinglePlayer) {
-		initBlock();
-		initPlayer();
-	} else {
-		connectServer();
-		connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
-	}
-
+//	if(gametype == SinglePlayer) {
+//		initBlock();
+//		initPlayer();
+//	} else {
+//		connectServer();
+//		connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
+//	}
+    connectServer();
+    connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
 
 //	headImage =  new QImage;
 //	headImage = getHeadPic();
@@ -70,6 +71,7 @@ void Game::initSceneBackground()
 void Game::connectServer()
 {
     tcpSocket.connectToHost(QHostAddress::LocalHost,2048);
+    qDebug()<<"sta";
 }
 
 void Game::initBlock()

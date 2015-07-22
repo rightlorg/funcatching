@@ -1,13 +1,14 @@
 #ifndef CLIENTSOCKET_H
 #define CLIENTSOCKET_H
 #include <QTcpSocket>
-class ClientSocket : public QTcpSocket
+#include <QThread>
+
+class ClientThread : public QThread
 {
-    //Q_OBJECT
 
 public:
-    ClientSocket(QObject *parent = 0);
-
+    ClientThread(QObject *parent = 0);
+    void run();
 private slots:
     void readClient();
 
