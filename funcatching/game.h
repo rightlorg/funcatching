@@ -11,6 +11,7 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
+#include <QHostAddress>
 #include "map.h"
 #include "readypage.h"
 #include "mainwindow.h"
