@@ -11,6 +11,7 @@ ReadyPage::ReadyPage(MainWindow *parent) :
 	ui(new Ui::ReadyPage)
 {
 	ui->setupUi(this);
+	ip = "";
 	mainwindow = parent;
 	mapIndex = -1;		//There are no maps
 	addMap();
@@ -61,6 +62,7 @@ void ReadyPage::on_go_clicked()
 		}
 		this->hide();
         Game *game = new Game(this, mainwindow, maps[mapIndex], Game::Multiplayer);
+//		Game *game = new Game(this, mainwindow, maps[mapIndex], Game::SinglePlayer);
 	}
 }
 
@@ -68,4 +70,26 @@ void ReadyPage::back()
 {
 //	mainwindow->showWidget();
 	this->show();
+}
+
+void ReadyPage::on_server_clicked()
+{
+	bool ok = false;
+	QSettings settings("Funcatching Project", "Funcatching");
+	settings.beginGroup("IP Address");
+	ip = QInputDialog::getText(this, tr("Enter IP"), tr("Enter IP"),
+								QLineEdit::Normal,
+								settings.value("IP").toString().isEmpty()?"127.0.0.1":settings.value("IP").toString(),
+								&ok);
+	settings.setValue("IP", ip);
+	settings.endGroup();
+	if (ok) {
+			if (!dir.exists(maps[mapIndex])) {
+				QMessageBox::warning(NULL, tr("警告"), tr("文件不存在"),
+						     QMessageBox::Abort);
+				return;
+			}
+			this->hide();
+			Game *game = new Game(this, mainwindow, maps[mapIndex], Game::Multiplayer);
+	}
 }

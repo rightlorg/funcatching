@@ -6,6 +6,8 @@
 #include <QModelIndex>
 #include <QDir>
 #include <QStringList>
+#include <QSettings>
+#include <QInputDialog>
 
 namespace Ui {
 class ReadyPage;
@@ -28,12 +30,15 @@ private slots:
 
 	void on_go_clicked();
 
+	void on_server_clicked();
+
 private:
 	Ui::ReadyPage *ui;
 	MainWindow *mainwindow;
 	int mapIndex;
 	QDir dir;
 	QStringList maps;
+	QString ip;
 };
 
 #endif // READYPAGE_H
