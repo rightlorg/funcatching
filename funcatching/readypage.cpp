@@ -61,8 +61,7 @@ void ReadyPage::on_go_clicked()
 			return;
 		}
 		this->hide();
-        Game *game = new Game(this, mainwindow, maps[mapIndex], Game::Multiplayer);
-//		Game *game = new Game(this, mainwindow, maps[mapIndex], Game::SinglePlayer);
+		Game *game = new Game(this, mainwindow, maps[mapIndex], Game::SinglePlayer);
 	}
 }
 
@@ -84,12 +83,7 @@ void ReadyPage::on_server_clicked()
 	settings.setValue("IP", ip);
 	settings.endGroup();
 	if (ok) {
-			if (!dir.exists(maps[mapIndex])) {
-				QMessageBox::warning(NULL, tr("警告"), tr("文件不存在"),
-						     QMessageBox::Abort);
-				return;
-			}
 			this->hide();
-			Game *game = new Game(this, mainwindow, maps[mapIndex], Game::Multiplayer);
+			Game *game = new Game(this, mainwindow, "", Game::Multiplayer);
 	}
 }
