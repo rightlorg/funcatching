@@ -268,12 +268,14 @@ void MapEditor::add_new_row()
     disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
     int row=QInputDialog::getInteger(this,tr("Adding new rows"),tr("Please input the number of the rows you want to add"),
                                      statusLabel->text().toInt(),1,300,1);
+    ui->progressBar->setMaximum(row);
     for(int i=0;i<row;i++){
         ui->tableWidget->insertRow(ui->tableWidget->rowCount());
         for(int column = 0;column<ui->tableWidget->columnCount();column++){
             QTableWidgetItem *item = new QTableWidgetItem;
             item->setText("");
             ui->tableWidget->setItem(ui->tableWidget->rowCount()-1,column,item);
+            ui->progressBar->setValue(row);
         }
     }
     connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
@@ -284,12 +286,14 @@ void MapEditor::add_new_column()
     disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
     int column=QInputDialog::getInteger(this,tr("Adding new columns"),tr("Please input the number of the columns you want to add"),
                                         statusLabel->text().toInt(),1,300,1);
+    ui->progressBar->setMaximum(column);
     for(int i=0;i<column;i++){
         ui->tableWidget->insertColumn(ui->tableWidget->columnCount());
         for(int row = 0;row<ui->tableWidget->rowCount();row++){
             QTableWidgetItem *item = new QTableWidgetItem;
             item->setText("");
             ui->tableWidget->setItem(row,ui->tableWidget->columnCount()-1,item);
+            ui->progressBar->setValue(column);
         }
     }
     connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
@@ -374,6 +378,7 @@ void MapEditor::bat_table()
     QList<QTableWidgetSelectionRange> ranges = ui->tableWidget->selectedRanges();
     QTableWidgetSelectionRange range = ranges.first();
     ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(0),ui->tableWidget->columnWidth(0)));
+    ui->progressBar->setMaximum(range.rowCount()*range.columnCount());
     for(int row = 0;row<range.rowCount();++row){
         for(int column = 0;column<range.columnCount();++column){
             QTableWidgetItem *item = ui->tableWidget->item(row+range.topRow(),column+range.leftColumn());
@@ -382,9 +387,12 @@ void MapEditor::bat_table()
                 label->setPixmap(*statusImage);
                 ui->tableWidget->setCellWidget(item->row(), item->column(), label);
                 item->setText(itemstatusLabel->text());
+
+                ui->progressBar->setValue(row*range.rowCount()+column);
             }
         }
     }
+    ui->progressBar->setValue(range.rowCount()*range.columnCount());
 }
 
 void MapEditor::on_tableWidget_clicked(const QModelIndex &index)

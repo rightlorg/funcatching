@@ -73,6 +73,7 @@ void Game::connectServer()
 
 void Game::initBlock()
 {
+<<<<<<< HEAD
 		int rowsize = map->mapRowSize(0);
 	    int columnsize = map->mapRowSize(0);
 		for(int i = 0; i < rowsize; i++) {
@@ -82,6 +83,17 @@ void Game::initBlock()
 				scene->addItem(block);
 			}
 		}
+=======
+    int rowsize = map->mapRowSize(0);
+    int columnsize = map->mapRowSize(0);
+    for(int i = 0; i < rowsize; i++) {
+        for (int j = 0; j < columnsize; j++) {
+            QGraphicsPixmapItem *block = new QGraphicsPixmapItem(QPixmap(":/tex/3.png"));
+            block->setPos(32 * j, 32 * i);
+            scene->addItem(block);
+        }
+    }
+>>>>>>> 13563aa99ef7a41db2dabe1fd0255951cb3ec775
 }
 
 void Game::initPlayer()
@@ -104,11 +116,19 @@ void Game::firstDataSubmit()
 	player_name = settings.value("name").toString();
 	settings.endGroup();
 
+<<<<<<< HEAD
 	out.setVersion(QDataStream::Qt_4_8);
 	out<<quint32(0)<<player_name<<headImage;
 	out.device()->seek(0);
 	out<<quint32(block.size()-sizeof(quint16));
 	tcpSocket.write(block);
+=======
+    out.setVersion(QDataStream::Qt_4_8);
+    out<<quint32(0)<<player_name;//<<headImage;
+    out.device()->seek(0);
+    out<<quint32(block.size()-sizeof(quint16));
+    tcpSocket.write(block);
+>>>>>>> 13563aa99ef7a41db2dabe1fd0255951cb3ec775
 
 	disconnect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
 }
