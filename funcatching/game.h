@@ -18,48 +18,51 @@
 #include "mainwindow.h"
 #include <QColor>
 #include <QPixmap>
+#include <QList>
+#include <QSettings>
 
 class Game : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    explicit Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
-											QString mapPath, int gametype);
-    ~Game();
+	explicit Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
+		      QString mapPath, int gametype);
+	~Game();
 
-    enum Camp
-    {
-        Catcher,
-        Hider,
-        None
-    };
+	enum Camp
+	{
+		Catcher,
+		Hider,
+		None
+	};
 
-    enum GameType
-    {
-	    SinglePlayer,
-	    Multiplayer
-    };
+	enum GameType
+	{
+		SinglePlayer,
+		Multiplayer
+	};
 
 private slots:
-    void firstDataSubmit();
+	void firstDataSubmit();
 
 private:
-//    bool genHeadPic(QImage image, Camp camp, QString playerName);
-    void connectServer();
-    void initBlock();
-    void initPlayer();
-    void getHeadPic();
-//    QImage *headImage;
-    QTcpSocket tcpSocket;
-    Map *map;
-    ReadyPage *readypage;
-    quint32 nextBlockSize;
-    MainWindow *mainwindow;
-    QGraphicsScene *scene;
-    QGraphicsView *view;
-    QString player_name;
-    QImage *headImage;
-
+//	    bool genHeadPic(QImage image, Camp camp, QString playerName);
+	void connectServer();
+	void initBlock();
+	void initPlayer();
+	void loadTexture();
+	void getHeadPic();
+	//    QImage *headImage;
+	QTcpSocket tcpSocket;
+	Map *map;
+	ReadyPage *readypage;
+	quint32 nextBlockSize;
+	MainWindow *mainwindow;
+	QGraphicsScene *scene;
+	QGraphicsView *view;
+	QString player_name;
+	QImage *headImage;
+	QList<QPixmap> texture;
 	void initSceneBackground();
 };
 

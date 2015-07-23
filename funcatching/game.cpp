@@ -2,8 +2,8 @@
 #include <QGLWidget>
 
 Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
-										QString mapPath, int gametype):
-    QObject(parent_readypage)
+	   QString mapPath, int gametype):
+	QObject(parent_readypage)
 {
 	readypage = parent_readypage;
 	mainwindow  = parent_mainwindow;
@@ -22,7 +22,7 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	initSceneBackground();
 
 	if(gametype == SinglePlayer) {
-        initBlock();
+		initBlock();
 		initPlayer();
 	} else {
 		connectServer();
@@ -32,7 +32,7 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 
 Game::~Game()
 {
-    delete map;
+	delete map;
 }
 
 //bool Game::genHeadPic(QImage image, Camp camp, QString playerName)
@@ -41,43 +41,47 @@ Game::~Game()
 
 void Game::initSceneBackground()
 {
-//	scene->setForegroundBrush(QColor(200, 255, 255));
+	//	scene->setForegroundBrush(QColor(200, 255, 255));
 	scene->setBackgroundBrush(QPixmap(":/image/pix3.png"));
-//	scene->setSceneRect(-100, -100, 200, 200);
+	//	scene->setSceneRect(-100, -100, 200, 200);
 }
 
 void Game::getHeadPic()
 {
-    QSettings settings("Funcatching Project", "Funcatching");
-    settings.beginGroup("HeadImage");
-    QString path = settings.value("head_image", "").toString();
-    QFile a(path);
-    if(!a.exists())
-    {
-        return;
-    }
-    settings.endGroup();
-    headImage =  new QImage;
-    headImage->load(path);
+	QSettings settings("Funcatching Project", "Funcatching");
+	settings.beginGroup("HeadImage");
+	QString path = settings.value("head_image", "").toString();
+	QFile a(path);
+	if(!a.exists())
+	{
+		return;
+	}
+	settings.endGroup();
+	headImage =  new QImage;
+	headImage->load(path);
 }
 
 void Game::connectServer()
 {
-    tcpSocket.connectToHost(QHostAddress::LocalHost,2048);
-    qDebug()<<"sta";
+	QSettings settings("Funcatching Project", "Funcatching");
+	settings.beginGroup("IP Address");
+	QHostAddress *address = new QHostAddress(settings.value("IP").toString());
+	tcpSocket.connectToHost(*address,2048);
+	settings.endGroup();
+	qDebug()<<"sta";
 }
 
 void Game::initBlock()
 {
-//	int rowsize = map->mapRowSize(0);
-//    int columnsize = map->mapRowSize(0);
-//	for(int i = 0; i < rowsize; i++) {
-//		for (int j = 0; j < columnsize; j++) {
-//			QGraphicsPixmapItem *block = new QGraphicsPixmapItem(QPixmap(":/tex/3.png"));
-//			block->setPos(32 * j, 32 * i);
-//			scene->addItem(block);
-//		}
-//	}
+		int rowsize = map->mapRowSize(0);
+	    int columnsize = map->mapRowSize(0);
+		for(int i = 0; i < rowsize; i++) {
+			for (int j = 0; j < columnsize; j++) {
+				QGraphicsPixmapItem *block = new QGraphicsPixmapItem(QPixmap(":/tex/3.png"));
+				block->setPos(32 * j, 32 * i);
+				scene->addItem(block);
+			}
+		}
 }
 
 void Game::initPlayer()
@@ -85,23 +89,28 @@ void Game::initPlayer()
 
 }
 
+void Game::loadTexture()
+{
+
+}
+
 void Game::firstDataSubmit()
 {
-    QByteArray block;
-    QDataStream out(&block,QIODevice::WriteOnly);
+	QByteArray block;
+	QDataStream out(&block,QIODevice::WriteOnly);
 
-    QSettings settings("Funcatching Project", "Funcatching");
-    settings.beginGroup("Player Name");
-    player_name = settings.value("name").toString();
-    settings.endGroup();
+	QSettings settings("Funcatching Project", "Funcatching");
+	settings.beginGroup("Player Name");
+	player_name = settings.value("name").toString();
+	settings.endGroup();
 
-    out.setVersion(QDataStream::Qt_4_8);
-    out<<quint32(0)<<player_name<<headImage;
-    out.device()->seek(0);
-    out<<quint32(block.size()-sizeof(quint16));
-    tcpSocket.write(block);
+	out.setVersion(QDataStream::Qt_4_8);
+	out<<quint32(0)<<player_name<<headImage;
+	out.device()->seek(0);
+	out<<quint32(block.size()-sizeof(quint16));
+	tcpSocket.write(block);
 
-    disconnect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
+	disconnect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
 }
 
 void initHeadPic()
