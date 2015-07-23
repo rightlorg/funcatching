@@ -5,9 +5,8 @@
 class server : public QTcpServer
 {
     Q_OBJECT
-
 public:
-    explicit server(QWidget *parent = 0);
+    explicit server(QObject *parent = 0);
     ~server();
 
 private:

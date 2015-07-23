@@ -1,7 +1,7 @@
 #include <QTextStream>
 #include <QCoreApplication>
 #include "server.h"
-#include "clientsocket.h"
+#include "clientThread.h"
 
 QTextStream cin(stdin,QIODevice::ReadOnly);
 QTextStream cout(stdout,QIODevice::WriteOnly);

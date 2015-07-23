@@ -2,20 +2,18 @@
 #define CLIENTSOCKET_H
 #include <QTcpSocket>
 #include <QThread>
-//struct ClientStruct{
-//    //QImage headImage;
-//    QString playername;
-//};
 
 class ClientThread : public QThread, public QTcpSocket
 {
+        Q_OBJECT
 
 public:
     ClientThread(int socketDescriptor, QObject *parent);
     void run();
-    void firstData();
+
 private slots:
     void readClient();
+    void firstData();
 
 private:
     quint32 nextBlockSize;
