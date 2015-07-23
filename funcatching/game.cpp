@@ -8,13 +8,6 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	readypage = parent_readypage;
 	mainwindow  = parent_mainwindow;
 
-	map = new Map(NULL, mapPath);
-	if(!map->loadMap())
-	{
-		readypage->back();
-		delete this;
-	}
-
 	scene = new QGraphicsScene(mainwindow);
 	view = new QGraphicsView(scene, mainwindow);
 	view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
@@ -22,6 +15,11 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	initSceneBackground();
 
 	if(gametype == SinglePlayer) {
+		map = new Map(NULL, mapPath);
+		if(!map->loadMap()) {
+			readypage->back();
+			delete this;
+		}
 		initBlock();
 		initPlayer();
 	} else {
@@ -75,9 +73,10 @@ void Game::initBlock()
 {
 	int rowsize = map->mapRowSize(0);
 	int columnsize = map->mapRowSize(0);
+	QPixmap tex(":/tex/3.png");
 	for(int i = 0; i < rowsize; i++) {
 		for (int j = 0; j < columnsize; j++) {
-			QGraphicsPixmapItem *block = new QGraphicsPixmapItem(QPixmap(":/tex/3.png"));
+			QGraphicsPixmapItem *block = new QGraphicsPixmapItem(tex);
 			block->setPos(32 * j, 32 * i);
 			scene->addItem(block);
 		}
