@@ -1,11 +1,11 @@
-#include <QtNetwork>
+//#include <QtNetwork>
 
-#include "clientthread.h"
+//#include "clientthread.h"
 
-ClientThread::ClientThread(QObject *parent)
-    : QThread(parent),
-      QTcpSocket(parent)
+//ClientThread::ClientThread(QObject *parent)
+//    : QThread(parent),
+//      QTcpSocket(parent)
 
-{
-    nextBlockSize = 0;
-}
+//{
+//    nextBlockSize = 0;
+//}
