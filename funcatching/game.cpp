@@ -172,6 +172,6 @@ void Game::getFirst()
         newPlayer.x = x;
         newPlayer.y = y;
         newPlayer.z = z;
-        player.insert(player_index,newPlayer);
+        player.insert(player_index,&newPlayer);
     }
 }
