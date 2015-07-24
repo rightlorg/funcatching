@@ -10,7 +10,6 @@ public:
     unsigned short z;
     bool identety;
     bool pos_changed;
-private:
     bool operator ==(storing_player &next);
 };
 

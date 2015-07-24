@@ -17,13 +17,8 @@ HEADERS += game.h \
         gotocell.h \
 	map.h \
     block.h \
-<<<<<<< HEAD
     storing_player.h
-=======
-    blocklist.h
->>>>>>> 438334e845b807b734bd9fe793c66f9dcaf0062d
-FORMS += mainwindow.ui mapeditor.ui readypage.ui settings.ui \
-    gotocell.ui
+FORMS += mainwindow.ui mapeditor.ui readypage.ui settings.ui gotocell.ui
 SOURCES += game.cpp \
            main.cpp \
            mainwindow.cpp \
@@ -34,9 +29,5 @@ SOURCES += game.cpp \
     gotocell.cpp \
 	map.cpp \
     block.cpp \
-<<<<<<< HEAD
     storing_player.cpp
-=======
-    blocklist.cpp
->>>>>>> 438334e845b807b734bd9fe793c66f9dcaf0062d
 RESOURCES += funcatching.qrc
