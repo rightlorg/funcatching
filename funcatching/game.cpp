@@ -67,9 +67,10 @@ void Game::connectServer()
     QSettings settings("Funcatching Project", "Funcatching");
     settings.beginGroup("IP Address");
     QHostAddress *address = new QHostAddress(settings.value("IP").toString());
-    tcpSocket.connectToHost("127.0.0.1",2048);
     qDebug()<<"asdf";
+    tcpSocket.connectToHost(*address,2048);
     settings.endGroup();
+    //example
     storing_player A;
     storing_player B;
     A.x = 0;    A.y = 0;    A.z = 0;
