@@ -1,5 +1,6 @@
 #ifndef SERVER_H
 #define SERVER_H
+
 #include <QTcpServer>
 
 class server : public QTcpServer
