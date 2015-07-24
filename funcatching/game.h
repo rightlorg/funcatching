@@ -46,6 +46,7 @@ public:
 
 private slots:
 	void firstDataSubmit();
+    void getFirst();
 
 private:
 //	    bool genHeadPic(QImage image, Camp camp, QString playerName);

@@ -27,7 +27,8 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
         initPlayer();
     } else {
         connectServer();
-        //		connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
+        connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
+        connect(&tcpSocket,SIGNAL(readyRead()),this,SLOT(getFirst()));
     }
 }
 
@@ -70,15 +71,6 @@ void Game::connectServer()
     qDebug()<<"asdf";
     tcpSocket.connectToHost(*address,2048);
     settings.endGroup();
-    //example
-    storing_player A;
-    storing_player B;
-    A.x = 0;    A.y = 0;    A.z = 0;
-    B.x = 0;    B.y = 0;    B.z = 0;
-    player.insert(player_index++,&A);
-    player.insert(player_index++,&B);
-    bool a = (*player[0]==*player[1]);
-    qDebug()<<a;
 }
 
 void Game::initBlock()
@@ -133,7 +125,7 @@ void Game::loadTexture()
 
 void Game::firstDataSubmit()
 {
-    qDebug()<<"asd";
+    qDebug()<<"hehe";
     QByteArray block;
     QDataStream out(&block,QIODevice::WriteOnly);
 
@@ -154,4 +146,32 @@ void Game::firstDataSubmit()
 void initHeadPic()
 {
 
+}
+
+void Game::getFirst()
+{
+    QDataStream in(&tcpSocket);
+    in.setVersion(QDataStream::Qt_4_8);
+
+    while(nextBlockSize==0){
+        in >> nextBlockSize;
+        if(nextBlockSize<tcpSocket.bytesAvailable())
+            break;
+    }
+    unsigned short player_index;
+    bool identity;
+    unsigned short x,y,z;
+    QString player_name;
+    QImage player_image;
+
+    in >> player_index;
+    for(int i=0;i<=player_index;i++){
+        in >> player_image >> player_name >>identity >> x >> y >> z;
+        storing_player newPlayer;
+        newPlayer.identety = identity;
+        newPlayer.x = x;
+        newPlayer.y = y;
+        newPlayer.z = z;
+        player.insert(player_index,newPlayer);
+    }
 }
