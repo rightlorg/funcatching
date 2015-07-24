@@ -15,10 +15,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         server_start.cpp \
     server.cpp \
-    clientthread.cpp
+    clientthread.cpp \
+    storing_player.cpp
 
 HEADERS  += server_start.h \
     server.h \
-    clientthread.h
+    clientthread.h \
+    storing_player.h
 
 FORMS    += server_start.ui

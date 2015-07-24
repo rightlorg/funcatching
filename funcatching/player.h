@@ -22,7 +22,6 @@ public slots:
 private:
 	QImage *headImage;
 	QString playerName;
-
 };
 
 #endif // PLAYER_H

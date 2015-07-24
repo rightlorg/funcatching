@@ -2,25 +2,16 @@
 #define CLIENTSOCKET_H
 
 #include <QTcpSocket>
+#include <QThread>
 
-class QDate;
-class QTime;
-
-class ClientSocket : public QTcpSocket
+class ClientThread : public QThread,public QTcpSocket
 {
     Q_OBJECT
-
 public:
-    ClientSocket(QObject *parent = 0);
-
-private slots:
-    void readClient();
-
-private:
-    void generateRandomTrip(const QString &from, const QString &to,
-                            const QDate &date, const QTime &time);
-
+    ClientThread(QObject *parent = 0);
     quint16 nextBlockSize;
+protected:
+    void run();
 };
 
 #endif

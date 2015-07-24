@@ -13,13 +13,15 @@
 #include <QGraphicsItem>
 #include <QGraphicsPixmapItem>
 #include <QHostAddress>
-#include "map.h"
-#include "readypage.h"
-#include "mainwindow.h"
 #include <QColor>
 #include <QPixmap>
 #include <QList>
 #include <QSettings>
+#include "map.h"
+#include "readypage.h"
+#include "mainwindow.h"
+#include "storing_player.h"
+
 
 class Game : public QObject
 {

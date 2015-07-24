@@ -64,9 +64,8 @@ void Game::connectServer()
 	QSettings settings("Funcatching Project", "Funcatching");
 	settings.beginGroup("IP Address");
 	QHostAddress *address = new QHostAddress(settings.value("IP").toString());
-	tcpSocket.connectToHost(*address,2048);
+    tcpSocket.connectToHost(QHostAddress::LocalHost,2048);
 	settings.endGroup();
-	qDebug()<<"sta";
 }
 
 void Game::initBlock()
@@ -95,6 +94,7 @@ void Game::loadTexture()
 
 void Game::firstDataSubmit()
 {
+    qDebug()<<"asd";
 	QByteArray block;
 	QDataStream out(&block,QIODevice::WriteOnly);
 
