@@ -1,17 +1,12 @@
-#include <QTextStream>
-#include <QCoreApplication>
-#include "server.h"
-#include "clientThread.h"
-
-QTextStream cin(stdin,QIODevice::ReadOnly);
-QTextStream cout(stdout,QIODevice::WriteOnly);
-
+#include "server_start.h"
+#include <QApplication>
+#include <QDebug>
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-    server Server;
-    if(!Server.listen(QHostAddress::Any,2048)){
-        cout<<"failed to connect to the server.\n";
-    }
+    QApplication a(argc, argv);
+        qDebug()<<"w";
+    server_start w;
+    w.show();
+
     return a.exec();
 }

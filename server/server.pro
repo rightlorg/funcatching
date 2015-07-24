@@ -1,23 +1,24 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2015-07-21T08:25:28
+# Project created by QtCreator 2015-07-23T10:34:25
 #
 #-------------------------------------------------
 
-QT           += network opengl
-QT          -=gui
-TARGET =
+QT       += core gui network
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+TARGET = server
 TEMPLATE = app
 
-SOURCES += main.cpp \
+
+SOURCES += main.cpp\
+        server_start.cpp \
     server.cpp \
-    clientThread.cpp
+    clientthread.cpp
 
-FORMS += \
-    server.ui
-
-HEADERS += \
+HEADERS  += server_start.h \
     server.h \
-    clientThread.h
+    clientthread.h
 
-RESOURCES +=
+FORMS    += server_start.ui
