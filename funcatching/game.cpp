@@ -67,13 +67,17 @@ void Game::connectServer()
     QSettings settings("Funcatching Project", "Funcatching");
     settings.beginGroup("IP Address");
     QHostAddress *address = new QHostAddress(settings.value("IP").toString());
-    tcpSocket.connectToHost(QHostAddress::LocalHost,2048);
+    tcpSocket.connectToHost("127.0.0.1",2048);
+    qDebug()<<"asdf";
     settings.endGroup();
     storing_player A;
     storing_player B;
     A.x = 0;    A.y = 0;    A.z = 0;
-    B.x = 1;    B.y = 2;    B.z = 3;
-    player.insert(1,&A);
+    B.x = 0;    B.y = 0;    B.z = 0;
+    player.insert(player_index++,&A);
+    player.insert(player_index++,&B);
+    bool a = (*player[0]==*player[1]);
+    qDebug()<<a;
 }
 
 void Game::initBlock()
