@@ -1,5 +1,6 @@
 #include "game.h"
 #include <QGLWidget>
+#include <QChar>
 
 Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	   QString mapPath, int gametype):
@@ -13,6 +14,8 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
 	mainwindow->addviewWidget(view);
 	initSceneBackground();
+
+	loadTexture();
 
 	if(gametype == SinglePlayer) {
 		map = new Map(NULL, mapPath);
@@ -89,7 +92,33 @@ void Game::initPlayer()
 
 void Game::loadTexture()
 {
+	QDir dir(":/tex/");
+	dir.setSorting(QDir::Name);
+	QStringList list, filter;
+	filter << "*.png";
+	dir.setNameFilters(filter);
+	list = dir.entryList();
+	qDebug() << list;
+	qDebug() << dir.absoluteFilePath(list[0]);
 
+	QString tmp_str;
+	QChar tmp_c;
+	int i = 0, previous = 0;
+	{
+		QList<QPixmap> newlist;
+		texture.append(newlist);
+	}
+	foreach (QString texname, list) {
+		tmp_c = texname[0];
+		tmp_str = QString(tmp_c);
+		i = tmp_str.toInt();
+		if (previous != i) {
+			QList<QPixmap> newlist;
+			texture.append(newlist);
+			previous = i;
+		}
+		texture[previous].append(QPixmap(dir.absoluteFilePath(texname)));
+	}
 }
 
 void Game::firstDataSubmit()
