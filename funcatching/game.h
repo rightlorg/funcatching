@@ -62,7 +62,7 @@ private:
 	QGraphicsView *view;
 	QString player_name;
 	QImage *headImage;
-	QList<QPixmap> texture;
+	QList<QList<QPixmap> > texture;
 	void initSceneBackground();
 };
 
