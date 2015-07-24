@@ -73,8 +73,7 @@ void Game::connectServer()
     storing_player B;
     A.x = 0;    A.y = 0;    A.z = 0;
     B.x = 1;    B.y = 2;    B.z = 3;
-    bool asdf = (A==B);
-    qDebug()<<asdf;
+    player.insert(1,&A);
 }
 
 void Game::initBlock()

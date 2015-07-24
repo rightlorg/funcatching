@@ -12,6 +12,7 @@ server::~server()
 
 void server::incomingConnection(int socketId)
 {
-    ClientThread *socket = new ClientThread();
-    socket->setSocketDescriptor(socketId);
+//    ClientThread *socket = new ClientThread();
+//    socket->setSocketDescriptor(socketId);
+    qDebug()<<"connect successfully";
 }
