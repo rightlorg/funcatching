@@ -37,3 +37,4 @@ build-funcatching-Qt4-Debug/debug/funcatching.exe
 *.Debug
 build-funcatching-Qt4-Release/release/funcatching.exe
 build-server-Qt4-Release/release/server.exe
+build-funcatching-Qt4-Release/map/新建文件夹/xx.map
