@@ -173,5 +173,6 @@ void Game::getFirst()
         newPlayer.y = y;
         newPlayer.z = z;
         player.insert(player_index,&newPlayer);
+        player_headImages.append(player_image);
     }
 }
