@@ -68,9 +68,15 @@ void Game::connectServer()
     QSettings settings("Funcatching Project", "Funcatching");
     settings.beginGroup("IP Address");
     QHostAddress *address = new QHostAddress(settings.value("IP").toString());
-    qDebug()<<"asdf";
     tcpSocket.connectToHost(*address,2048);
     settings.endGroup();
+    storing_player newPlayer;
+    newPlayer.x = 1;
+    player.insert(0,&newPlayer);
+    qDebug()<<'a';
+    newPlayer.x = 2;
+    int a = player.value(1)->x;
+    qDebug()<<a;
 }
 
 void Game::initBlock()
@@ -100,8 +106,6 @@ void Game::loadTexture()
     filter << "*.png";
     dir.setNameFilters(filter);
     list = dir.entryList();
-    qDebug() << list;
-    qDebug() << dir.absoluteFilePath(list[0]);
 
     QString tmp_str;
     QChar tmp_c;

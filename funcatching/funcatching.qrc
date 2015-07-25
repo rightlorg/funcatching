@@ -17,5 +17,59 @@
         <file>tex/4.png</file>
         <file>tex/0.png</file>
         <file>image/pix3.png</file>
+        <file>tex/0-6.png</file>
+        <file>tex/1-6.png</file>
+        <file>tex/3-4.png</file>
+        <file>tex/3-5.png</file>
+        <file>tex/3-6.png</file>
+        <file>tex/4-6.png</file>
+        <file>tex/7.png</file>
+        <file>tex/7-6.png</file>
+        <file>tex/8.png</file>
+        <file>tex/8-6.png</file>
+        <file>tex/9.png</file>
+        <file>tex/9-6.png</file>
+        <file>tex/10.png</file>
+        <file>tex/10-6.png</file>
+        <file>tex/11.png</file>
+        <file>tex/11-6.png</file>
+        <file>tex/12.png</file>
+        <file>tex/12-6.png</file>
+        <file>tex/13.png</file>
+        <file>tex/13-6.png</file>
+        <file>tex/14.png</file>
+        <file>tex/14-6.png</file>
+        <file>tex/15.png</file>
+        <file>tex/15-6.png</file>
+        <file>tex/16.png</file>
+        <file>tex/16-6.png</file>
+        <file>tex/17.png</file>
+        <file>tex/17-6.png</file>
+        <file>tex/18.png</file>
+        <file>tex/18-6.png</file>
+        <file>tex/19.png</file>
+        <file>tex/19-6.png</file>
+        <file>tex/20.png</file>
+        <file>tex/20-6.png</file>
+        <file>tex/21.png</file>
+        <file>tex/21-6.png</file>
+        <file>tex/22.png</file>
+        <file>tex/22-6.png</file>
+        <file>tex/p/7.png</file>
+        <file>tex/p/8.png</file>
+        <file>tex/p/9.png</file>
+        <file>tex/p/10.png</file>
+        <file>tex/p/11.png</file>
+        <file>tex/p/12.png</file>
+        <file>tex/p/13.png</file>
+        <file>tex/p/14.png</file>
+        <file>tex/p/15.png</file>
+        <file>tex/p/16.png</file>
+        <file>tex/p/17.png</file>
+        <file>tex/p/18.png</file>
+        <file>tex/p/19.png</file>
+        <file>tex/p/20.png</file>
+        <file>tex/p/21.png</file>
+        <file>tex/p/22.png</file>
     </qresource>
 </RCC>
