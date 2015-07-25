@@ -70,13 +70,6 @@ void Game::connectServer()
     QHostAddress *address = new QHostAddress(settings.value("IP").toString());
     tcpSocket.connectToHost(*address,2048);
     settings.endGroup();
-    storing_player newPlayer;
-    newPlayer.x = 1;
-    player.insert(0,&newPlayer);
-    qDebug()<<'a';
-    newPlayer.x = 2;
-    int a = player.value(1)->x;
-    qDebug()<<a;
 }
 
 void Game::initBlock()
@@ -166,17 +159,17 @@ void Game::getFirst()
     bool identity;
     unsigned short x,y,z;
     QString player_name;
-    QImage player_image;
+    QImage *player_image = new QImage;
 
     in >> player_index;
     for(int i=0;i<=player_index;i++){
-        in >> player_image >> player_name >>identity >> x >> y >> z;
-        storing_player newPlayer;
-        newPlayer.identety = identity;
-        newPlayer.x = x;
-        newPlayer.y = y;
-        newPlayer.z = z;
-        player.insert(player_index,&newPlayer);
-        player_headImages.append(player_image);
+        in >>/* player_image >>*/ player_name >>identity >> x >> y >> z;
+        storing_player *newPlayer;
+        newPlayer->identety = identity;
+        newPlayer->x = x;
+        newPlayer->y = y;
+        newPlayer->z = z;
+        player.insert(i,newPlayer);
+//        player_headImages->append(player_image);
     }
 }

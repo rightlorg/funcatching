@@ -66,7 +66,7 @@ private:
 	QString player_name;
 	QImage *headImage;
     QMap<unsigned short, storing_player *>player;
-    QVector<QImage>player_headImages;
+    QVector<QImage*>player_headImages;
     unsigned short player_index = 0;
 	QList<QList<QPixmap> > texture;
 	void initSceneBackground();
