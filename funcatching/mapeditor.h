@@ -65,7 +65,7 @@ private:
     void initialize_item(int row,int column,QString status);
 	QMenuBar *menuBar;
 	QLabel *statusLabel;
-	QLabel *itemstatusLabel;
+    QString itemstatusString;
     QLabel *label;
     QPixmap *statusImage;
 	QString filename;

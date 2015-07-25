@@ -13,8 +13,7 @@ MapEditor::MapEditor(QWidget *parent) :
     createTableWidget(20,20);
     createStatusBar();
     createMenuBar();
-    itemstatusLabel = new QLabel;
-    itemstatusLabel->setText("VGlass");
+    itemstatusString = "VGlass";
     ui->tableWidget->setCurrentCell(0,0);
 
     setWindowIcon(QIcon(":/image/pix.png"));
@@ -206,45 +205,45 @@ void MapEditor::ver()
 
 void MapEditor::on_VGlass_clicked()
 {
-    itemstatusLabel->setText(tr("VGlass"));
+    itemstatusString = "VGlass";
     statusLabel->setText(tr("vertical glass item choosed"));
 }
 
 void MapEditor::on_HGlass_clicked()
 {
-    itemstatusLabel->setText(tr("HGlass"));
+    itemstatusString = "HGlass";
     statusLabel->setText(tr("Horizontal glass item choosed"));
 }
 
 void MapEditor::on_VWall_clicked()
 {
-    itemstatusLabel->setText(tr("VWall"));
+    itemstatusString = "VWall";
     statusLabel->setText(tr("Vertical wall item choosed"));
 }
 
 void MapEditor::on_grass_clicked()
 {
     statusImage->load(":/image/grass.png");
-    itemstatusLabel->setText(tr("grass"));
+    itemstatusString = "grass";
     statusLabel->setText(tr("grass item choosed"));
 }
 
 void MapEditor::on_HWall_clicked()
 {
-    itemstatusLabel->setText(tr("HWall"));
+    itemstatusString = "HWall";
     statusLabel->setText(tr("Horizontal wall item choosed"));
 }
 
 void MapEditor::on_VDoor_clicked()
 {
     statusImage->load(":/image/VDoor.png");
-    itemstatusLabel->setText(tr("VDoor"));
+    itemstatusString = "VDoor";
     statusLabel->setText(tr("Vertical door item choosed"));
 }
 
 void MapEditor::on_HDoor_clicked()
 {
-    itemstatusLabel->setText(tr("HDoor"));
+    itemstatusString = "HDoor";
     statusLabel->setText(tr("Horizontal door item choosed"));
 }
 
@@ -252,14 +251,14 @@ void MapEditor::on_Floor_clicked()
 {
     statusImage->load(":/tex/3.png");
     *statusImage = statusImage->scaled(45, 40);
-    itemstatusLabel->setText(tr("WFloor"));
+    itemstatusString = "WFloor";
     on_Wood_clicked();
 }
 
 void MapEditor::on_nullButton_clicked()
 {
     statusImage->load(":/image/white.png");
-    itemstatusLabel->setText(tr(""));
+    itemstatusString = "";
     statusLabel->setText(tr("Clearing item choosed"));
 }
 
@@ -313,8 +312,8 @@ void MapEditor::closeEvent(QCloseEvent *event)
 
 void MapEditor::on_Wood_clicked()
 {
-    if(itemstatusLabel->text()=="CFloor"||itemstatusLabel->text()=="GFloor"){
-        itemstatusLabel->setText("WFloor");
+    if(itemstatusString=="CFloor"||itemstatusString=="GFloor"){
+        itemstatusString = "WFloor";
         statusLabel->setText("Wooden Floor item choosed");
     }
     ui->actionClay->setChecked(0);
@@ -324,8 +323,8 @@ void MapEditor::on_Wood_clicked()
 
 void MapEditor::on_Clay_clicked()
 {
-    if(itemstatusLabel->text()=="WFloor"||itemstatusLabel->text()=="GFloor"){
-        itemstatusLabel->setText("CFloor");
+    if(itemstatusString=="WFloor"||itemstatusString=="GFloor"){
+        itemstatusString = "CFloor";
         statusLabel->setText("Clay Floor item choosed");
     }
     ui->actionWood->setChecked(0);
@@ -335,8 +334,8 @@ void MapEditor::on_Clay_clicked()
 
 void MapEditor::on_Glass_clicked()
 {
-    if(itemstatusLabel->text()=="WFloor"||itemstatusLabel->text()=="CFloor"){
-        itemstatusLabel->setText("GFloor");
+    if(itemstatusString=="WFloor"||itemstatusString=="CFloor"){
+        itemstatusString = "GFloor";
         statusLabel->setText("Glass Floor item choosed");
     }
     ui->actionWood->setChecked(0);
@@ -386,7 +385,7 @@ void MapEditor::bat_table()
                 label = new QLabel;
                 label->setPixmap(*statusImage);
                 ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-                item->setText(itemstatusLabel->text());
+                item->setText(itemstatusString);
 
                 ui->progressBar->setValue(row*range.rowCount()+column);
             }
@@ -402,7 +401,7 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
         label = new QLabel;
         label->setPixmap(*statusImage);
         ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-        item->setText(itemstatusLabel->text());
+        item->setText(itemstatusString);
     }
 }
 

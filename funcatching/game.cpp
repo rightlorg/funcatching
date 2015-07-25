@@ -15,7 +15,7 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
     mainwindow->addviewWidget(view);
     initSceneBackground();
 
-    loadTexture();
+//    loadTexture();
 
     if(gametype == SinglePlayer) {
         map = new Map(NULL, mapPath);
