@@ -51,5 +51,66 @@
         <file>tex/21-6.png</file>
         <file>tex/22.png</file>
         <file>tex/22-6.png</file>
+        <file>tex/0-1.png</file>
+        <file>tex/1-1.png</file>
+        <file>tex/4-1.png</file>
+        <file>tex/7-1.png</file>
+        <file>tex/8-1.png</file>
+        <file>tex/9-1.png</file>
+        <file>tex/10-1.png</file>
+        <file>tex/11-1.png</file>
+        <file>tex/12-1.png</file>
+        <file>tex/13-1.png</file>
+        <file>tex/14-1.png</file>
+        <file>tex/15-1.png</file>
+        <file>tex/16-1.png</file>
+        <file>tex/17-1.png</file>
+        <file>tex/18-1.png</file>
+        <file>tex/19-1.png</file>
+        <file>tex/20-1.png</file>
+        <file>tex/21-1.png</file>
+        <file>tex/22-1.png</file>
+        <file>tex/23-1.png</file>
+        <file>tex/23-6.png</file>
+        <file>tex/23.png</file>
+        <file>tex/24-1.png</file>
+        <file>tex/24-6.png</file>
+        <file>tex/24.png</file>
+        <file>tex/25-1.png</file>
+        <file>tex/25-6.png</file>
+        <file>tex/25.png</file>
+        <file>tex/26-1.png</file>
+        <file>tex/26-6.png</file>
+        <file>tex/26.png</file>
+        <file>tex/27-1.png</file>
+        <file>tex/27-6.png</file>
+        <file>tex/27.png</file>
+        <file>tex/28-1.png</file>
+        <file>tex/28-6.png</file>
+        <file>tex/28.png</file>
+        <file>tex/29-1.png</file>
+        <file>tex/29-6.png</file>
+        <file>tex/29.png</file>
+        <file>tex/30-1.png</file>
+        <file>tex/30-6.png</file>
+        <file>tex/30.png</file>
+        <file>tex/31-1.png</file>
+        <file>tex/31-6.png</file>
+        <file>tex/31.png</file>
+        <file>tex/32-1.png</file>
+        <file>tex/32-6.png</file>
+        <file>tex/32.png</file>
+        <file>tex/33-1.png</file>
+        <file>tex/33-6.png</file>
+        <file>tex/33.png</file>
+        <file>tex/34-1.png</file>
+        <file>tex/34-6.png</file>
+        <file>tex/34.png</file>
+        <file>tex/35-1.png</file>
+        <file>tex/35-6.png</file>
+        <file>tex/35.png</file>
+        <file>tex/36-1.png</file>
+        <file>tex/36-6.png</file>
+        <file>tex/36.png</file>
     </qresource>
 </RCC>
