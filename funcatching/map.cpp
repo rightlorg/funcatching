@@ -49,6 +49,9 @@ bool Map::saveMap()
 		out << totalRow;
 		out << totalColumn;
 
+		out << spawn_row;
+		out << spawn_column;
+
 		for(quint32 rowIndex = 0; rowIndex < totalRow; rowIndex++)
 		{
 			for(quint32 columnIndex = 0; columnIndex < totalColumn; totalColumn++)
@@ -103,6 +106,10 @@ bool Map::loadMap()
 		}
 		quint16 tmp;
 		in >> totalColumn;
+		{
+			quint32 tmp;
+			in >> tmp;
+		}
 		{
 			QStringList newRow;
 			map[i].append(newRow);

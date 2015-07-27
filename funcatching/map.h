@@ -41,6 +41,7 @@ private:
 	QList<DoubleStringList> map;		//相当于三维数组
 	enum {MagicNum = 0x2FA3120C};
 	QStringList floorPath;					//每层地图文件名
+	quint32 spawn_row, spawn_column;
 };
 
 #endif // MAP_H

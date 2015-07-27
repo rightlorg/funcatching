@@ -121,7 +121,8 @@ bool MapEditor::openFile()
     ui->tableWidget->clearContents();
 
     createTableWidget(temp_row,temp_column);
-
+	in >> temp_row;
+	in >> temp_column;
     quint16 row;
     quint16 column;
     QString str;
@@ -138,6 +139,16 @@ bool MapEditor::openFile()
 
 void MapEditor::saveFile()
 {
+	bool ok = false;
+	ui->tableWidget->rowAt(0);
+		quint32 spawnblock_row = QInputDialog::getInt(this, tr("Set the spawn point"), tr("The Row of Spawn Point:"),
+							     0, 0, ui->tableWidget->rowCount(), 10, &ok);
+		if (!ok)
+			return;
+		quint32 spawnblock_column = QInputDialog::getInt(this, tr("Set the spawn point"), tr("The Column of Spawn Point:"),
+								0, 0, ui->tableWidget->colorCount(), 10, &ok);
+		if (!ok)
+			return;
     QString filename = QFileDialog::getSaveFileName(this,tr("Saving map"),".",tr("Map files (*.map)"));
     QFile file(filename);
     if(!file.open(QIODevice::WriteOnly))
@@ -152,6 +163,7 @@ void MapEditor::saveFile()
         out<<quint32(MagicNum);
         out<<quint32(ui->tableWidget->rowCount());
         out<<quint32(ui->tableWidget->columnCount());
+	out << spawnblock_row << spawnblock_column;
 
         QApplication::setOverrideCursor(Qt::WaitCursor);
         for(int row = 0;row<(ui->tableWidget->rowCount());++row)
