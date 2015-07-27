@@ -18,8 +18,10 @@ HEADERS += block.h \
            player.h \
            readypage.h \
            settings.h \
-           storing_player.h
-FORMS += gotocell.ui mainwindow.ui mapeditor.ui readypage.ui settings.ui
+           storing_player.h \
+    adjust_size.h
+FORMS += gotocell.ui mainwindow.ui mapeditor.ui readypage.ui settings.ui \
+    adjust_size.ui
 SOURCES += block.cpp \
            blocklist.cpp \
            game.cpp \
@@ -31,5 +33,6 @@ SOURCES += block.cpp \
            player.cpp \
            readypage.cpp \
            settings.cpp \
-           storing_player.cpp
+           storing_player.cpp \
+    adjust_size.cpp
 RESOURCES += funcatching.qrc

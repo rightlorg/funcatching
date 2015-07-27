@@ -18,13 +18,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QTableWidget" name="tableWidget">
-        <property name="iconSize">
-         <size>
-          <width>100</width>
-          <height>100</height>
-         </size>
-        </property>
+       <widget class="QTableView" name="tableWidget">
         <attribute name="horizontalHeaderDefaultSectionSize">
          <number>40</number>
         </attribute>
@@ -78,8 +72,7 @@
     <addaction name="actionAdd_new_row"/>
     <addaction name="actionAdd_new_Column"/>
     <addaction name="separator"/>
-    <addaction name="actionSet_Row_size"/>
-    <addaction name="actionSet_Column_size"/>
+    <addaction name="actionSize"/>
     <addaction name="separator"/>
     <addaction name="action_Bat"/>
     <addaction name="separator"/>
@@ -92,17 +85,23 @@
     <addaction name="action_About_us"/>
     <addaction name="actionVersion"/>
    </widget>
-   <widget class="QMenu" name="menuMeteria">
+   <widget class="QMenu" name="menu_Shadow">
     <property name="title">
-     <string>&amp;Meteria</string>
+     <string>&amp;Shadow</string>
     </property>
-    <addaction name="actionWood"/>
-    <addaction name="actionGlass"/>
-    <addaction name="actionClay"/>
+    <addaction name="actionTop"/>
+    <addaction name="actionButton"/>
+    <addaction name="actionLeft"/>
+    <addaction name="actionRight"/>
+    <addaction name="separator"/>
+    <addaction name="actionTop_left"/>
+    <addaction name="actionTop_right"/>
+    <addaction name="actionButton_left"/>
+    <addaction name="actionButton_right"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Tool"/>
-   <addaction name="menuMeteria"/>
+   <addaction name="menu_Shadow"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
@@ -325,6 +324,51 @@
   <action name="action_Bat">
    <property name="text">
     <string>&amp;Bat</string>
+   </property>
+  </action>
+  <action name="actionTop">
+   <property name="text">
+    <string>Top</string>
+   </property>
+  </action>
+  <action name="actionButton">
+   <property name="text">
+    <string>Button</string>
+   </property>
+  </action>
+  <action name="actionLeft">
+   <property name="text">
+    <string>Left</string>
+   </property>
+  </action>
+  <action name="actionRight">
+   <property name="text">
+    <string>Right</string>
+   </property>
+  </action>
+  <action name="actionTop_left">
+   <property name="text">
+    <string>Top-left</string>
+   </property>
+  </action>
+  <action name="actionButton_left">
+   <property name="text">
+    <string>Button-left</string>
+   </property>
+  </action>
+  <action name="actionTop_right">
+   <property name="text">
+    <string>Top-right</string>
+   </property>
+  </action>
+  <action name="actionButton_right">
+   <property name="text">
+    <string>Button-right</string>
+   </property>
+  </action>
+  <action name="actionSize">
+   <property name="text">
+    <string>Size</string>
    </property>
   </action>
  </widget>

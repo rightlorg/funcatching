@@ -10,6 +10,7 @@ MapEditor::MapEditor(QWidget *parent) :
 {
     ui->setupUi(this);
     statusImage = new QPixmap;
+    table_view_size = 2;
     createTableWidget(20,20);
     createStatusBar();
     createMenuBar();
@@ -22,6 +23,7 @@ MapEditor::MapEditor(QWidget *parent) :
 MapEditor::~MapEditor()
 {
     ui->tableWidget->clearContents();
+    qDebug()<<"asdfas";
     delete ui;
 }
 
@@ -264,10 +266,13 @@ void MapEditor::on_nullButton_clicked()
 
 void MapEditor::add_new_row()
 {
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
     int row=QInputDialog::getInteger(this,tr("Adding new rows"),tr("Please input the number of the rows you want to add"),
                                      statusLabel->text().toInt(),1,300,1);
     ui->progressBar->setMaximum(row);
+
     for(int i=0;i<row;i++){
         ui->tableWidget->insertRow(ui->tableWidget->rowCount());
         for(int column = 0;column<ui->tableWidget->columnCount();column++){
@@ -277,11 +282,14 @@ void MapEditor::add_new_row()
             ui->progressBar->setValue(row);
         }
     }
+    QApplication::restoreOverrideCursor();
     connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 }
 
 void MapEditor::add_new_column()
 {
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     disconnect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
     int column=QInputDialog::getInteger(this,tr("Adding new columns"),tr("Please input the number of the columns you want to add"),
                                         statusLabel->text().toInt(),1,300,1);
@@ -295,20 +303,21 @@ void MapEditor::add_new_column()
             ui->progressBar->setValue(column);
         }
     }
+    QApplication::restoreOverrideCursor();
     connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 }
 
-void MapEditor::closeEvent(QCloseEvent *event)
-{
-    //    int r = QMessageBox::warning(this,tr("Map editor"),
-    //                                 tr("Do you want to quit?"),
-    //                                 QMessageBox::Yes|QMessageBox::No);
-    //    if(QMessageBox::Yes==r){
-    //        event->accept();
-    //    }
-    //    else
-    //        event->ignore();
-}
+//void MapEditor::closeEvent(QCloseEvent *event)
+//{
+//        int r = QMessageBox::warning(this,tr("Map editor"),
+//                                     tr("Do you want to quit?"),
+//                                     QMessageBox::Yes|QMessageBox::No);
+//        if(QMessageBox::Yes==r){
+//            event->accept();
+//        }
+//        else
+//            event->ignore();
+//}
 
 void MapEditor::on_Wood_clicked()
 {
@@ -343,20 +352,20 @@ void MapEditor::on_Glass_clicked()
     ui->actionGlass->setChecked(1);
 }
 
-void MapEditor::setColumnSize()
+void MapEditor::adjust_table_size()
 {
-    int columnsize=QInputDialog::getInteger(this,tr("Setting column size"),tr("Please input the size of column(from 50 to 150)"),
-                                            statusLabel->text().toInt(),75,150,50);
-    for(int column = 0;column<ui->tableWidget->columnCount();++column)
-        ui->tableWidget->setColumnWidth(column,columnsize);
-}
-
-void MapEditor::setRowSize()
-{
-    int rowsize=QInputDialog::getInteger(this,tr("Setting row size"),tr("Please input the size of row(from 20 to 60)"),
-                                         statusLabel->text().toInt(),35,60,20);
-    for(int row = 0;row<ui->tableWidget->rowCount();++row)
-        ui->tableWidget->setRowHeight(row,rowsize);
+    adjust_size *ad = new adjust_size(this,table_view_size);
+    while(ad->exec())
+    {
+        table_view_size = ad->table_size;
+        for(int row = 0;row<ui->tableWidget->rowCount();++row)
+            ui->tableWidget->setRowHeight(row,table_view_size*15);
+        for(int column = 0;column<ui->tableWidget->columnCount();++column)
+            ui->tableWidget->setColumnWidth(column,table_view_size*15);
+//        foreach(QWidget *win,ui->tableWidget){
+//            win->sets
+//        }
+    }
 }
 
 void MapEditor::gotoCell()
@@ -376,6 +385,8 @@ void MapEditor::bat_table()
 {
     QList<QTableWidgetSelectionRange> ranges = ui->tableWidget->selectedRanges();
     QTableWidgetSelectionRange range = ranges.first();
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(0),ui->tableWidget->columnWidth(0)));
     ui->progressBar->setMaximum(range.rowCount()*range.columnCount());
     for(int row = 0;row<range.rowCount();++row){
@@ -391,11 +402,14 @@ void MapEditor::bat_table()
             }
         }
     }
+    QApplication::restoreOverrideCursor();
     ui->progressBar->setValue(range.rowCount()*range.columnCount());
 }
 
 void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 {
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     QTableWidgetItem *item = ui->tableWidget->item(index.row(),index.column());
     {
         label = new QLabel;
@@ -403,6 +417,7 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
         ui->tableWidget->setCellWidget(item->row(), item->column(), label);
         item->setText(itemstatusString);
     }
+    QApplication::restoreOverrideCursor();
 }
 
 void MapEditor::initialize_item(int row,int column,QString status)

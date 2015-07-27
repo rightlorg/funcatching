@@ -9,6 +9,7 @@
 #include <QPixmap>
 #include <QModelIndex>
 #include <qabstractitemview.h>
+#include "adjust_size.h"
 
 class QMenuBar;
 
@@ -25,7 +26,7 @@ public:
 	~MapEditor();
 
 protected:
-    void closeEvent(QCloseEvent *event);
+    //void closeEvent(QCloseEvent *event);
 
 private slots:
     bool openFile();
@@ -35,10 +36,9 @@ private slots:
 	void aboutFile();
 	void ver();
 	void add_new_row();
-    void setColumnSize();
-    void setRowSize();
     void gotoCell();
     void bat_table();
+    void adjust_table_size();
 
 	void add_new_column();
 	void on_VGlass_clicked();
@@ -70,6 +70,7 @@ private:
     QPixmap *statusImage;
 	QString filename;
 	int selection;
+    int table_view_size;
 	Ui::MapEditor *ui;
 };
 
