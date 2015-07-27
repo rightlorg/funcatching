@@ -100,7 +100,6 @@ void Game::loadTexture()
 	filter << "*.png";
 	dir.setNameFilters(filter);
 	list = dir.entryList();
-	qDebug() << list;
 
 	//对材质列表按名称排序
 	{
@@ -125,7 +124,7 @@ void Game::loadTexture()
 			}
 		}
 	}
-
+	qDebug() << list;
 	//载入材质
 	int i = 0, previous = 0;
 	{
