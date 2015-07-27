@@ -58,11 +58,9 @@ void MapEditor::createMenuBar()
     connect(ui->actionTool_Dialog,SIGNAL(triggered()),this,SLOT(dockDialog()));
     connect(ui->actionAdd_new_Column,SIGNAL(triggered()),this,SLOT(add_new_column()));
     connect(ui->actionAdd_new_row,SIGNAL(triggered()),this,SLOT(add_new_row()));
-    connect(ui->actionSet_Column_size,SIGNAL(triggered()),this,SLOT(setColumnSize()));
-    connect(ui->actionSet_Row_size,SIGNAL(triggered()),this,SLOT(setRowSize()));
     connect(ui->actionGo_to_cell,SIGNAL(triggered()),this,SLOT(gotoCell()));
     connect(ui->action_Bat,SIGNAL(triggered()),this,SLOT(bat_table()));
-
+    connect(ui->actionSize,SIGNAL(triggered()),this,SLOT(adjust_table_size()));
     connect(ui->actionClay,SIGNAL(triggered()),this,SLOT(on_Clay_clicked()));
     connect(ui->actionGlass,SIGNAL(triggered()),this,SLOT(on_Glass_clicked()));
     connect(ui->actionWood,SIGNAL(triggered()),this,SLOT(on_Wood_clicked()));
@@ -354,6 +352,7 @@ void MapEditor::on_Glass_clicked()
 
 void MapEditor::adjust_table_size()
 {
+    qDebug()<<"adfasd";
     adjust_size *ad = new adjust_size(this,table_view_size);
     while(ad->exec())
     {
