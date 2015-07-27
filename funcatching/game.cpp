@@ -15,7 +15,7 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
     mainwindow->addviewWidget(view);
     initSceneBackground();
 
-//    loadTexture();
+    loadTexture();
 
     if(gametype == SinglePlayer) {
         map = new Map(NULL, mapPath);
@@ -93,31 +93,84 @@ void Game::initPlayer()
 
 void Game::loadTexture()
 {
-    QDir dir(":/tex/");
-    dir.setSorting(QDir::Name);
-    QStringList list, filter;
-    filter << "*.png";
-    dir.setNameFilters(filter);
-    list = dir.entryList();
+	QDir dir(":/tex/");
+	QString tmp_str;
+	QStringList list, filter;
 
-    QString tmp_str;
-    QChar tmp_c;
-    int i = 0, previous = 0;
-    {
-        QList<QPixmap> newlist;
-        texture.append(newlist);
-    }
-    foreach (QString texname, list) {
-        tmp_c = texname[0];
-        tmp_str = QString(tmp_c);
-        i = tmp_str.toInt();
-        if (previous != i) {
-            QList<QPixmap> newlist;
-            texture.append(newlist);
-            previous = i;
-        }
-        texture[previous].append(QPixmap(dir.absoluteFilePath(texname)));
-    }
+	filter << "*.png";
+	dir.setNameFilters(filter);
+	list = dir.entryList();
+	qDebug() << list;
+	//对材质列表按名称排序
+	{
+		int a = 0, b = 0, length = list.size(), m = length;
+		for (int i = 1; i < length; ++i) {
+			m -= 1;
+//			tmp_str = QString(list[i][0]);
+////			for (int x = 1; x < list[i].size(); ++x) {
+//				if (list[i][1].toAscii() == '1' || list[i][1].toAscii() == '2' || list[i][1].toAscii() == '3' || list[i][1].toAscii() == '4' || list[i][1].toAscii() == '5' || list[i][1].toAscii() == '6' || list[i][1].toAscii() == '7' || list[i][1].toAscii() == '8' || list[i][1].toAscii() == '9' || list[i][1].toAscii() == '0')
+//				        tmp_str.append(list[i][1]);
+////			}
+//			a = tmp_str.toInt();
+			for (int j = 0; j < m; ++j) {
+				tmp_str = QString(list[j][0]);
+	//			for (int x = 1; x < list[i].size(); ++x) {
+					if (list[j][1].toAscii() == '1' || list[j][1].toAscii() == '2' || list[j][1].toAscii() == '3' || list[j][1].toAscii() == '4' || list[j][1].toAscii() == '5' || list[j][1].toAscii() == '6' || list[j][1].toAscii() == '7' || list[j][1].toAscii() == '8' || list[j][1].toAscii() == '9' || list[j][1].toAscii() == '0')
+						tmp_str.append(list[j][1]);
+	//			}
+				a = tmp_str.toInt();
+
+
+                                tmp_str = QString(list[j + 1][0]);
+//                                for (int x = 1; x < list[j].size(); ++x) {
+					if (list[j + 1][1].toAscii() == '1' || list[j + 1][1].toAscii() == '2' || list[j + 1][1].toAscii() == '3' || list[j + 1][1].toAscii() == '4' || list[j + 1][1].toAscii() == '5' || list[j + 1][1].toAscii() == '6' || list[j + 1][1].toAscii() == '7' || list[j + 1][1].toAscii() == '8' || list[j + 1][1].toAscii() == '9' || list[j + 1][1].toAscii() == '0')
+						tmp_str.append(list[j + 1][1]);
+//                                }
+				b = tmp_str.toInt();
+				if (a > b) {
+					tmp_str = list[j];
+					list[j] = list[j + 1];
+					list[j + 1] = tmp_str;
+				}
+			}
+		}
+		qDebug() << list;
+//		for (int i = 0; i < list.size() - 1; ++i) {
+//			tmp_str = QString(list[i][0]);
+//			if (i >= 10)
+//				tmp_str.append(list[i][1]);
+//			a = tmp_str.toInt();
+//			for (int j = i + 1; j < list.size(); ++j) {
+//				tmp_str = QString(list[j][0]);
+//				if (j >= 10)
+//					tmp_str.append(list[j][1]);
+//				b = tmp_str.toInt();
+
+//				if (a > b) {
+//					tmp_str = list[i];
+//					list[i] = list[j];
+//					list[j] = tmp_str;
+//				}
+//			}
+//		}
+	}
+	//载入材质
+//	int i = 0, previous = 0;
+//	{
+//		QList<QPixmap> newlist;
+//		texture.append(newlist);
+//	}
+//	foreach (QString texname, list) {
+
+//		tmp_str = QString(texname[0]);
+//		i = tmp_str.toInt();
+//		if (previous != i) {
+//			QList<QPixmap> newlist;
+//			texture.append(newlist);
+//			previous = i;
+//		}
+//		texture[previous].append(QPixmap(dir.absoluteFilePath(texname)));
+//	}
 }
 
 void Game::firstDataSubmit()
