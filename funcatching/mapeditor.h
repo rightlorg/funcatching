@@ -3,15 +3,9 @@
 
 #include <QMainWindow>
 #include <QtGui>
-#include <ui_mapeditor.h>
-#include <QLabel>
-#include <QPainter>
-#include <QPixmap>
-#include <QModelIndex>
-#include <qabstractitemview.h>
+#include <QMap>
 #include "adjust_size.h"
-
-class QMenuBar;
+#include "ui_mapeditor.h"
 
 namespace Ui {
 class MapEditor;
@@ -19,35 +13,35 @@ class MapEditor;
 
 class MapEditor : public QMainWindow
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	explicit MapEditor(QWidget *parent = 0);
-	~MapEditor();
+    explicit MapEditor(QWidget *parent = 0);
+    ~MapEditor();
 
 protected:
     //void closeEvent(QCloseEvent *event);
 
 private slots:
     bool openFile();
-	void saveFile();
-	void quitFile();
-	void dockDialog();
-	void aboutFile();
-	void ver();
-	void add_new_row();
+    void saveFile();
+    void quitFile();
+    void dockDialog();
+    void aboutFile();
+    void ver();
+    void add_new_row();
     void gotoCell();
     void bat_table();
     void adjust_table_size();
 
-	void add_new_column();
-	void on_VGlass_clicked();
-	void on_HGlass_clicked();
-	void on_VWall_clicked();
-	void on_HWall_clicked();
-	void on_VDoor_clicked();
-	void on_HDoor_clicked();
-	void on_Floor_clicked();
+    void add_new_column();
+    void on_VGlass_clicked();
+    void on_HGlass_clicked();
+    void on_VWall_clicked();
+    void on_HWall_clicked();
+    void on_VDoor_clicked();
+    void on_HDoor_clicked();
+    void on_Floor_clicked();
     void on_nullButton_clicked();
     void on_grass_clicked();
 
@@ -58,20 +52,23 @@ private slots:
     void on_tableWidget_clicked(const QModelIndex &index);
 
 private:
-	enum{MagicNum = 0x2FA3120C};
-	void createMenuBar();
+    typedef QMap<int, QMap<int, QLabel*> >all_label;
+    enum{MagicNum = 0x2FA3120C};
+    void createMenuBar();
     void createTableWidget(int a,int b);
-	void createStatusBar();
+    void createStatusBar();
+    void add_one_label(int row, int column, QLabel* newlabel);
     void initialize_item(int row,int column,QString status);
-	QMenuBar *menuBar;
-	QLabel *statusLabel;
+    all_label storing_all_label;
+    QMenuBar *menuBar;
+    QLabel *statusLabel;
     QString itemstatusString;
     QLabel *label;
     QPixmap *statusImage;
-	QString filename;
-	int selection;
+    QString filename;
+    int selection;
     int table_view_size;
-	Ui::MapEditor *ui;
+    Ui::MapEditor *ui;
 };
 
 #endif // MAPEDITOR_H

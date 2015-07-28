@@ -85,23 +85,8 @@
     <addaction name="action_About_us"/>
     <addaction name="actionVersion"/>
    </widget>
-   <widget class="QMenu" name="menu_Shadow">
-    <property name="title">
-     <string>&amp;Shadow</string>
-    </property>
-    <addaction name="actionTop"/>
-    <addaction name="actionButton"/>
-    <addaction name="actionLeft"/>
-    <addaction name="actionRight"/>
-    <addaction name="separator"/>
-    <addaction name="actionTop_left"/>
-    <addaction name="actionTop_right"/>
-    <addaction name="actionButton_left"/>
-    <addaction name="actionButton_right"/>
-   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Tool"/>
-   <addaction name="menu_Shadow"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
