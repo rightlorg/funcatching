@@ -140,15 +140,14 @@ bool MapEditor::openFile()
 void MapEditor::saveFile()
 {
 	bool ok = false;
-	ui->tableWidget->rowAt(0);
-		quint32 spawnblock_row = QInputDialog::getInt(this, tr("Set the spawn point"), tr("The Row of Spawn Point:"),
-							     0, 0, ui->tableWidget->rowCount(), 10, &ok);
-		if (!ok)
-			return;
-		quint32 spawnblock_column = QInputDialog::getInt(this, tr("Set the spawn point"), tr("The Column of Spawn Point:"),
-								0, 0, ui->tableWidget->colorCount(), 10, &ok);
-		if (!ok)
-			return;
+	quint32 spawnblock_row = QInputDialog::getInt(this, tr("Set the spawn point"), tr("The Row of Spawn Point:"),
+						     0, 0, ui->tableWidget->rowCount(), 10, &ok);
+	if (!ok)
+		return;
+	quint32 spawnblock_column = QInputDialog::getInt(this, tr("Set the spawn point"), tr("The Column of Spawn Point:"),
+							0, 0, ui->tableWidget->colorCount(), 10, &ok);
+	if (!ok)
+		return;
     QString filename = QFileDialog::getSaveFileName(this,tr("Saving map"),".",tr("Map files (*.map)"));
     QFile file(filename);
     if(!file.open(QIODevice::WriteOnly))
