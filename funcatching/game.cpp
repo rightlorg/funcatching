@@ -116,12 +116,20 @@ void Game::loadTexture()
 			m -= 1;
 			for (int j = 0; j < m; ++j) {
 				tmp_str = QString(list[j][0]);
-				if (list[j][1].toAscii() == '1' || list[j][1].toAscii() == '2' || list[j][1].toAscii() == '3' || list[j][1].toAscii() == '4' || list[j][1].toAscii() == '5' || list[j][1].toAscii() == '6' || list[j][1].toAscii() == '7' || list[j][1].toAscii() == '8' || list[j][1].toAscii() == '9' || list[j][1].toAscii() == '0')
+				if (list[j][1].toAscii() == '1' || list[j][1].toAscii() == '2' ||
+					list[j][1].toAscii() == '3' || list[j][1].toAscii() == '4' ||
+					list[j][1].toAscii() == '5' || list[j][1].toAscii() == '6' ||
+					list[j][1].toAscii() == '7' || list[j][1].toAscii() == '8' ||
+					list[j][1].toAscii() == '9' || list[j][1].toAscii() == '0')
 					tmp_str.append(list[j][1]);
 				a = tmp_str.toInt();
 
 				tmp_str = QString(list[j + 1][0]);
-				if (list[j + 1][1].toAscii() == '1' || list[j + 1][1].toAscii() == '2' || list[j + 1][1].toAscii() == '3' || list[j + 1][1].toAscii() == '4' || list[j + 1][1].toAscii() == '5' || list[j + 1][1].toAscii() == '6' || list[j + 1][1].toAscii() == '7' || list[j + 1][1].toAscii() == '8' || list[j + 1][1].toAscii() == '9' || list[j + 1][1].toAscii() == '0')
+				if (list[j + 1][1].toAscii() == '1' || list[j + 1][1].toAscii() == '2' ||
+					list[j + 1][1].toAscii() == '3' || list[j + 1][1].toAscii() == '4' ||
+					list[j + 1][1].toAscii() == '5' || list[j + 1][1].toAscii() == '6' ||
+					list[j + 1][1].toAscii() == '7' || list[j + 1][1].toAscii() == '8' ||
+					list[j + 1][1].toAscii() == '9' || list[j + 1][1].toAscii() == '0')
 					tmp_str.append(list[j + 1][1]);
 				b = tmp_str.toInt();
 				if (a > b) {
