@@ -1,5 +1,4 @@
 #include <QtGui>
-
 #include "adjust_size.h"
 
 adjust_size::adjust_size(QWidget *parent)
@@ -9,7 +8,6 @@ adjust_size::adjust_size(QWidget *parent)
     ui->setupUi(this);
     _size = 0;
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
-
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
 }
 
@@ -33,7 +31,6 @@ void adjust_size::on_horizontalSlider_valueChanged(int value)
         break;
     }
 }
-
 void adjust_size::on_buttonBox_accepted()
 {
     this->hide();
