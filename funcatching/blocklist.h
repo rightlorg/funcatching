@@ -9,6 +9,7 @@
 class BlockList : public QObject
 {
 	Q_OBJECT
+
 public:
 	BlockList(QObject *parent = 0);
 	quint8 getValue(QString key);

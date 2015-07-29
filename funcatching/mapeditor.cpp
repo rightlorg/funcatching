@@ -121,7 +121,8 @@ bool MapEditor::openFile()
     ui->tableWidget->clearContents();
 
     createTableWidget(temp_row,temp_column);
-	in >> temp_row >> temp_column;
+    in >> temp_row;
+    in >> temp_column;
     quint16 row;
     quint16 column;
     QString str;
@@ -136,17 +137,17 @@ bool MapEditor::openFile()
     return true;
 }
 
-void MapEditor::saveFile()
+void MapEditor::save\File()
 {
-	bool ok = false;
-	quint32 spawnblock_row = QInputDialog::getInt(this, tr("Set the spawn point"), tr("The Row of Spawn Point:"),
-						     0, 0, ui->tableWidget->rowCount(), 10, &ok);
-	if (!ok)
-		return;
-	quint32 spawnblock_column = QInputDialog::getInt(this, tr("Set the spawn point"), tr("The Column of Spawn Point:"),
-							0, 0, ui->tableWidget->colorCount(), 10, &ok);
-	if (!ok)
-		return;
+    bool ok = false;
+    quint32 spawnblock_row = QInputDialog::getInt(this, tr("Set the spawn point"), tr("The Row of Spawn Point:"),
+                                                  0, 0, ui->tableWidget->rowCount(), 10, &ok);
+    if (!ok)
+        return;
+    quint32 spawnblock_column = QInputDialog::getInt(this, tr("Set the spawn point"), tr("The Column of Spawn Point:"),
+                                                     0, 0, ui->tableWidget->colorCount(), 10, &ok);
+    if (!ok)
+        return;
     QString filename = QFileDialog::getSaveFileName(this,tr("Saving map"),".",tr("Map files (*.map)"));
     QFile file(filename);
     if(!file.open(QIODevice::WriteOnly))
@@ -161,7 +162,7 @@ void MapEditor::saveFile()
         out<<quint32(MagicNum);
         out<<quint32(ui->tableWidget->rowCount());
         out<<quint32(ui->tableWidget->columnCount());
-	out << spawnblock_row << spawnblock_column;
+        out << spawnblock_row << spawnblock_column;
 
         QApplication::setOverrideCursor(Qt::WaitCursor);
         for(int row = 0;row<(ui->tableWidget->rowCount());++row)
@@ -362,7 +363,6 @@ void MapEditor::on_Glass_clicked()
 
 void MapEditor::adjust_table_size()
 {
-    qDebug()<<"adfasd";
     adjust_size *ad = new adjust_size(this,table_view_size);
     while(ad->exec())
     {
@@ -371,9 +371,7 @@ void MapEditor::adjust_table_size()
             ui->tableWidget->setRowHeight(row,table_view_size*15);
         for(int column = 0;column<ui->tableWidget->columnCount();++column)
             ui->tableWidget->setColumnWidth(column,table_view_size*15);
-//        foreach(QWidget *win,ui->tableWidget){
-//            win->sets
-//        }
+        qDebug()<<table_view_size;
     }
 }
 
@@ -406,6 +404,7 @@ void MapEditor::bat_table()
                 label->setPixmap(*statusImage);
                 ui->tableWidget->setCellWidget(item->row(), item->column(), label);
                 item->setText(itemstatusString);
+                add_one_label(item->row(),item->column(),label);
 
                 ui->progressBar->setValue(row*range.rowCount()+column);
             }
@@ -425,6 +424,7 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
         label->setPixmap(*statusImage);
         ui->tableWidget->setCellWidget(item->row(), item->column(), label);
         item->setText(itemstatusString);
+        add_one_label(item->row(),item->column(),label);
     }
     QApplication::restoreOverrideCursor();
 }
@@ -443,4 +443,12 @@ void MapEditor::initialize_item(int row,int column,QString status)
         ui->tableWidget->setCellWidget(item->row(), item->column(), label);
         item->setText("grass");
     }
+}
+
+void MapEditor::add_one_label(int row, int column, QLabel* newlabel)
+{
+    QMap<int, QLabel*> map;
+    map.insert(column,newlabel);
+    storing_all_label.insert(row, map);
+    qDebug()<<"hello world";
 }
