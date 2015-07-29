@@ -15,11 +15,17 @@
 #include <QDataStream>
 #include <QStringList>
 #include <QList>
-#include	<QDir>
+#include <QDir>
 #include <QMessageBox>
 #include <QDebug>
 
-typedef QList<QList<quint8> > DoubleQuintList;
+struct mapBlcok
+{
+	quint8 id;
+	quint8 status;
+};
+
+typedef QList<QList<mapBlcok> > DoublemapBlockList;
 
 class Map : public QObject
 {
@@ -29,16 +35,17 @@ public:
 	~Map();
 	bool saveMap();
 	bool loadMap();
-	quint8 at(int x, int y, int z);
+	mapBlcok at(int x, int y, int z);
 	bool change(int x, int y, int z);
 	int mapRowSize(int floor);
 	int mapColumnSize(int floor);
+	int findWall(int x, int y, int z);
 signals:
 
 public slots:
 
 private:
-	QList<DoubleQuintList> map;		//相当于三维数组
+	QList<DoublemapBlockList> map;		//相当于三维数组
 	enum {MagicNum = 0x2FA3120C};
 	QStringList floorPath;					//每层地图文件名
 	quint32 spawn_row, spawn_column;

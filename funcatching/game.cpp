@@ -23,7 +23,7 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
             readypage->back();
             delete this;
         }
-	PaintBlocks(0);
+	paintBlocks(0);
         initPlayer();
     } else {
         connectServer();
@@ -72,21 +72,25 @@ void Game::connectServer()
     settings.endGroup();
 }
 
-void Game::PaintBlocks(int floor)
+void Game::paintBlocks(int floor)
 {
     int rowsize = map->mapRowSize(0);
     int columnsize = map->mapRowSize(0);
+    int shadowStyle = 8;
     qDebug() << rowsize << columnsize;
     for(int i = 0; i < rowsize; i++) {
         for (int j = 0; j < columnsize; j++) {
-		if (map->at(j, i, floor) == 0) {
+		if (map->at(j, i, floor).id == 0)
 			continue;
-		}
-	    QGraphicsPixmapItem *block = new QGraphicsPixmapItem(
-					texture[map->at(j, i, floor)][0]);
-	    block->setPos(32 * j, 32 * i);
-	    scene->addItem(block);
-        }
+		shadowStyle = map->findWall(j, i, floor);
+		if (map->at(i, j, floor).id > texture.size())
+			continue;
+		QGraphicsPixmapItem *block = new QGraphicsPixmapItem(
+						texture[map->at(j, i, floor).id][shadowStyle]);
+
+		block->setPos(32 * j, 32 * i);
+		scene->addItem(block);
+	}
     }
 }
 
@@ -112,13 +116,13 @@ void Game::loadTexture()
 			m -= 1;
 			for (int j = 0; j < m; ++j) {
 				tmp_str = QString(list[j][0]);
-					if (list[j][1].toAscii() == '1' || list[j][1].toAscii() == '2' || list[j][1].toAscii() == '3' || list[j][1].toAscii() == '4' || list[j][1].toAscii() == '5' || list[j][1].toAscii() == '6' || list[j][1].toAscii() == '7' || list[j][1].toAscii() == '8' || list[j][1].toAscii() == '9' || list[j][1].toAscii() == '0')
-						tmp_str.append(list[j][1]);
+				if (list[j][1].toAscii() == '1' || list[j][1].toAscii() == '2' || list[j][1].toAscii() == '3' || list[j][1].toAscii() == '4' || list[j][1].toAscii() == '5' || list[j][1].toAscii() == '6' || list[j][1].toAscii() == '7' || list[j][1].toAscii() == '8' || list[j][1].toAscii() == '9' || list[j][1].toAscii() == '0')
+					tmp_str.append(list[j][1]);
 				a = tmp_str.toInt();
 
-                                tmp_str = QString(list[j + 1][0]);
-					if (list[j + 1][1].toAscii() == '1' || list[j + 1][1].toAscii() == '2' || list[j + 1][1].toAscii() == '3' || list[j + 1][1].toAscii() == '4' || list[j + 1][1].toAscii() == '5' || list[j + 1][1].toAscii() == '6' || list[j + 1][1].toAscii() == '7' || list[j + 1][1].toAscii() == '8' || list[j + 1][1].toAscii() == '9' || list[j + 1][1].toAscii() == '0')
-						tmp_str.append(list[j + 1][1]);
+				tmp_str = QString(list[j + 1][0]);
+				if (list[j + 1][1].toAscii() == '1' || list[j + 1][1].toAscii() == '2' || list[j + 1][1].toAscii() == '3' || list[j + 1][1].toAscii() == '4' || list[j + 1][1].toAscii() == '5' || list[j + 1][1].toAscii() == '6' || list[j + 1][1].toAscii() == '7' || list[j + 1][1].toAscii() == '8' || list[j + 1][1].toAscii() == '9' || list[j + 1][1].toAscii() == '0')
+					tmp_str.append(list[j + 1][1]);
 				b = tmp_str.toInt();
 				if (a > b) {
 					tmp_str = list[j];
@@ -154,22 +158,22 @@ void Game::loadTexture()
 
 void Game::firstDataSubmit()
 {
-    qDebug()<<"hehe";
-    QByteArray block;
-    QDataStream out(&block,QIODevice::WriteOnly);
+	qDebug()<<"hehe";
+	QByteArray block;
+	QDataStream out(&block,QIODevice::WriteOnly);
 
-    QSettings settings("Funcatching Project", "Funcatching");
-    settings.beginGroup("Player Name");
-    player_name = settings.value("name").toString();
-    settings.endGroup();
+	QSettings settings("Funcatching Project", "Funcatching");
+	settings.beginGroup("Player Name");
+	player_name = settings.value("name").toString();
+	settings.endGroup();
 
-    out.setVersion(QDataStream::Qt_4_8);
-    out<<quint32(0)<<player_name;//<<headImage;
-    out.device()->seek(0);
-    out<<quint32(block.size()-sizeof(quint16));
-    tcpSocket.write(block);
+	out.setVersion(QDataStream::Qt_4_8);
+	out<<quint32(0)<<player_name;//<<headImage;
+	out.device()->seek(0);
+	out<<quint32(block.size()-sizeof(quint16));
+	tcpSocket.write(block);
 
-    disconnect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
+	disconnect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
 }
 
 void initHeadPic()

@@ -51,7 +51,7 @@ private slots:
 private:
 //	    bool genHeadPic(QImage image, Camp camp, QString playerName);
 	void connectServer();
-	void PaintBlocks(int floor);
+	void paintBlocks(int floor);
 	void initPlayer();
 	void loadTexture();
 	void getHeadPic();

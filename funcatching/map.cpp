@@ -57,7 +57,8 @@ bool Map::saveMap()
 			for(quint32 columnIndex = 0; columnIndex < totalColumn; totalColumn++)
 			{
 				out << rowIndex << columnIndex;
-				out << map[i][rowIndex][columnIndex];
+				out << map[i][rowIndex][columnIndex].id;
+				out << map[i][rowIndex][columnIndex].status;
 			}
 		}
 	}
@@ -68,7 +69,6 @@ bool Map::saveMap()
 bool Map::loadMap()
 {
 	QFile file;
-
 	for(int i = 0; i < floorPath.size(); i++)
 	{
 		file.setFileName(floorPath[i]);
@@ -82,7 +82,7 @@ bool Map::loadMap()
 		}
 
 		//添加新层
-		DoubleQuintList newFloor;
+		DoublemapBlockList newFloor;
 		map.append(newFloor);
 
 
@@ -99,18 +99,15 @@ bool Map::loadMap()
 		quint32 totalColumn = 0;
 		int columnIndex = 0;
 		int rowIndex = 0;
-		quint8 block;
+		mapBlcok block;
 		{
 			quint32 tmp;
 			in >> tmp;				//抛弃垃圾值
 		}
 		in >> totalColumn;
+		in >> spawn_row >> spawn_column;
 		{
-			quint32 tmp;
-			in >> tmp >> tmp;
-		}
-		{
-			QList<quint8> newRow;
+			QList<mapBlcok> newRow;
 			map[i].append(newRow);
 		}
 		quint16 tmp;
@@ -119,13 +116,14 @@ bool Map::loadMap()
 			//检查是否要换行
 			if(columnIndex == (int)totalColumn)
 			{
-				QList<quint8> newRow;
+				QList<mapBlcok> newRow;
 				map[i].append(newRow);
 				rowIndex++;
 				columnIndex = 0;
 			}
-			in >> tmp >> tmp >> block;			//抛弃垃圾值
-			qDebug() << block;
+			in >> tmp >> tmp;			//抛弃垃圾值
+			in >> block.id >> block.status;
+			qDebug() << block.id << block.status;
 			map[i][rowIndex].append(block);
 			columnIndex++;
 		}
@@ -134,7 +132,7 @@ bool Map::loadMap()
 	return true;
 }
 
-quint8 Map::at(int x, int y, int z)
+mapBlcok Map::at(int x, int y, int z)
 {
 	return map[z][y][x];
 }
@@ -147,4 +145,54 @@ int Map::mapRowSize(int floor)
 int Map::mapColumnSize(int floor)
 {
 	return map[floor][0].size();
+}
+
+
+// -1: No wall near by
+// 0:right
+// 1:left
+// 2:bottom
+// 3:top
+// 4:bottom left
+// 5:top right
+// 6:top left
+// 7:bottom right
+int Map::findWall(int x, int y, int z)
+{
+	if (map[z][y][x].status == 1) {
+		return -1;
+	}
+	//right&bottom&top
+	if (x + 1 < map[z][y].size()) {
+		if (map[z][y][x + 1].status == 1) {
+			if (y + 1 < map[z].size())
+				if (map[z][y + 1][x].status == 1)
+					return 7;
+			if (y - 1 >= 0)
+				if (map[z][y - 1][x].status ==1)
+					return 5;
+			return 0;
+		}
+	}
+	//left&bottom&top
+	if (x - 1 >= 0) {
+		if (map[z][y][x - 1].status == 1) {
+			if (y + 1 < map[z].size())
+				if (map[z][y + 1][x].status == 1)
+					return 4;
+			if (y - 1 >= 0)
+				if (map[z][y - 1][x].status == 1)
+					return 6;
+			return 1;
+		}
+	}
+	//top
+	if (y - 1 >= 0)
+		if (map[z][y -1][x].status == 1)
+			return 3;
+	//bottom
+	if (y + 1 < map[z].size())
+		if (map[z][y + 1][x].status == 1)
+			return 2;
+	return -1;
 }
