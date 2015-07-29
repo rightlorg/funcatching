@@ -23,7 +23,7 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
             readypage->back();
             delete this;
         }
-        initBlock();
+	PaintBlocks(0);
         initPlayer();
     } else {
         connectServer();
@@ -72,15 +72,18 @@ void Game::connectServer()
     settings.endGroup();
 }
 
-void Game::initBlock()
+void Game::PaintBlocks(int floor)
 {
     int rowsize = map->mapRowSize(0);
     int columnsize = map->mapRowSize(0);
     qDebug() << rowsize << columnsize;
-    QPixmap tex(":/tex/3.png");
     for(int i = 0; i < rowsize; i++) {
         for (int j = 0; j < columnsize; j++) {
-	    QGraphicsPixmapItem *block = new QGraphicsPixmapItem(tex);
+		if (map->at(j, i, floor) == 0) {
+			continue;
+		}
+	    QGraphicsPixmapItem *block = new QGraphicsPixmapItem(
+					texture[map->at(j, i, floor)][0]);
 	    block->setPos(32 * j, 32 * i);
 	    scene->addItem(block);
         }

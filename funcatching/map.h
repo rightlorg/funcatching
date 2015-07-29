@@ -29,7 +29,7 @@ public:
 	~Map();
 	bool saveMap();
 	bool loadMap();
-	QString at(int x, int y, int z);
+	quint8 at(int x, int y, int z);
 	bool change(int x, int y, int z);
 	int mapRowSize(int floor);
 	int mapColumnSize(int floor);

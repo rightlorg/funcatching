@@ -2,17 +2,17 @@
 
 BlockList::BlockList(QObject *parent) : QObject(parent)
 {
-	blocklist[tr("Sand")] = 0;
-	blocklist[tr("Stone")] = 1;
-	blocklist[tr("Vertical Glass Pane")] = 2;
-	blocklist[tr("Oak Wood")] = 3;
-	blocklist[tr("Glass")] = 4;
-	blocklist[tr("Birch")] = 5;
-	blocklist[tr("Mushroom")] = 6;
+	blocklist[tr("NULL")]			= 0;
+	blocklist[tr("Stone")]			= 1;
+	blocklist[tr("Vertical Glass Pane")]	= 2;
+	blocklist[tr("Oak Wood")]		= 3;
+	blocklist[tr("Glass")]			= 4;
+	blocklist[tr("Birch")]			= 5;
+	blocklist[tr("Mushroom")]		= 6;
 //	blocklist[tr("")] = 7;
 //	blocklist[tr("")] = 8;
 //	blocklist[tr("")] = 9;
-//	blocklist[tr("")] = 10;
+//	blocklist[tr("")] = 10; 
 //	blocklist[tr("")] = 11;
 //	blocklist[tr("")] = 12;
 //	blocklist[tr("")] = 13;
@@ -27,6 +27,7 @@ BlockList::BlockList(QObject *parent) : QObject(parent)
 //	blocklist[tr("")] = 22;
 //	blocklist[tr("")] = 23;
 //	blocklist[tr("")] = 24;
+//	blocklist[tr("Sand")]= 37;
 
 }
 

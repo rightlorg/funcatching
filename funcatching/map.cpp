@@ -134,9 +134,9 @@ bool Map::loadMap()
 	return true;
 }
 
-QString Map::at(int x, int y, int z)
+quint8 Map::at(int x, int y, int z)
 {
-//	return;
+	return map[z][y][x];
 }
 
 int Map::mapRowSize(int floor)

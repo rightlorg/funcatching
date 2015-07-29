@@ -137,7 +137,7 @@ bool MapEditor::openFile()
     return true;
 }
 
-void MapEditor::save\File()
+void MapEditor::saveFile()
 {
     bool ok = false;
     quint32 spawnblock_row = QInputDialog::getInt(this, tr("Set the spawn point"), tr("The Row of Spawn Point:"),
