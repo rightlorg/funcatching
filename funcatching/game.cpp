@@ -76,6 +76,7 @@ void Game::initBlock()
 {
     int rowsize = map->mapRowSize(0);
     int columnsize = map->mapRowSize(0);
+    qDebug() << rowsize << columnsize;
     QPixmap tex(":/tex/3.png");
     for(int i = 0; i < rowsize; i++) {
         for (int j = 0; j < columnsize; j++) {
@@ -137,7 +138,7 @@ void Game::loadTexture()
 		if (texname[1].toAscii() == '1' || texname[1].toAscii() == '2' || texname[1].toAscii() == '3' || texname[1].toAscii() == '4' || texname[1].toAscii() == '5' || texname[1].toAscii() == '6' || texname[1].toAscii() == '7' || texname[1].toAscii() == '8' || texname[1].toAscii() == '9' || texname[1].toAscii() == '0') {
 			tmp_str.append(texname[1]);
 		}
-		qDebug() << tmp_str;
+
 		i = tmp_str.toInt();
 		if (previous != i) {
 			QList<QPixmap> newlist;

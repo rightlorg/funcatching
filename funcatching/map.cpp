@@ -82,7 +82,7 @@ bool Map::loadMap()
 		}
 
 		//添加新层
-		QList<QStringList> newFloor;
+		DoubleQuintList newFloor;
 		map.append(newFloor);
 
 
@@ -99,7 +99,7 @@ bool Map::loadMap()
 		quint32 totalColumn = 0;
 		int columnIndex = 0;
 		int rowIndex = 0;
-		QString str;
+		quint8 block;
 		{
 			quint32 tmp;
 			in >> tmp;				//抛弃垃圾值
@@ -108,10 +108,10 @@ bool Map::loadMap()
 		in >> totalColumn;
 		{
 			quint32 tmp;
-			in >> tmp;
+			in >> tmp >> tmp;
 		}
 		{
-			QStringList newRow;
+			QList<quint8> newRow;
 			map[i].append(newRow);
 		}
 		while(!in.atEnd())
@@ -119,14 +119,14 @@ bool Map::loadMap()
 			//检查是否要换行
 			if(columnIndex == (int)totalColumn)
 			{
-				QStringList newRow;
+				QList<quint8> newRow;
 				map[i].append(newRow);
 				rowIndex++;
 				columnIndex = 0;
 			}
-			in >> tmp >> tmp >> str;			//抛弃垃圾值
-			qDebug() << str;
-			map[i][rowIndex].append(str);
+			in >> tmp >> tmp >> block;			//抛弃垃圾值
+			qDebug() << block;
+			map[i][rowIndex].append(block);
 			columnIndex++;
 		}
 		file.close();

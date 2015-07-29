@@ -19,7 +19,7 @@
 #include <QMessageBox>
 #include <QDebug>
 
-typedef QList<QStringList> DoubleStringList;
+typedef QList<QList<quint8> > DoubleQuintList;
 
 class Map : public QObject
 {
@@ -38,7 +38,7 @@ signals:
 public slots:
 
 private:
-	QList<DoubleStringList> map;		//相当于三维数组
+	QList<DoubleQuintList> map;		//相当于三维数组
 	enum {MagicNum = 0x2FA3120C};
 	QStringList floorPath;					//每层地图文件名
 	quint32 spawn_row, spawn_column;
