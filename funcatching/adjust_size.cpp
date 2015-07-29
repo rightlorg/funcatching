@@ -1,72 +1,40 @@
+#include <QtGui>
+
 #include "adjust_size.h"
-#include "ui_adjust_size.h"
-#include <QDebug>
-adjust_size::adjust_size(QWidget *parent,int size) :
-    QDialog(parent),
-    ui(new Ui::adjust_size)
+
+adjust_size::adjust_size(QWidget *parent)
+    : QDialog(parent),
+      ui(new Ui::adjust_size)
 {
     ui->setupUi(this);
-    table_size = size;
-    ui->size_slider->setValue(table_size);
-    switch(table_size){
-    case 0:
-        ui->size_label->setText("very small");
-        break;
-    case 1:
-        ui->size_label->setText("small");
-        break;
-    case 2:
-        ui->size_label->setText("normal");
-        break;
-    case 3:
-        ui->size_label->setText("big");
-        break;
-    case 4:
-        ui->size_label->setText("very big");
-        break;
-    }
+    _size = 0;
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+
+    connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
 }
 
-adjust_size::~adjust_size()
+void adjust_size::on_horizontalSlider_valueChanged(int value)
 {
-    delete ui;
-}
-
-void adjust_size::on_size_slider_valueChanged(int value)
-{
-    table_size = value;
     switch(value){
     case 0:
-        ui->size_label->setText("very small");
+        ui->label->setText("very small");
         break;
     case 1:
-        ui->size_label->setText("small");
+        ui->label->setText("small");
         break;
     case 2:
-        ui->size_label->setText("normal");
+        ui->label->setText("normal");
         break;
     case 3:
-        ui->size_label->setText("big");
+        ui->label->setText("big");
         break;
     case 4:
-        ui->size_label->setText("very big");
+        ui->label->setText("very big");
         break;
     }
 }
 
-void adjust_size::on_canceButton_clicked()
+void adjust_size::on_buttonBox_accepted()
 {
-    close_event();
-}
-
-void adjust_size::on_okButton_clicked()
-{
-    this->accept();
-    close_event();
-}
-
-void adjust_size::close_event()
-{
-    delete ui;
     this->hide();
 }
