@@ -104,7 +104,6 @@ bool Map::loadMap()
 			quint32 tmp;
 			in >> tmp;				//抛弃垃圾值
 		}
-		quint16 tmp;
 		in >> totalColumn;
 		{
 			quint32 tmp;
@@ -114,6 +113,7 @@ bool Map::loadMap()
 			QList<quint8> newRow;
 			map[i].append(newRow);
 		}
+		quint16 tmp;
 		while(!in.atEnd())
 		{
 			//检查是否要换行

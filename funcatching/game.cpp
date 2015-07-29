@@ -80,9 +80,9 @@ void Game::initBlock()
     QPixmap tex(":/tex/3.png");
     for(int i = 0; i < rowsize; i++) {
         for (int j = 0; j < columnsize; j++) {
-            QGraphicsPixmapItem *block = new QGraphicsPixmapItem(tex);
-            block->setPos(32 * j, 32 * i);
-            scene->addItem(block);
+	    QGraphicsPixmapItem *block = new QGraphicsPixmapItem(tex);
+	    block->setPos(32 * j, 32 * i);
+	    scene->addItem(block);
         }
     }
 }

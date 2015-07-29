@@ -121,8 +121,7 @@ bool MapEditor::openFile()
     ui->tableWidget->clearContents();
 
     createTableWidget(temp_row,temp_column);
-	in >> temp_row;
-	in >> temp_column;
+	in >> temp_row >> temp_column;
     quint16 row;
     quint16 column;
     QString str;
