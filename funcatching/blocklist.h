@@ -3,8 +3,11 @@
 
 #include <QString>
 #include <QHash>
+#include <QMap>
 #include <QObject>
 #include <QString>
+
+
 
 class BlockList : public QObject
 {
@@ -12,11 +15,13 @@ class BlockList : public QObject
 
 public:
 	BlockList(QObject *parent = 0);
-	quint8 getValue(QString key);
-	QString getKey(quint8 value);
+//	quint8 getValue(QString key);
+//	QString getKey(quint8 value);
+    QMap<QString, quint8> blocklist;
 	~BlockList();
 private:
-	QHash<QString, quint8> blocklist;
 };
+
+extern BlockList blocklist;
 
 #endif // BLOCKLIST_H

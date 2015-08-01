@@ -35,19 +35,19 @@ private slots:
     void adjust_table_size();
 
     void add_new_column();
-    void on_VGlass_clicked();
-    void on_HGlass_clicked();
-    void on_VWall_clicked();
-    void on_HWall_clicked();
-    void on_VDoor_clicked();
-    void on_HDoor_clicked();
-    void on_Floor_clicked();
-    void on_nullButton_clicked();
-    void on_grass_clicked();
+//    void on_VGlass_clicked();
+//    void on_HGlass_clicked();
+//    void on_VWall_clicked();
+//    void on_HWall_clicked();
+//    void on_VDoor_clicked();
+//    void on_HDoor_clicked();
+//    void on_Floor_clicked();
+//    void on_nullButton_clicked();
+//    void on_grass_clicked();
 
-    void on_Clay_clicked();
-    void on_Glass_clicked();
-    void on_Wood_clicked();
+//    void on_Clay_clicked();
+//    void on_Glass_clicked();
+//    void on_Wood_clicked();
 
     void on_tableWidget_clicked(const QModelIndex &index);
 
@@ -59,6 +59,7 @@ private:
     void createStatusBar();
     void add_one_label(int row, int column, QLabel* newlabel);
     void initialize_item(int row,int column,QString status);
+    void initdockButtos();
     all_label storing_all_label;
     QMenuBar *menuBar;
     QLabel *statusLabel;
