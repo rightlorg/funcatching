@@ -6,6 +6,8 @@
 #include <QMap>
 #include "adjust_size.h"
 #include "ui_mapeditor.h"
+#include <QList>
+#include <QPushButton>
 
 namespace Ui {
 class MapEditor;
@@ -33,7 +35,7 @@ private slots:
     void gotoCell();
     void bat_table();
     void adjust_table_size();
-
+	void ondockbuttonClicked();
     void add_new_column();
 //    void on_VGlass_clicked();
 //    void on_HGlass_clicked();
@@ -42,7 +44,7 @@ private slots:
 //    void on_VDoor_clicked();
 //    void on_HDoor_clicked();
 //    void on_Floor_clicked();
-//    void on_nullButton_clicked();
+    void on_nullButton_clicked();
 //    void on_grass_clicked();
 
 //    void on_Clay_clicked();
@@ -50,6 +52,7 @@ private slots:
 //    void on_Wood_clicked();
 
     void on_tableWidget_clicked(const QModelIndex &index);
+
 
 private:
     typedef QMap<int, QMap<int, QLabel*> >all_label;
@@ -70,6 +73,7 @@ private:
     int selection;
     int table_view_size;
     Ui::MapEditor *ui;
+    QList<QPushButton *> dockbuttonList;
 };
 
 #endif // MAPEDITOR_H

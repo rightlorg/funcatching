@@ -18,6 +18,8 @@ MapEditor::MapEditor(QWidget *parent) :
 {
 	ui->setupUi(this);
 	statusImage = new QPixmap;
+	selection = 0;
+	dockbuttonList.append(NULL);
 	table_view_size = 2;
 	createTableWidget(20,20);
 	createStatusBar();
@@ -274,12 +276,13 @@ void MapEditor::ver()
 //    on_Wood_clicked();
 //}
 
-//void MapEditor::on_nullButton_clicked()
-//{
-//    statusImage->load(":/image/white.png");
-//    itemstatusString = "";
-//    statusLabel->setText(tr("Clearing item choosed"));
-//}
+void MapEditor::on_nullButton_clicked()
+{
+	selection = 0;
+    statusImage->load(":/image/white.png");
+    itemstatusString = "";
+    statusLabel->setText(tr("Clearing item choosed"));
+}
 
 void MapEditor::add_new_row()
 {
@@ -403,6 +406,22 @@ void MapEditor::adjust_table_size()
 	}
 }
 
+void MapEditor::ondockbuttonClicked()
+{
+	if (QPushButton* senderButton = dynamic_cast<QPushButton*>(sender())) {
+		for (int i = 0; i < dockbuttonList.size(); ++i) {
+			if (dockbuttonList[i] == senderButton) {
+				selection = i;
+				if (i ==  0) {
+					statusLabel->setText(tr("NULL"));
+				}
+				statusLabel->setText(blocklist.blocklist.key(i));
+			}
+		}
+	}
+	qDebug() << selection;
+}
+
 void MapEditor::gotoCell()
 {
 	GoToCellDialog *gotocell = new GoToCellDialog(this);
@@ -487,6 +506,9 @@ void MapEditor::initdockButtos()
 		newButton->setIcon(QIcon(picPath));
 		newButton->setIconSize(QSize(32, 32));
 		ui->verticalLayout->addWidget(newButton);
+		dockbuttonList.append(newButton);
+		connect(newButton, SIGNAL(clicked()), this, SLOT(ondockbuttonClicked()));
+
 
 	}
 }
@@ -498,3 +520,4 @@ void MapEditor::add_one_label(int row, int column, QLabel* newlabel)
 	storing_all_label.insert(row, map);
 	qDebug()<<"hello world";
 }
+

@@ -51,7 +51,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -117,13 +117,13 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>68</width>
-          <height>517</height>
+          <width>59</width>
+          <height>527</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QPushButton" name="NULL_Button">
+          <widget class="QPushButton" name="nullButton">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
