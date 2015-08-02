@@ -7,9 +7,7 @@
         <file>image/gotocell.png</file>
         <file>image/open.png</file>
         <file>image/save.png</file>
-        <file>tex/2-1.png</file>
         <file>tex/1.png</file>
-        <file>tex/2-2.png</file>
         <file>tex/3-1.png</file>
         <file>tex/3.png</file>
         <file>tex/4.png</file>
@@ -325,14 +323,16 @@
         <file>tex/36-4.png</file>
         <file>tex/36-5.png</file>
         <file>tex/36-7.png</file>
-        <file>tex/37-0.png</file>
-        <file>tex/37-1.png</file>
-        <file>tex/37-2.png</file>
-        <file>tex/37-3.png</file>
-        <file>tex/37-4.png</file>
-        <file>tex/37-5.png</file>
-        <file>tex/37-6.png</file>
-        <file>tex/37-7.png</file>
         <file>tex/37.png</file>
+        <file>tex/2-0.png</file>
+        <file>tex/2-1.png</file>
+        <file>tex/2-2.png</file>
+        <file>tex/2-3.png</file>
+        <file>tex/2-4.png</file>
+        <file>tex/2-5.png</file>
+        <file>tex/2-6.png</file>
+        <file>tex/2-7.png</file>
+        <file>tex/2.png</file>
+        <file>tex/38.png</file>
     </qresource>
 </RCC>

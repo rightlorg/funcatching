@@ -17,7 +17,7 @@ public:
 	BlockList(QObject *parent = 0);
 //	quint8 getValue(QString key);
 //	QString getKey(quint8 value);
-    QMap<QString, quint8> blocklist;
+    QHash<QString, quint8> blocklist;
 	~BlockList();
 private:
 };

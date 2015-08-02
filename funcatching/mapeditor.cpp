@@ -8,6 +8,7 @@
 #include <QSizePolicy>
 #include "blocklist.h"
 #include <QIcon>
+#include <QHash>
 
 BlockList blocklist;
 
@@ -474,15 +475,13 @@ void MapEditor::initialize_item(int row,int column,QString status)
 
 void MapEditor::initdockButtos()
 {
-	QMap<QString, quint8>::const_iterator i;
-	quint8 j = 0;
-	for (i = blocklist.blocklist.constBegin(); i != blocklist.blocklist.constEnd(); ++i, ++j) {
+	for (quint8 i = 1; i < blocklist.blocklist.size(); ++i) {
 		QPushButton *newButton = new QPushButton(ui->dockWidget);
 		newButton->setMaximumSize(36, 36);
 		newButton->setMinimumSize(36, 36);
 		newButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
-		QString picPath = ":/tex/" + QString::number(i.value()) + ".png";
+		QString picPath = ":/tex/" + QString::number(i) + ".png";
 		qDebug() << picPath;
 
 		newButton->setIcon(QIcon(picPath));
