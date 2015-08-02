@@ -26,6 +26,7 @@ MapEditor::MapEditor(QWidget *parent) :
 	createMenuBar();
 	itemstatusString = "VGlass";
 	ui->tableWidget->setCurrentCell(0,0);
+	ui->tableWidget->setIconSize(QSize(32, 32));
 	setWindowIcon(QIcon(":/image/pix.png"));
 	initdockButtos();
 }
@@ -279,9 +280,12 @@ void MapEditor::ver()
 void MapEditor::on_nullButton_clicked()
 {
 	selection = 0;
-    statusImage->load(":/image/white.png");
-    itemstatusString = "";
-    statusLabel->setText(tr("Clearing item choosed"));
+	qDebug() << selection;
+	statusLabel->setText(tr("NULL"));
+	statusImage->load(":/image/white.png");
+//    statusImage->load(":/image/white.png");
+//    itemstatusString = "";
+//    statusLabel->setText(tr("Clearing item choosed"));
 }
 
 void MapEditor::add_new_row()
@@ -411,10 +415,8 @@ void MapEditor::ondockbuttonClicked()
 	if (QPushButton* senderButton = dynamic_cast<QPushButton*>(sender())) {
 		for (int i = 0; i < dockbuttonList.size(); ++i) {
 			if (dockbuttonList[i] == senderButton) {
-				selection = i;
-				if (i ==  0) {
-					statusLabel->setText(tr("NULL"));
-				}
+				selection = i;				
+				statusImage->load(":/tex/" + QString::number(i) + ".png");
 				statusLabel->setText(blocklist.blocklist.key(i));
 			}
 		}
@@ -467,11 +469,13 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 	qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
 	QTableWidgetItem *item = ui->tableWidget->item(index.row(),index.column());
 	{
-		label = new QLabel;
-		label->setPixmap(*statusImage);
-		ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-		item->setText(itemstatusString);
-		add_one_label(item->row(),item->column(),label);
+//		item->setBackground(*statusImage);
+			item->setIcon(QIcon(*statusImage));
+//		label = new QLabel;
+//		label->setPixmap(*statusImage);
+//		ui->tableWidget->setCellWidget(item->row(), item->column(), label);
+//		item->setText(itemstatusString);
+//		add_one_label(item->row(),item->column(),label);
 	}
 	QApplication::restoreOverrideCursor();
 }
@@ -481,15 +485,15 @@ void MapEditor::initialize_item(int row,int column,QString status)
 	label = new QLabel;
 	QTableWidgetItem *item = ui->tableWidget->item(row,column);
 	ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(0),ui->tableWidget->columnWidth(0)));
-	if(status.toAscii()=="grass"){
-		label->setPixmap(QPixmap(":/image/grass"));
-		ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-		item->setText("grass");
-	}else if(status.toAscii()=="VDoor"){
-		label->setPixmap(QPixmap(":/image/grass"));
-		ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-		item->setText("grass");
-	}
+//	if(status.toAscii()=="grass"){
+//		label->setPixmap(QPixmap(":/image/grass"));
+//		ui->tableWidget->setCellWidget(item->row(), item->column(), label);
+//		item->setText("grass");
+//	}else if(status.toAscii()=="VDoor"){
+//		label->setPixmap(QPixmap(":/image/grass"));
+//		ui->tableWidget->setCellWidget(item->row(), item->column(), label);
+//		item->setText("grass");
+//	}
 }
 
 void MapEditor::initdockButtos()
