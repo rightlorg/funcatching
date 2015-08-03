@@ -179,13 +179,16 @@ void MapEditor::saveFile()
 		out<<quint32(ui->tableWidget->columnCount());
 		out << spawnblock_row << spawnblock_column;
 
+		quint8 id, status;
 		QApplication::setOverrideCursor(Qt::WaitCursor);
 		for(int row = 0;row<(ui->tableWidget->rowCount());++row)
 		{
 			for(int column = 0;column<(ui->tableWidget->columnCount());++column)
 			{
-				QString str = ui->tableWidget->item(row,column)->text();
-				out<<quint16(row)<<quint16(column)<<str;
+				out<<quint32(row)<<quint32(column);
+				id = ui->tableWidget->item(row,column)->data(88).toUInt();
+				status = ui->tableWidget->item(row, column)->data(66).toUInt();
+				out << id << status;
 
 			}
 		}

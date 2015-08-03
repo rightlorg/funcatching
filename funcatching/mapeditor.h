@@ -39,25 +39,9 @@ private slots:
     void add_new_column();
     void onactionWall_clicded();
     void onactionNO_clicded();
-//    void on_VGlass_clicked();
-//    void on_HGlass_clicked();
-//    void on_VWall_clicked();
-//    void on_HWall_clicked();
-//    void on_VDoor_clicked();
-//    void on_HDoor_clicked();
-//    void on_Floor_clicked();
     void on_nullButton_clicked();
-//    void on_grass_clicked();
-
-//    void on_Clay_clicked();
-//    void on_Glass_clicked();
-//    void on_Wood_clicked();
-
     void on_tableWidget_clicked(const QModelIndex &index);
-
-
     void on_noButton_clicked();
-
     void on_wallButton_clicked();
 
 private:
