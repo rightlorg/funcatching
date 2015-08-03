@@ -24,6 +24,7 @@ MapEditor::MapEditor(QWidget *parent) :
 	createTableWidget(20,20);
 	createStatusBar();
 	createMenuBar();
+	blockStatus = 0; //no
 	itemstatusString = "VGlass";
 	ui->tableWidget->setCurrentCell(0,0);
 	ui->tableWidget->setIconSize(QSize(32, 32));
@@ -72,9 +73,12 @@ void MapEditor::createMenuBar()
 	connect(ui->actionGo_to_cell,SIGNAL(triggered()),this,SLOT(gotoCell()));
 	connect(ui->action_Bat,SIGNAL(triggered()),this,SLOT(bat_table()));
 	connect(ui->actionSize,SIGNAL(triggered()),this,SLOT(adjust_table_size()));
-	connect(ui->actionClay,SIGNAL(triggered()),this,SLOT(on_Clay_clicked()));
-	connect(ui->actionGlass,SIGNAL(triggered()),this,SLOT(on_Glass_clicked()));
-	connect(ui->actionWood,SIGNAL(triggered()),this,SLOT(on_Wood_clicked()));
+	connect(ui->actionWall, SIGNAL(triggered(bool)), this, SLOT(onactionWall_clicded()));
+	connect(ui->actionNO, SIGNAL(triggered(bool)), this, SLOT(onactionNO_clicded()));
+
+//	connect(ui->actionClay,SIGNAL(triggered()),this,SLOT(on_Clay_clicked()));
+//	connect(ui->actionGlass,SIGNAL(triggered()),this,SLOT(on_Glass_clicked()));
+//	connect(ui->actionWood,SIGNAL(triggered()),this,SLOT(on_Wood_clicked()));
 
 	ui->actionWood->setCheckable(true);
 	ui->actionGlass->setCheckable(true);
@@ -331,6 +335,16 @@ void MapEditor::add_new_column()
 	connect(ui->tableWidget,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(cell_paint(QTableWidgetItem*)));
 }
 
+void MapEditor::onactionWall_clicded()
+{
+	blockStatus = 1;
+}
+
+void MapEditor::onactionNO_clicded()
+{
+	blockStatus = 0;
+}
+
 //void MapEditor::closeEvent(QCloseEvent *event)
 //{
 //        int r = QMessageBox::warning(this,tr("Map editor"),
@@ -449,11 +463,15 @@ void MapEditor::bat_table()
 		for(int column = 0;column<range.columnCount();++column){
 			QTableWidgetItem *item = ui->tableWidget->item(row+range.topRow(),column+range.leftColumn());
 			{
-				label = new QLabel;
-				label->setPixmap(*statusImage);
-				ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-				item->setText(itemstatusString);
-				add_one_label(item->row(),item->column(),label);
+				item->setIcon(QIcon(*statusImage));
+				item->setData(88, selection);
+				item->setData(66, blockStatus);
+//				qDebug() << item->data(88).toInt();
+//				label = new QLabel;
+//				label->setPixmap(*statusImage);
+//				ui->tableWidget->setCellWidget(item->row(), item->column(), label);
+//				item->setText(itemstatusString);
+//				add_one_label(item->row(),item->column(),label);
 
 				ui->progressBar->setValue(row*range.rowCount()+column);
 			}
@@ -471,6 +489,9 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 	{
 //		item->setBackground(*statusImage);
 			item->setIcon(QIcon(*statusImage));
+			item->setData(88, selection);
+			item->setData(66, blockStatus);
+
 //		label = new QLabel;
 //		label->setPixmap(*statusImage);
 //		ui->tableWidget->setCellWidget(item->row(), item->column(), label);
@@ -525,3 +546,13 @@ void MapEditor::add_one_label(int row, int column, QLabel* newlabel)
 	qDebug()<<"hello world";
 }
 
+
+void MapEditor::on_noButton_clicked()
+{
+    blockStatus = 0;
+}
+
+void MapEditor::on_wallButton_clicked()
+{
+    blockStatus = 1;
+}
