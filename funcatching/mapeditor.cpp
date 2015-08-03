@@ -229,67 +229,12 @@ void MapEditor::ver()
 			   tr("funcatching 0.0.0 beta"));
 }
 
-//void MapEditor::on_VGlass_clicked()
-//{
-//    itemstatusString = "VGlass";
-//    statusLabel->setText(tr("vertical glass item choosed"));
-//}
-
-//void MapEditor::on_HGlass_clicked()
-//{
-//    itemstatusString = "HGlass";
-//    statusLabel->setText(tr("Horizontal glass item choosed"));
-//}
-
-//void MapEditor::on_VWall_clicked()
-//{
-//    itemstatusString = "VWall";
-//    statusLabel->setText(tr("Vertical wall item choosed"));
-//}
-
-//void MapEditor::on_grass_clicked()
-//{
-//    statusImage->load(":/image/grass.png");
-//    itemstatusString = "grass";
-//    statusLabel->setText(tr("grass item choosed"));
-//}
-
-//void MapEditor::on_HWall_clicked()
-//{
-//    itemstatusString = "HWall";
-//    statusLabel->setText(tr("Horizontal wall item choosed"));
-//}
-
-//void MapEditor::on_VDoor_clicked()
-//{
-//    statusImage->load(":/image/VDoor.png");
-//    itemstatusString = "VDoor";
-//    statusLabel->setText(tr("Vertical door item choosed"));
-//}
-
-//void MapEditor::on_HDoor_clicked()
-//{
-//    itemstatusString = "HDoor";
-//    statusLabel->setText(tr("Horizontal door item choosed"));
-//}
-
-//void MapEditor::on_Floor_clicked()
-//{
-//    statusImage->load(":/tex/3.png");
-//    *statusImage = statusImage->scaled(32, 32);
-//    itemstatusString = "WFloor";
-//    on_Wood_clicked();
-//}
-
 void MapEditor::on_nullButton_clicked()
 {
 	selection = 0;
 	qDebug() << selection;
 	statusLabel->setText(tr("NULL"));
 	statusImage->load(":/image/white.png");
-//    statusImage->load(":/image/white.png");
-//    itemstatusString = "";
-//    statusLabel->setText(tr("Clearing item choosed"));
 }
 
 void MapEditor::add_new_row()
@@ -344,51 +289,6 @@ void MapEditor::onactionNO_clicded()
 {
 	blockStatus = 0;
 }
-
-//void MapEditor::closeEvent(QCloseEvent *event)
-//{
-//        int r = QMessageBox::warning(this,tr("Map editor"),
-//                                     tr("Do you want to quit?"),
-//                                     QMessageBox::Yes|QMessageBox::No);
-//        if(QMessageBox::Yes==r){
-//            event->accept();
-//        }
-//        else
-//            event->ignore();
-//}
-
-//void MapEditor::on_Wood_clicked()
-//{
-//    if(itemstatusString=="CFloor"||itemstatusString=="GFloor"){
-//        itemstatusString = "WFloor";
-//        statusLabel->setText("Wooden Floor item choosed");
-//    }
-//    ui->actionClay->setChecked(0);
-//    ui->actionGlass->setChecked(0);
-//    ui->actionWood->setChecked(1);
-//}
-
-//void MapEditor::on_Clay_clicked()
-//{
-//    if(itemstatusString=="WFloor"||itemstatusString=="GFloor"){
-//        itemstatusString = "CFloor";
-//        statusLabel->setText("Clay Floor item choosed");
-//    }
-//    ui->actionWood->setChecked(0);
-//    ui->actionGlass->setChecked(0);
-//    ui->actionClay->setChecked(1);
-//}
-
-//void MapEditor::on_Glass_clicked()
-//{
-//    if(itemstatusString=="WFloor"||itemstatusString=="CFloor"){
-//        itemstatusString = "GFloor";
-//        statusLabel->setText("Glass Floor item choosed");
-//    }
-//    ui->actionWood->setChecked(0);
-//    ui->actionClay->setChecked(0);
-//    ui->actionGlass->setChecked(1);
-//}
 
 void MapEditor::adjust_table_size()
 {
@@ -467,25 +367,9 @@ void MapEditor::bat_table()
 		for(int column = 0;column<range.columnCount();++column){
 			QTableWidgetItem *item = ui->tableWidget->item(row+range.topRow(),column+range.leftColumn());
 			{
-//				if (blockStatus != 0 && selection != 0) {
-//					switch (blockStatus) {
-//					case 1:
-//						statusImage->load(":/tex/" + QString::number(selection) + "-8.png");
-//						break;
-//					default:
-//						break;
-//					}
-//				}
 				item->setIcon(QIcon(*statusImage));
 				item->setData(88, selection);
 				item->setData(66, blockStatus);
-//				qDebug() << item->data(88).toInt();
-//				label = new QLabel;
-//				label->setPixmap(*statusImage);
-//				ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-//				item->setText(itemstatusString);
-//				add_one_label(item->row(),item->column(),label);
-
 				ui->progressBar->setValue(row*range.rowCount()+column);
 			}
 		}
@@ -500,26 +384,10 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 	qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
 	QTableWidgetItem *item = ui->tableWidget->item(index.row(),index.column());
 	{
-//		item->setBackground(*statusImage);
-//		if (blockStatus != 0 && selection != 0) {
-//			switch (blockStatus) {
-//			case 1:
-//				statusImage->load(":/tex/" + QString::number(selection) + "-8.png");
-//				break;
-//			default:
-//				break;
-//			}
-//		}
-
 			item->setIcon(QIcon(*statusImage));
-//			item->setData(88, selection);
-//			item->setData(66, blockStatus);
+			item->setData(88, selection);
+			item->setData(66, blockStatus);
 
-//		label = new QLabel;
-//		label->setPixmap(*statusImage);
-//		ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-//		item->setText(itemstatusString);
-//		add_one_label(item->row(),item->column(),label);
 	}
 	QApplication::restoreOverrideCursor();
 }
@@ -529,15 +397,6 @@ void MapEditor::initialize_item(int row,int column,QString status)
 	label = new QLabel;
 	QTableWidgetItem *item = ui->tableWidget->item(row,column);
 	ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(0),ui->tableWidget->columnWidth(0)));
-//	if(status.toAscii()=="grass"){
-//		label->setPixmap(QPixmap(":/image/grass"));
-//		ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-//		item->setText("grass");
-//	}else if(status.toAscii()=="VDoor"){
-//		label->setPixmap(QPixmap(":/image/grass"));
-//		ui->tableWidget->setCellWidget(item->row(), item->column(), label);
-//		item->setText("grass");
-//	}
 }
 
 void MapEditor::initdockButtos()
