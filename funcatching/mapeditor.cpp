@@ -429,9 +429,13 @@ void MapEditor::ondockbuttonClicked()
 	if (QPushButton* senderButton = dynamic_cast<QPushButton*>(sender())) {
 		for (int i = 0; i < dockbuttonList.size(); ++i) {
 			if (dockbuttonList[i] == senderButton) {
-				selection = i;				
-				statusImage->load(":/tex/" + QString::number(i) + ".png");
+				selection = i;
+				if (blockStatus == 1 && selection != 0)
+				    statusImage->load(":/tex/" + QString::number(selection) + "-8.png");
+				else
+					statusImage->load(":/tex/" + QString::number(i) + ".png");
 				statusLabel->setText(blocklist.blocklist.key(i));
+
 			}
 		}
 	}
@@ -463,6 +467,15 @@ void MapEditor::bat_table()
 		for(int column = 0;column<range.columnCount();++column){
 			QTableWidgetItem *item = ui->tableWidget->item(row+range.topRow(),column+range.leftColumn());
 			{
+//				if (blockStatus != 0 && selection != 0) {
+//					switch (blockStatus) {
+//					case 1:
+//						statusImage->load(":/tex/" + QString::number(selection) + "-8.png");
+//						break;
+//					default:
+//						break;
+//					}
+//				}
 				item->setIcon(QIcon(*statusImage));
 				item->setData(88, selection);
 				item->setData(66, blockStatus);
@@ -488,9 +501,19 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 	QTableWidgetItem *item = ui->tableWidget->item(index.row(),index.column());
 	{
 //		item->setBackground(*statusImage);
+//		if (blockStatus != 0 && selection != 0) {
+//			switch (blockStatus) {
+//			case 1:
+//				statusImage->load(":/tex/" + QString::number(selection) + "-8.png");
+//				break;
+//			default:
+//				break;
+//			}
+//		}
+
 			item->setIcon(QIcon(*statusImage));
-			item->setData(88, selection);
-			item->setData(66, blockStatus);
+//			item->setData(88, selection);
+//			item->setData(66, blockStatus);
 
 //		label = new QLabel;
 //		label->setPixmap(*statusImage);
@@ -550,9 +573,14 @@ void MapEditor::add_one_label(int row, int column, QLabel* newlabel)
 void MapEditor::on_noButton_clicked()
 {
     blockStatus = 0;
+    if (selection != 0)
+	statusImage->load(":/tex/" + QString::number(selection) + ".png");
 }
 
 void MapEditor::on_wallButton_clicked()
 {
     blockStatus = 1;
+    if (selection != 0)
+	statusImage->load(":/tex/" + QString::number(selection) + "-8.png");
+
 }
