@@ -110,7 +110,7 @@ bool Map::loadMap()
 			QList<mapBlcok> newRow;
 			map[i].append(newRow);
 		}
-		quint16 tmp;
+		quint32 tmp;
 		while(!in.atEnd())
 		{
 			//检查是否要换行

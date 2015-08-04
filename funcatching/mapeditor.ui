@@ -20,16 +20,16 @@
       <item>
        <widget class="QTableWidget" name="tableWidget">
         <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>40</number>
+         <number>36</number>
         </attribute>
         <attribute name="horizontalHeaderMinimumSectionSize">
-         <number>40</number>
+         <number>36</number>
         </attribute>
         <attribute name="verticalHeaderDefaultSectionSize">
-         <number>40</number>
+         <number>36</number>
         </attribute>
         <attribute name="verticalHeaderMinimumSectionSize">
-         <number>40</number>
+         <number>36</number>
         </attribute>
        </widget>
       </item>
@@ -51,7 +51,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -85,77 +85,128 @@
     <addaction name="action_About_us"/>
     <addaction name="actionVersion"/>
    </widget>
+   <widget class="QMenu" name="menu_Block_Status">
+    <property name="title">
+     <string>&amp;Block Status</string>
+    </property>
+    <addaction name="actionWall"/>
+    <addaction name="actionNO"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Tool"/>
    <addaction name="menu_Help"/>
+   <addaction name="menu_Block_Status"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2">
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPushButton" name="nullButton">
-       <property name="text">
-        <string>Null</string>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>36</width>
+      <height>36</height>
+     </size>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="0">
+      <widget class="QScrollArea" name="scrollArea">
+       <property name="widgetResizable">
+        <bool>true</bool>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="grass">
-       <property name="text">
-        <string>grass</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="VGlass">
-       <property name="text">
-        <string>VGlass</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="HGlass">
-       <property name="text">
-        <string>HGlass</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="VWall">
-       <property name="text">
-        <string>VWall</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="HWall">
-       <property name="text">
-        <string>HWall</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="VDoor">
-       <property name="text">
-        <string>VDoor</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="HDoor">
-       <property name="text">
-        <string>HDoor</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="Floor">
-       <property name="text">
-        <string>Floor</string>
-       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>59</width>
+          <height>527</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QPushButton" name="noButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>36</width>
+             <height>36</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>36</width>
+             <height>36</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>NO</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="wallButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>36</width>
+             <height>36</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>36</width>
+             <height>36</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Wall</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="nullButton">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>36</width>
+             <height>36</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>36</width>
+             <height>36</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>NULL</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </item>
     </layout>
@@ -354,6 +405,16 @@
   <action name="actionSize">
    <property name="text">
     <string>Size</string>
+   </property>
+  </action>
+  <action name="actionWall">
+   <property name="text">
+    <string>Wall</string>
+   </property>
+  </action>
+  <action name="actionNO">
+   <property name="text">
+    <string>NO</string>
    </property>
   </action>
  </widget>

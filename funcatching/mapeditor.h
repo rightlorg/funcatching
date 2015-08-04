@@ -6,6 +6,8 @@
 #include <QMap>
 #include "adjust_size.h"
 #include "ui_mapeditor.h"
+#include <QList>
+#include <QPushButton>
 
 namespace Ui {
 class MapEditor;
@@ -33,23 +35,14 @@ private slots:
     void gotoCell();
     void bat_table();
     void adjust_table_size();
-
+	void ondockbuttonClicked();
     void add_new_column();
-    void on_VGlass_clicked();
-    void on_HGlass_clicked();
-    void on_VWall_clicked();
-    void on_HWall_clicked();
-    void on_VDoor_clicked();
-    void on_HDoor_clicked();
-    void on_Floor_clicked();
+    void onactionWall_clicded();
+    void onactionNO_clicded();
     void on_nullButton_clicked();
-    void on_grass_clicked();
-
-    void on_Clay_clicked();
-    void on_Glass_clicked();
-    void on_Wood_clicked();
-
     void on_tableWidget_clicked(const QModelIndex &index);
+    void on_noButton_clicked();
+    void on_wallButton_clicked();
 
 private:
     typedef QMap<int, QMap<int, QLabel*> >all_label;
@@ -59,6 +52,7 @@ private:
     void createStatusBar();
     void add_one_label(int row, int column, QLabel* newlabel);
     void initialize_item(int row,int column,QString status);
+    void initdockButtos();
     all_label storing_all_label;
     QMenuBar *menuBar;
     QLabel *statusLabel;
@@ -69,6 +63,14 @@ private:
     int selection;
     int table_view_size;
     Ui::MapEditor *ui;
+
+//    0:NO
+//    1:Wall
+//    ...:...
+    int blockStatus;
+
+
+    QList<QPushButton *> dockbuttonList;
 };
 
 #endif // MAPEDITOR_H

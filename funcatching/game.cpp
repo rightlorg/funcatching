@@ -85,8 +85,11 @@ void Game::paintBlocks(int floor)
 		shadowStyle = map->findWall(j, i, floor);
 		if (map->at(i, j, floor).id > texture.size())
 			continue;
+		if (shadowStyle == -1)
+			shadowStyle = texture[map->at(j, i, floor).id].size() - 1;
 		QGraphicsPixmapItem *block = new QGraphicsPixmapItem(
-						texture[map->at(j, i, floor).id][shadowStyle]);
+						texture[map->at(j, i, floor).id]
+							[shadowStyle]);
 
 		block->setPos(32 * j, 32 * i);
 		scene->addItem(block);

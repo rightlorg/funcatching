@@ -7,9 +7,7 @@
         <file>image/gotocell.png</file>
         <file>image/open.png</file>
         <file>image/save.png</file>
-        <file>tex/2-1.png</file>
         <file>tex/1.png</file>
-        <file>tex/2-2.png</file>
         <file>tex/3-1.png</file>
         <file>tex/3.png</file>
         <file>tex/4.png</file>
@@ -325,14 +323,52 @@
         <file>tex/36-4.png</file>
         <file>tex/36-5.png</file>
         <file>tex/36-7.png</file>
-        <file>tex/37-0.png</file>
-        <file>tex/37-1.png</file>
-        <file>tex/37-2.png</file>
-        <file>tex/37-3.png</file>
-        <file>tex/37-4.png</file>
-        <file>tex/37-5.png</file>
-        <file>tex/37-6.png</file>
-        <file>tex/37-7.png</file>
         <file>tex/37.png</file>
+        <file>tex/2-0.png</file>
+        <file>tex/2-1.png</file>
+        <file>tex/2-2.png</file>
+        <file>tex/2-3.png</file>
+        <file>tex/2-4.png</file>
+        <file>tex/2-5.png</file>
+        <file>tex/2-6.png</file>
+        <file>tex/2-7.png</file>
+        <file>tex/2.png</file>
+        <file>tex/38.png</file>
+        <file>tex/1-8.png</file>
+        <file>tex/2-8.png</file>
+        <file>tex/3-8.png</file>
+        <file>tex/4-8.png</file>
+        <file>tex/5-8.png</file>
+        <file>tex/6-8.png</file>
+        <file>tex/7-8.png</file>
+        <file>tex/8-8.png</file>
+        <file>tex/9-8.png</file>
+        <file>tex/10-8.png</file>
+        <file>tex/11-8.png</file>
+        <file>tex/12-8.png</file>
+        <file>tex/13-8.png</file>
+        <file>tex/14-8.png</file>
+        <file>tex/15-8.png</file>
+        <file>tex/16-8.png</file>
+        <file>tex/17-8.png</file>
+        <file>tex/18-8.png</file>
+        <file>tex/19-8.png</file>
+        <file>tex/20-8.png</file>
+        <file>tex/21-8.png</file>
+        <file>tex/22-8.png</file>
+        <file>tex/23-8.png</file>
+        <file>tex/24-8.png</file>
+        <file>tex/25-8.png</file>
+        <file>tex/26-8.png</file>
+        <file>tex/27-8.png</file>
+        <file>tex/28-8.png</file>
+        <file>tex/29-8.png</file>
+        <file>tex/30-8.png</file>
+        <file>tex/31-8.png</file>
+        <file>tex/32-8.png</file>
+        <file>tex/33-8.png</file>
+        <file>tex/34-8.png</file>
+        <file>tex/35-8.png</file>
+        <file>tex/36-8.png</file>
     </qresource>
 </RCC>
