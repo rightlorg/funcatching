@@ -48,10 +48,11 @@ bool Map::saveMap()
 
 		out << totalRow;
 		out << totalColumn;
-
-		out << spawn_row;
-		out << spawn_column;
-
+		{
+			quint32 spawn_row = spawnPoint[i].ry(),
+				spawn_column = spawnPoint[i].rx();
+			out << spawn_row << spawn_column;
+		}
 		for(quint32 rowIndex = 0; rowIndex < totalRow; rowIndex++)
 		{
 			for(quint32 columnIndex = 0; columnIndex < totalColumn; totalColumn++)
@@ -105,7 +106,13 @@ bool Map::loadMap()
 			in >> tmp;				//抛弃垃圾值
 		}
 		in >> totalColumn;
-		in >> spawn_row >> spawn_column;
+		//Get spawn point
+		{
+			quint32 spawn_row,spawn_column;
+			in >> spawn_row >> spawn_column;
+			spawnPoint.append(QPoint(spawn_column, spawn_row));
+
+		}
 		{
 			QList<mapBlcok> newRow;
 			map[i].append(newRow);
@@ -195,4 +202,9 @@ int Map::findWall(int x, int y, int z)
 		if (map[z][y + 1][x].status == 1)
 			return 2;
 	return -1;
+}
+
+QPoint Map::getspawnPoint(int floor)
+{
+	return QPoint(spawnPoint[floor].rx(), spawnPoint[floor].ry());
 }

@@ -17,9 +17,11 @@
 #include <QPixmap>
 #include <QList>
 #include <QSettings>
+#include <QEvent>
 #include "map.h"
 #include "readypage.h"
 #include "mainwindow.h"
+#include <QKeyEvent>
 #include "storing_player.h"
 
 
@@ -43,7 +45,8 @@ public:
 		SinglePlayer,
 		Multiplayer
 	};
-
+protected:
+	bool eventFilter(QObject *object, QEvent *event);
 private slots:
 	void firstDataSubmit();
     void getFirst();
@@ -52,9 +55,10 @@ private:
 //	    bool genHeadPic(QImage image, Camp camp, QString playerName);
 	void connectServer();
 	void paintBlocks(int floor);
-	void initPlayer();
+	void initPlayer(int gametype);
 	void loadTexture();
-	void getHeadPic();
+	void handleKeyPressed(QKeyEvent *event);
+	void getHeadPic(int gametype);
 	//    QImage *headImage;
 	QTcpSocket tcpSocket;
 	Map *map;
@@ -64,9 +68,10 @@ private:
 	QGraphicsScene *scene;
 	QGraphicsView *view;
 	QString player_name;
-	QImage *headImage;
+	QGraphicsPixmapItem *myself;
+	QPixmap myself_headImage;
     QMap<unsigned short, storing_player *>player;
-    QVector<QImage*>player_headImages;
+    QList<QPixmap> player_headImages;
     unsigned short player_index = 0;
 	QList<QList<QPixmap> > texture;
 	void initSceneBackground();

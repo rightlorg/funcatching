@@ -18,6 +18,7 @@
 #include <QDir>
 #include <QMessageBox>
 #include <QDebug>
+#include <QPoint>
 
 struct mapBlcok
 {
@@ -40,6 +41,7 @@ public:
 	int mapRowSize(int floor);
 	int mapColumnSize(int floor);
 	int findWall(int x, int y, int z);
+	QPoint getspawnPoint(int floor);
 signals:
 
 public slots:
@@ -48,7 +50,7 @@ private:
 	QList<DoublemapBlockList> map;		//相当于三维数组
 	enum {MagicNum = 0x2FA3120C};
 	QStringList floorPath;					//每层地图文件名
-	quint32 spawn_row, spawn_column;
+	QList<QPoint> spawnPoint;
 };
 
 #endif // MAP_H

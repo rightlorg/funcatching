@@ -10,6 +10,7 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
     mainwindow  = parent_mainwindow;
 
     scene = new QGraphicsScene(mainwindow);
+
     view = new QGraphicsView(scene, mainwindow);
     view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
     mainwindow->addviewWidget(view);
@@ -24,17 +25,28 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
             delete this;
         }
 	paintBlocks(0);
-        initPlayer();
+	initPlayer(SinglePlayer);
     } else {
         connectServer();
         connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
         connect(&tcpSocket,SIGNAL(readyRead()),this,SLOT(getFirst()));
     }
+    scene->installEventFilter(this);
 }
 
 Game::~Game()
 {
-    delete map;
+	delete map;
+}
+
+bool Game::eventFilter(QObject *object, QEvent *event)
+{
+	if (event->type() == QEvent::KeyPress) {
+		handleKeyPressed((QKeyEvent *)event);
+		return true;
+	    } else {
+		return QObject::eventFilter(object, event);
+	    }
 }
 
 //bool Game::genHeadPic(QImage image, Camp camp, QString playerName)
@@ -45,22 +57,32 @@ void Game::initSceneBackground()
 {
     //	scene->setForegroundBrush(QColor(200, 255, 255));
     scene->setBackgroundBrush(QPixmap(":/image/pix3.png"));
-    //	scene->setSceneRect(-100, -100, 200, 200);
 }
 
-void Game::getHeadPic()
+void Game::getHeadPic(int gametype)
 {
-    QSettings settings("Funcatching Project", "Funcatching");
-    settings.beginGroup("HeadImage");
-    QString path = settings.value("head_image", "").toString();
-    QFile a(path);
-    if(!a.exists())
-    {
-        return;
-    }
-    settings.endGroup();
-    headImage =  new QImage;
-    headImage->load(path);
+	switch (gametype) {
+	case SinglePlayer:
+	{
+		QSettings settings("Funcatching Project", "Funcatching");
+		settings.beginGroup("HeadImage");
+		QString path = settings.value("head_image", "").toString();
+		QFile a(path);
+		if(!a.exists())
+		{
+		    return;
+		}
+		settings.endGroup();
+		myself_headImage.load(path);
+		myself_headImage = myself_headImage.scaled(26, 26, Qt::IgnoreAspectRatio);
+	}
+		break;
+	case Multiplayer:
+//		player_headImages.append(headImage);
+		break;
+	default:
+		break;
+	}
 }
 
 void Game::connectServer()
@@ -95,10 +117,36 @@ void Game::paintBlocks(int floor)
 		scene->addItem(block);
 	}
     }
+    scene->setSceneRect(map->getspawnPoint(0).rx() * 32, map->getspawnPoint(0).ry() * 32,
+			32, 32);
+//    scene->itemAt();
+//    scene->setSceneRect(0,0,0,0);
+
+
 }
 
-void Game::initPlayer()
+void Game::initPlayer(int gametype)
 {
+	QPoint spawnPoint = map->getspawnPoint(0);
+	switch (gametype) {
+	case SinglePlayer:
+		getHeadPic(SinglePlayer);
+		myself = new QGraphicsPixmapItem(myself_headImage);
+		myself->setPos(spawnPoint.rx() * 32 + 3, spawnPoint.ry() * 32 + 3);
+		scene->addItem(myself);
+		break;
+	case Multiplayer:
+		for (int i = 0; i < player_headImages.size(); ++i) {
+			QGraphicsPixmapItem *newplayer = new QGraphicsPixmapItem(player_headImages[i]);
+			newplayer->setPos(spawnPoint.rx() * 32 + 3, spawnPoint.ry() * 32 + 3);
+			scene->addItem(newplayer);
+		}
+
+		break;
+	default:
+		return;
+	}
+
 
 }
 
@@ -164,6 +212,33 @@ void Game::loadTexture()
 			previous = i;
 		}
 		texture[previous].append(QPixmap(dir.absoluteFilePath(texname)));
+	}
+}
+
+void Game::handleKeyPressed(QKeyEvent *event)
+{
+	switch (event->key()) {
+	case Qt::Key_W:
+		myself->setPos(myself->pos().rx(), myself->pos().ry() - 3);
+		scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
+		break;
+	case Qt::Key_A:
+		myself->setPos(myself->pos().rx() - 3, myself->pos().ry());
+		scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
+
+		break;
+	case Qt::Key_S:
+		myself->setPos(myself->pos().rx(), myself->pos().ry() + 3);
+		scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
+
+		break;
+	case Qt::Key_D:
+		myself->setPos(myself->pos().rx() + 3, myself->pos().ry());
+		scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
+
+		break;
+	default:
+		break;
 	}
 }
 
