@@ -99,7 +99,7 @@ void Game::paintBlocks(int floor)
     int rowsize = map->mapRowSize(0);
     int columnsize = map->mapRowSize(0);
     int shadowStyle = 8;
-    qDebug() << rowsize << columnsize;
+//    qDebug() << rowsize << columnsize;
     for(int i = 0; i < rowsize; i++) {
         for (int j = 0; j < columnsize; j++) {
 		if (map->at(j, i, floor).id == 0)

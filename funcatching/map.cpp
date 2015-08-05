@@ -130,7 +130,7 @@ bool Map::loadMap()
 			}
 			in >> tmp >> tmp;			//抛弃垃圾值
 			in >> block.id >> block.status;
-			qDebug() << block.id << block.status;
+//			qDebug() << block.id << block.status;
 			map[i][rowIndex].append(block);
 			columnIndex++;
 		}
