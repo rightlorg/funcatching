@@ -35,34 +35,6 @@ void Settings::on_mapButton_clicked()
 	MapEditor *map= new MapEditor;
 	this->close();
 	map->show();
-#if 0
-	filename = QFileDialog::getOpenFileName(this,tr("choose your image"),".",tr("png(*.png)"));
-	QSettings imageSet("Carrow Inc.","fun catching");
-	imageSet.setValue("imagePath",filename);
-	QString filename;
-	filename=QFileDialog::getOpenFileName(this,
-					      tr("选择图像"),
-					      ".",
-					      tr("Images (*.png *.bmp *.jpg *.tif *.GIF )"));
-	if(filename.isEmpty())
-	{
-		return;
-	}
-	else
-	{
-		QImage* img=new QImage;
-
-		if(! ( img->load(filename) ) ) //加载图像
-		{
-			QMessageBox::information(this,
-						 tr("打开图像失败"),
-						 tr("打开图像失败!"));
-			delete img;
-			return;
-		}
-		ui->label->setPixmap(QPixmap::fromImage(*img));
-	}
-#endif
 }
 
 void Settings::on_setnameButton_clicked()
@@ -73,4 +45,12 @@ void Settings::on_setnameButton_clicked()
 	settings.setValue("name", QInputDialog::getText(this, tr("Enter your name"), tr("Enter your name"),
                                             QLineEdit::Normal,settings.value("name").toString().isEmpty()?"hehe":settings.value("name").toString(), &ok));
 	settings.endGroup();
+}
+
+
+void Settings::on_initialmapButton_clicked()
+{
+        initializemap *initialize_map_setttings = new initializemap;
+        this->close();
+        initialize_map_setttings->show();
 }

@@ -35,7 +35,6 @@ MapEditor::MapEditor(QWidget *parent) :
 MapEditor::~MapEditor()
 {
 	ui->tableWidget->clearContents();
-	qDebug()<<"asdfas";
 	delete ui;
 }
 
@@ -154,15 +153,6 @@ bool MapEditor::openFile()
 
 void MapEditor::saveFile()
 {
-	bool ok = false;
-	quint32 spawnblock_row = QInputDialog::getInt(this, tr("Set the spawn point"), tr("The Row of Spawn Point:"),
-						      0, 0, ui->tableWidget->rowCount(), 10, &ok) - 1;
-	if (!ok)
-		return;
-	quint32 spawnblock_column = QInputDialog::getInt(this, tr("Set the spawn point"), tr("The Column of Spawn Point:"),
-							 0, 0, ui->tableWidget->colorCount(), 10, &ok) - 1;
-	if (!ok)
-		return;
 	QString filename = QFileDialog::getSaveFileName(this,tr("Saving map"),".",tr("Map files (*.map)"));
 	QFile file(filename);
 	if(!file.open(QIODevice::WriteOnly))
@@ -177,7 +167,6 @@ void MapEditor::saveFile()
 		out<<quint32(MagicNum);
 		out<<quint32(ui->tableWidget->rowCount());
 		out<<quint32(ui->tableWidget->columnCount());
-		out << spawnblock_row << spawnblock_column;
 
 		quint8 id, status;
 		QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -235,7 +224,6 @@ void MapEditor::ver()
 void MapEditor::on_nullButton_clicked()
 {
 	selection = 0;
-	qDebug() << selection;
 	statusLabel->setText(tr("NULL"));
 	statusImage->load(":/image/white.png");
 }
@@ -323,7 +311,6 @@ void MapEditor::adjust_table_size()
 			ui->tableWidget->setRowHeight(row,table_view_size*15);
 		for(int column = 0;column<ui->tableWidget->columnCount();++column)
 			ui->tableWidget->setColumnWidth(column,table_view_size*15);
-		qDebug()<<table_view_size;
 	}
 }
 
@@ -342,7 +329,6 @@ void MapEditor::ondockbuttonClicked()
 			}
 		}
 	}
-	qDebug() << selection;
 }
 
 void MapEditor::gotoCell()
@@ -411,7 +397,6 @@ void MapEditor::initdockButtos()
 		newButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
 		QString picPath = ":/tex/" + QString::number(i) + ".png";
-		qDebug() << picPath;
 
 		newButton->setIcon(QIcon(picPath));
 		newButton->setIconSize(QSize(32, 32));
@@ -428,7 +413,6 @@ void MapEditor::add_one_label(int row, int column, QLabel* newlabel)
 	QMap<int, QLabel*> map;
 	map.insert(column,newlabel);
 	storing_all_label.insert(row, map);
-	qDebug()<<"hello world";
 }
 
 
