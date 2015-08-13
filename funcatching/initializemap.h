@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QFile>
 #include <QtGui>
+#include <QRegExp>
+#include <QRegExpValidator>
 
 namespace Ui {
 class initializemap;
@@ -28,6 +30,7 @@ private:
     enum{MagicNum = 0x2FA3120C};
     bool directory_exist;
     bool position_checked;
+    unsigned int map_num;
     Ui::initializemap *ui;
 };
 
