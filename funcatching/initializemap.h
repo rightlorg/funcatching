@@ -4,8 +4,7 @@
 #include <QMainWindow>
 #include <QFile>
 #include <QtGui>
-#include <QRegExp>
-#include <QRegExpValidator>
+#include "initialmap_stackmap.h"
 
 namespace Ui {
 class initializemap;

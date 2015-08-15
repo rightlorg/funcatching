@@ -5,13 +5,11 @@ initializemap::initializemap(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::initializemap)
 {
-//    QRegExp regExp("[1-9][0-9]{0,7}");
-//    ui->columnEdit->setValidator(new QRegExpValidator(regExp));
-//    ui->rowEdit->setValidator(new QRegExpValidator(regExp));
-    connect(ui->listWidget,SIGNAL(currentRowChanged(int)),ui->stackedWidget,SLOT(setCurrentIndex(int)));
+    map_num = 0;
+    initialmap_stackmap a(this);
+    ui->stackedWidget->addWidget(&a);
     directory_exist = false;
     position_checked = false;
-    map_num = 0;
     ui->setupUi(this);
 }
 
@@ -22,13 +20,6 @@ initializemap::~initializemap()
 
 void initializemap::on_posCheck_clicked()
 {
-    if(!directory_exist){
-        ui->posCheck->setChecked(false);
-        return;
-    }
-    position_checked = !position_checked;
-    ui->rowEdit->setEnabled(position_checked);
-    ui->columnEdit->setEnabled(position_checked);
 }
 
 void initializemap::on_cancelButton_clicked()
@@ -88,9 +79,9 @@ void initializemap::on_directoreButton_clicked()
                              tr("This file is mot a Map file\nPlease rechoose the edited file"));
         return;
     }
-    ui->directoryLabel->setText(filename);
     ui->listWidget->addItem("new");
     directory_exist = true;
-
-    ui->listWidget->currentItem()->setText(QString::number(++map_num,10));
+    ui->listWidget->currentItem()->setText(QString::number(map_num,10));
+    ui->stackedWidget->insertWidget(map_num,new initialmap_stackmap);
+    map_num++;
 }
