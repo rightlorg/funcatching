@@ -10,7 +10,6 @@ initializemap::initializemap(QWidget *parent) :
     ui->stackedWidget->insertWidget(map_num,current_stack_map);
 //    ui->stackedWidget->addWidget(current_stack_map);
     ui->stackedWidget->setCurrentIndex(map_num);
-
     map_num++;
     ui->setupUi(this);
 }
@@ -30,7 +29,7 @@ void initializemap::on_cancelButton_clicked()
 }
 
 void initializemap::on_okButton_clicked()
-{
+{/*
     QString filename = QFileDialog::getOpenFileName(this,tr("choose the edit map"),".",tr("map(*.map)"));
     QFile file(filename);
     if(!file.open(QIODevice::ReadOnly)){
@@ -50,7 +49,7 @@ void initializemap::on_okButton_clicked()
         QMessageBox::warning(this,tr("Map editor"),
                              tr("This file is mot a Map file\nPlease rechoose the edited file"));
         return;
-    }
+    }*/
 }
 
 void initializemap::on_listWidget_currentRowChanged(int currentRow)
