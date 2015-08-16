@@ -7,10 +7,6 @@ initialmap_stackmap::initialmap_stackmap(QWidget *parent) :
 {
     position_checked = false;
     directory_exist = false;
-//    QRegExp regExp("[1-9][0-9]{0,7}");
-//    ui->columnEdit->setValidator(new QRegExpValidator(regExp, this));
-//    ui->rowEdit->setValidator(new QRegExpValidator(regExp, this));
-
     ui->setupUi(this);
 }
 
