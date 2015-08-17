@@ -5,7 +5,7 @@
 #include <QFile>
 #include <QtGui>
 #include "initialmap_stackmap.h"
-
+#include "ui_initialmap_stackmap.h"
 namespace Ui {
 class initializemap;
 }
@@ -19,9 +19,6 @@ public:
     ~initializemap();
 
 private slots:
-    void on_posCheck_clicked();
-    void on_cancelButton_clicked();
-    void on_okButton_clicked();
     void on_listWidget_currentRowChanged(int currentRow);
 
 private:
