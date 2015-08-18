@@ -20,7 +20,7 @@ public:
 
 private slots:
     void on_listWidget_currentRowChanged(int currentRow);
-
+    void on_currentstack_directory_clicked();
 private:
     enum{MagicNum = 0x2FA3120C};
     unsigned int map_num;

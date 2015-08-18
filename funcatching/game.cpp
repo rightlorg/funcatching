@@ -295,3 +295,10 @@ void Game::getFirst()
 //        player_headImages->append(player_image);
     }
 }
+
+void Game::keyPressEvent(QKeyEvent *key_event)
+{
+    qDebug()<<"succesfully login";
+    if(key_event->key()==Qt::Key_A)
+        qDebug()<<"a is pressed";
+}

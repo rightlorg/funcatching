@@ -18,6 +18,7 @@
 #include <QList>
 #include <QSettings>
 #include <QEvent>
+#include <QKeyEvent>
 #include "map.h"
 #include "readypage.h"
 #include "mainwindow.h"
@@ -45,8 +46,10 @@ public:
 		SinglePlayer,
 		Multiplayer
 	};
+    void keyPressEvent(QKeyEvent *key_event);
 protected:
-	bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event);
+
 private slots:
 	void firstDataSubmit();
     void getFirst();

@@ -38,5 +38,14 @@ void initialmap_stackmap::on_directoryButton_clicked()
                              tr("This file is mot a Map file\nPlease rechoose the edited file"));
         return;
     }
+    ui->directoryLabel->setText(filename);
     directory_exist = true;
+
+}
+
+void initialmap_stackmap::on_poscheckBox_clicked()
+{
+    position_checked = !position_checked;
+    ui->columnEdit->setEnabled(position_checked);
+    ui->rowEdit->setEnabled(position_checked);
 }
