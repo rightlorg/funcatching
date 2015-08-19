@@ -16,15 +16,15 @@ public:
     explicit initialmap_stackmap(QWidget *parent = 0);
     ~initialmap_stackmap();
     Ui::initialmap_stackmap *ui;
+    bool position_checked;
+    bool directory_exist;
+
 private slots:
     void on_directoryButton_clicked();
     void on_poscheckBox_clicked();
 
 private:
     enum{MagicNum = 0x2FA3120C};
-    bool position_checked;
-    bool directory_exist;
-
 };
 
 #endif // INITIALMAP_STACKMAP_H

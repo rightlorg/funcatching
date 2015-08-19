@@ -6,12 +6,13 @@ initializemap::initializemap(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::initializemap)
 {
+    map_num = 0;
     ui->setupUi(this);
 
-    map_num = 0;
     initialmap_stackmap *current_stack_map = new initialmap_stackmap;
     ui->stackedWidget->insertWidget(map_num,current_stack_map);
     ui->stackedWidget->setCurrentIndex(map_num);
+    total_stack_num.insert(map_num,current_stack_map);
     connect(current_stack_map->ui->directoryButton,SIGNAL(clicked()),this,SLOT(on_currentstack_directory_clicked()));
 }
 
@@ -27,10 +28,10 @@ void initializemap::on_listWidget_currentRowChanged(int currentRow)
 
 void initializemap::on_currentstack_directory_clicked()
 {
-    ui->listWidget->addItem("new");
     ui->listWidget->currentItem()->setText(QString::number(++map_num));
     initialmap_stackmap *current_stack_map = new initialmap_stackmap;
+    ui->listWidget->addItem("new");
     ui->stackedWidget->insertWidget(map_num,current_stack_map);
-    ui->stackedWidget->setCurrentIndex(map_num);
+    total_stack_num.insert(map_num,current_stack_map);
     connect(current_stack_map->ui->directoryButton,SIGNAL(clicked()),this,SLOT(on_currentstack_directory_clicked()));
 }

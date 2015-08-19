@@ -5,10 +5,15 @@ initialmap_stackmap::initialmap_stackmap(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::initialmap_stackmap)
 {
+    ui->setupUi(this);
     position_checked = false;
     directory_exist = false;
-    ui->setupUi(this);
+
+    QRegExp regExp("[1-9][0-9]{0,7}");
+    ui->columnEdit->setValidator(new QRegExpValidator(regExp, this));
+    ui->rowEdit->setValidator(new QRegExpValidator(regExp, this));
 }
+
 
 initialmap_stackmap::~initialmap_stackmap()
 {
@@ -40,12 +45,15 @@ void initialmap_stackmap::on_directoryButton_clicked()
     }
     ui->directoryLabel->setText(filename);
     directory_exist = true;
-
 }
 
 void initialmap_stackmap::on_poscheckBox_clicked()
 {
-    position_checked = !position_checked;
-    ui->columnEdit->setEnabled(position_checked);
-    ui->rowEdit->setEnabled(position_checked);
+//    if(!directory_exist){
+//        ui->poscheckBox->setChecked(false);
+//        return;
+//    }
+//    position_checked = !position_checked;
+//    ui->columnEdit->setEnabled(position_checked);
+//    ui->rowEdit->setEnabled(position_checked);
 }

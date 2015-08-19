@@ -28,56 +28,56 @@
 
 class Game : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	explicit Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
-		      QString mapPath, int gametype);
-	~Game();
+    explicit Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
+                  QString mapPath, int gametype);
+    ~Game();
 
-	enum Camp
-	{
-		Catcher,
-		Hider,
-		None
-	};
+    enum Camp
+    {
+        Catcher,
+        Hider,
+        None
+    };
 
-	enum GameType
-	{
-		SinglePlayer,
-		Multiplayer
-	};
-    void keyPressEvent(QKeyEvent *key_event);
+    enum GameType
+    {
+        SinglePlayer,
+        Multiplayer
+    };
 protected:
     bool eventFilter(QObject *object, QEvent *event);
 
 private slots:
-	void firstDataSubmit();
+    void firstDataSubmit();
     void getFirst();
+    void ok_to_exit();
 
 private:
-//	    bool genHeadPic(QImage image, Camp camp, QString playerName);
-	void connectServer();
-	void paintBlocks(int floor);
-	void initPlayer(int gametype);
-	void loadTexture();
-	void handleKeyPressed(QKeyEvent *event);
-	void getHeadPic(int gametype);
-	//    QImage *headImage;
-	QTcpSocket tcpSocket;
-	Map *map;
-	ReadyPage *readypage;
-	quint32 nextBlockSize;
-	MainWindow *mainwindow;
-	QGraphicsScene *scene;
-	QGraphicsView *view;
-	QString player_name;
-	QGraphicsPixmapItem *myself;
-	QPixmap myself_headImage;
+//    bool genHeadPic(QImage image, Camp camp, QString playerName);
+    void connectServer();
+    void paintBlocks(int floor);
+    void initPlayer(int gametype);
+    void loadTexture();
+    void handleKeyPressed(QKeyEvent *event);
+    void getHeadPic(int gametype);
+    //    QImage *headImage;
+    QTcpSocket tcpSocket;
+    Map *map;
+    ReadyPage *readypage;
+    quint32 nextBlockSize;
+    MainWindow *mainwindow;
+    QGraphicsScene *scene;
+    QGraphicsView *view;
+    QString player_name;
+    QGraphicsPixmapItem *myself;
+    QPixmap myself_headImage;
     QMap<unsigned short, storing_player *>player;
     QList<QPixmap> player_headImages;
-    unsigned short player_index = 0;
-	QList<QList<QPixmap> > texture;
-	void initSceneBackground();
+    unsigned short player_index;
+    QList<QList<QPixmap> > texture;
+    void initSceneBackground();
 };
 
 #endif // GAME_H

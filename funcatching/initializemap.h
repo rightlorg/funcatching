@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QFile>
 #include <QtGui>
+#include <QMap>
 #include "initialmap_stackmap.h"
 #include "ui_initialmap_stackmap.h"
 namespace Ui {
@@ -21,9 +22,11 @@ public:
 private slots:
     void on_listWidget_currentRowChanged(int currentRow);
     void on_currentstack_directory_clicked();
+
 private:
     enum{MagicNum = 0x2FA3120C};
     unsigned int map_num;
+    QMap<unsigned int, initialmap_stackmap*>total_stack_num;
     Ui::initializemap *ui;
 };
 
