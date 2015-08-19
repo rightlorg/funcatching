@@ -239,6 +239,9 @@ void Game::handleKeyPressed(QKeyEvent *event)
     case Qt::Key_Escape:
         ok_to_exit();
         break;
+    case Qt::Key_E:
+        //add something here
+        break;
     default:
         break;
     }
