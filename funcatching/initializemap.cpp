@@ -54,7 +54,10 @@ void initializemap::on_okButton_clicked()
     foreach(initialmap_stackmap *current_stack_map,total_stack_num){
         if(!current_stack_map->directory_exist)
             return;
-
+        if(current_stack_map->ui->paceEdit->text().isEmpty()){
+            QMessageBox::warning(this,tr("Saving initial settings"),tr("Pace cannot be zero"));
+            return;
+        }
         quint32 magic;
         QFile current_map_file(current_stack_map->ui->directoryLabel->text());
         if(!current_map_file.open(QIODevice::ReadOnly))
