@@ -6,6 +6,7 @@ initializemap::initializemap(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::initializemap)
 {
+    pos_checked = false;
     map_num = 0;
     ui->setupUi(this);
 
@@ -38,15 +39,45 @@ void initializemap::on_currentstack_directory_clicked()
 
 void initializemap::on_okButton_clicked()
 {
-
-}
-
-void initializemap::on_cancelButton_clicked()
-{
-    int r = QMessageBox::warning(this,tr("Funcatching - Pack page"),
-                                 tr("Do you want to quit?"),
-                                 QMessageBox::Yes|QMessageBox::No);
-    if(QMessageBox::Yes==r){
-        this->close();
+    QString filename = QFileDialog::getSaveFileName(this,tr("Saving initial settings"),".",tr("initial settings files (*.inimap)"));
+    QFile file(filename);
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        QMessageBox::warning(this,tr("Saving initial settings"),tr("failed to save settings"));
+        return;
     }
+    QDataStream out(&file);
+    out.setVersion(QDataStream::Qt_4_8);
+    out<<quint8(map_num);
+    foreach(initialmap_stackmap *current_stack_map,total_stack_num){
+        if(!current_stack_map->directory_exist)
+            return;
+        out<<current_stack_map->ui->directoryLabel->text();
+        if(current_stack_map->position_checked&&
+                (!current_stack_map->ui->rowEdit->text().isEmpty())&&
+                (!current_stack_map->ui->columnEdit->text().isEmpty())){
+            if(pos_checked){
+                QMessageBox::warning(this,tr("Saving initial settings"),tr("there are more than one initializing position\n"
+                                                                           "grammar mistake!"));
+                return;
+            }
+            out<<bool(1);
+            out<<quint32(current_stack_map->ui->rowEdit->text().toInt())
+                         <<quint32(current_stack_map->ui->columnEdit->text().toInt());
+            pos_checked = true;
+        }
+        else
+            out<<bool(0);
+    }
+    this->close();
 }
+
+    void initializemap::on_cancelButton_clicked()
+    {
+        int r = QMessageBox::warning(this,tr("Funcatching - Pack page"),
+                                     tr("Do you want to quit?"),
+                                     QMessageBox::Yes|QMessageBox::No);
+        if(QMessageBox::Yes==r){
+            this->close();
+        }
+    }
