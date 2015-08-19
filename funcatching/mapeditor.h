@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QtGui>
 #include <QMap>
-#include "adjust_size.h"
 #include "ui_mapeditor.h"
 #include <QList>
 #include <QPushButton>
@@ -34,7 +33,7 @@ private slots:
     void add_new_row();
     void gotoCell();
     void bat_table();
-    void adjust_table_size();
+//    void adjust_table_size();
 	void ondockbuttonClicked();
     void add_new_column();
     void onactionWall_clicded();

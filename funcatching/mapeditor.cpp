@@ -281,38 +281,38 @@ void MapEditor::onactionNO_clicded()
 	blockStatus = 0;
 }
 
-void MapEditor::adjust_table_size()
-{
-	adjust_size *ad = new adjust_size(this/*,table_view_size*/);
-	ad->_size = table_view_size;
-	ad->ui->horizontalSlider->setValue(table_view_size);
-	switch(table_view_size){
-	case 0:
-		ad->ui->label->setText("very small");
-		break;
-	case 1:
-		ad->ui->label->setText("small");
-		break;
-	case 2:
-		ad->ui->label->setText("normal");
-		break;
-	case 3:
-		ad->ui->label->setText("big");
-		break;
-	case 4:
-		ad->ui->label->setText("very big");
-		break;
-	}
-	while(ad->exec())
-	{
-		table_view_size = ad->_size;
-		table_view_size++;
-		for(int row = 0;row<ui->tableWidget->rowCount();++row)
-			ui->tableWidget->setRowHeight(row,table_view_size*15);
-		for(int column = 0;column<ui->tableWidget->columnCount();++column)
-			ui->tableWidget->setColumnWidth(column,table_view_size*15);
-	}
-}
+//void MapEditor::adjust_table_size()
+//{
+//	adjust_size *ad = new adjust_size(this/*,table_view_size*/);
+//	ad->_size = table_view_size;
+//	ad->ui->horizontalSlider->setValue(table_view_size);
+//	switch(table_view_size){
+//	case 0:
+//		ad->ui->label->setText("very small");
+//		break;
+//	case 1:
+//		ad->ui->label->setText("small");
+//		break;
+//	case 2:
+//		ad->ui->label->setText("normal");
+//		break;
+//	case 3:
+//		ad->ui->label->setText("big");
+//		break;
+//	case 4:
+//		ad->ui->label->setText("very big");
+//		break;
+//	}
+//	while(ad->exec())
+//	{
+//		table_view_size = ad->_size;
+//		table_view_size++;
+//		for(int row = 0;row<ui->tableWidget->rowCount();++row)
+//			ui->tableWidget->setRowHeight(row,table_view_size*15);
+//		for(int column = 0;column<ui->tableWidget->columnCount();++column)
+//			ui->tableWidget->setColumnWidth(column,table_view_size*15);
+//	}
+//}
 
 void MapEditor::ondockbuttonClicked()
 {
