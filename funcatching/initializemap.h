@@ -22,15 +22,14 @@ public:
 private slots:
     void on_listWidget_currentRowChanged(int currentRow);
     void on_currentstack_directory_clicked();
-
     void on_okButton_clicked();
-
     void on_cancelButton_clicked();
 
 private:
-    enum{MagicNum = 0x2FA3120C};
+    enum{map_MagicNum = 0x2FA3120C,ini_MagicNum = 0x2FA3120D};
     unsigned int map_num;
     QMap<unsigned int, initialmap_stackmap*>total_stack_num;
+    bool pos_checked;
     Ui::initializemap *ui;
 };
 

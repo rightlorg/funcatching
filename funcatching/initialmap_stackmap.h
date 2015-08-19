@@ -24,7 +24,7 @@ private slots:
     void on_poscheckBox_clicked();
 
 private:
-    enum{MagicNum = 0x2FA3120C};
+    enum{map_MagicNum = 0x2FA3120C};
 };
 
 #endif // INITIALMAP_STACKMAP_H

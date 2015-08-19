@@ -41,7 +41,7 @@ bool Map::saveMap()
 
 		QDataStream out(&file);
 		out.setVersion(QDataStream::Qt_4_8);
-		out << MagicNum;
+        out << map_MagicNum;
 
 		quint32 totalColumn = map[i].size();
 		quint32 totalRow = map[i][0].size();
@@ -91,7 +91,7 @@ bool Map::loadMap()
 		in.setVersion(QDataStream::Qt_4_8);
 		quint32 magic;
 		in >> magic;
-		if(magic!=MagicNum){
+        if(magic!=map_MagicNum){
 			QMessageBox::warning(NULL,tr("Map editor"),
 					     tr("This file is not a Map file\nPlease rechoose the map"));
 			return false;

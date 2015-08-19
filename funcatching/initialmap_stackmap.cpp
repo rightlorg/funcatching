@@ -38,7 +38,7 @@ void initialmap_stackmap::on_directoryButton_clicked()
     quint32 magic;
     in>>magic;
 
-    if(magic!=MagicNum){
+    if(magic!=map_MagicNum){
         QMessageBox::warning(this,tr("Map editor"),
                              tr("This file is mot a Map file\nPlease rechoose the edited file"));
         return;

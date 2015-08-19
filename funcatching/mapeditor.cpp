@@ -124,7 +124,7 @@ bool MapEditor::openFile()
 
 	in>>magic;
 
-	if(magic!=MagicNum){
+    if(magic!=map_MagicNum){
 		QMessageBox::warning(this,tr("Map editor"),
 				     tr("This file is mot a Map file\nPlease rechoose the edited file"));
 		return false;
@@ -164,7 +164,7 @@ void MapEditor::saveFile()
 		QDataStream out(&file);
 		out.setVersion(QDataStream::Qt_4_8);
 
-		out<<quint32(MagicNum);
+        out<<quint32(map_MagicNum);
 		out<<quint32(ui->tableWidget->rowCount());
 		out<<quint32(ui->tableWidget->columnCount());
 

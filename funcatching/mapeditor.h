@@ -46,7 +46,7 @@ private slots:
 
 private:
     typedef QMap<int, QMap<int, QLabel*> >all_label;
-    enum{MagicNum = 0x2FA3120C};
+    enum{map_MagicNum = 0x2FA3120C};
     void createMenuBar();
     void createTableWidget(int a,int b);
     void createStatusBar();

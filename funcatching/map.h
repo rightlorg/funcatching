@@ -48,7 +48,7 @@ public slots:
 
 private:
 	QList<DoublemapBlockList> map;		//相当于三维数组
-	enum {MagicNum = 0x2FA3120C};
+    enum {map_MagicNum = 0x2FA3120C};
 	QStringList floorPath;					//每层地图文件名
 	QList<QPoint> spawnPoint;
 };
