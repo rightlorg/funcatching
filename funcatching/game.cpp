@@ -293,17 +293,16 @@ void Game::getFirst()
         newPlayer->y = y;
         newPlayer->z = z;
         player.insert(i,newPlayer);
-//        player_headImages->append(player_image);
+        //        player_headImages->append(player_image);
     }
 }
 
 void Game::ok_to_exit()
 {
     int r = QMessageBox::warning(mainwindow,tr("Funcatching"),
-                     tr("Do you want to quit?"),
-                     QMessageBox::Yes|QMessageBox::No);
+                                 tr("Do you want to quit?"),
+                                 QMessageBox::Yes|QMessageBox::No);
     if(QMessageBox::Yes==r){
-//		this->close();
         mainwindow->hide();
     }
 }

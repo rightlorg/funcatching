@@ -35,3 +35,18 @@ void initializemap::on_currentstack_directory_clicked()
     total_stack_num.insert(map_num,current_stack_map);
     connect(current_stack_map->ui->directoryButton,SIGNAL(clicked()),this,SLOT(on_currentstack_directory_clicked()));
 }
+
+void initializemap::on_okButton_clicked()
+{
+
+}
+
+void initializemap::on_cancelButton_clicked()
+{
+    int r = QMessageBox::warning(this,tr("Funcatching - Pack page"),
+                                 tr("Do you want to quit?"),
+                                 QMessageBox::Yes|QMessageBox::No);
+    if(QMessageBox::Yes==r){
+        this->close();
+    }
+}

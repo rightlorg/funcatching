@@ -23,6 +23,10 @@ private slots:
     void on_listWidget_currentRowChanged(int currentRow);
     void on_currentstack_directory_clicked();
 
+    void on_okButton_clicked();
+
+    void on_cancelButton_clicked();
+
 private:
     enum{MagicNum = 0x2FA3120C};
     unsigned int map_num;
