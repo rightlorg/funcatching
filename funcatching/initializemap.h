@@ -19,6 +19,8 @@ public:
     explicit initializemap(QWidget *parent = 0);
     ~initializemap();
 
+protected:
+    void closeEvent(QCloseEvent *);
 private slots:
     void on_listWidget_currentRowChanged(int currentRow);
     void on_currentstack_directory_clicked();

@@ -73,7 +73,7 @@ void initializemap::on_okButton_clicked()
             return;
         }
         out<<current_stack_map->ui->directoryLabel->text();
-
+        out<<quint8(current_stack_map->ui->paceEdit->text().toInt());
         if(current_stack_map->position_checked&&
                 (!current_stack_map->ui->rowEdit->text().isEmpty())&&
                 (!current_stack_map->ui->columnEdit->text().isEmpty())){
@@ -100,4 +100,15 @@ void initializemap::on_cancelButton_clicked()
     if(QMessageBox::Yes==r){
         this->close();
     }
+}
+
+void initializemap::closeEvent(QCloseEvent * event)
+{
+    int r = QMessageBox::warning(this,tr("Funcatching - Pack page"),
+                                 tr("Do you want to quit?"),
+                                 QMessageBox::Yes|QMessageBox::No);
+    if(QMessageBox::No==r)
+        event->ignore();
+    else
+        event->accept();
 }

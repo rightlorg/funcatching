@@ -33,15 +33,15 @@ private slots:
     void add_new_row();
     void gotoCell();
     void bat_table();
-//    void adjust_table_size();
 	void ondockbuttonClicked();
     void add_new_column();
-    void onactionWall_clicded();
     void onactionNO_clicded();
     void on_nullButton_clicked();
     void on_tableWidget_clicked(const QModelIndex &index);
     void on_noButton_clicked();
     void on_wallButton_clicked();
+    void on_hwall_clicked();
+    void on_vwall_clicked();
 
 private:
     typedef QMap<int, QMap<int, QLabel*> >all_label;
@@ -62,13 +62,10 @@ private:
     int selection;
     int table_view_size;
     Ui::MapEditor *ui;
-
 //    0:NO
 //    1:Wall
 //    ...:...
-    int blockStatus;
-
-
+    unsigned short blockStatus;
     QList<QPushButton *> dockbuttonList;
 };
 

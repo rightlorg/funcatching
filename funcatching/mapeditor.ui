@@ -51,7 +51,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>18</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -89,7 +89,14 @@
     <property name="title">
      <string>&amp;Block Status</string>
     </property>
-    <addaction name="actionWall"/>
+    <widget class="QMenu" name="menuWall">
+     <property name="title">
+      <string>Wall</string>
+     </property>
+     <addaction name="actionVertical_Wall"/>
+     <addaction name="actionHorizonal_Wall"/>
+    </widget>
+    <addaction name="menuWall"/>
     <addaction name="actionNO"/>
    </widget>
    <addaction name="menu_File"/>
@@ -125,8 +132,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>59</width>
-          <height>527</height>
+          <width>76</width>
+          <height>508</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
@@ -407,14 +414,19 @@
     <string>Size</string>
    </property>
   </action>
-  <action name="actionWall">
-   <property name="text">
-    <string>Wall</string>
-   </property>
-  </action>
   <action name="actionNO">
    <property name="text">
     <string>NO</string>
+   </property>
+  </action>
+  <action name="actionVertical_Wall">
+   <property name="text">
+    <string>Vertical Wall</string>
+   </property>
+  </action>
+  <action name="actionHorizonal_Wall">
+   <property name="text">
+    <string>Horizonal Wall</string>
    </property>
   </action>
  </widget>

@@ -218,7 +218,6 @@ void Game::loadTexture()
 
 void Game::handleKeyPressed(QKeyEvent *event)
 {
-    qDebug()<<"succesfully login";
     switch (event->key()) {
     case Qt::Key_W:
         myself->setPos(myself->pos().rx(), myself->pos().ry() - 3);
