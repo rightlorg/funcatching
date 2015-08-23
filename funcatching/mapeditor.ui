@@ -93,16 +93,30 @@
      <property name="title">
       <string>Wall</string>
      </property>
-     <addaction name="actionVertical_Wall"/>
-     <addaction name="actionHorizonal_Wall"/>
+     <addaction name="actionLeft_Wall"/>
+     <addaction name="actionRight_Wall"/>
+     <addaction name="separator"/>
+     <addaction name="actionTop_Wall"/>
+     <addaction name="actionButtom_Wall"/>
+    </widget>
+    <widget class="QMenu" name="menuCorner">
+     <property name="title">
+      <string>Corner</string>
+     </property>
+     <addaction name="actionTop_Left"/>
+     <addaction name="actionTop_Right"/>
+     <addaction name="separator"/>
+     <addaction name="actionButtom_Left"/>
+     <addaction name="actionButtom_Right"/>
     </widget>
     <addaction name="menuWall"/>
+    <addaction name="menuCorner"/>
     <addaction name="actionNO"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Tool"/>
-   <addaction name="menu_Help"/>
    <addaction name="menu_Block_Status"/>
+   <addaction name="menu_Help"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <attribute name="dockWidgetArea">
@@ -419,14 +433,50 @@
     <string>NO</string>
    </property>
   </action>
-  <action name="actionVertical_Wall">
+  <action name="actionLeft_Wall">
    <property name="text">
-    <string>Vertical Wall</string>
+    <string>Left Wall</string>
    </property>
   </action>
-  <action name="actionHorizonal_Wall">
+  <action name="actionRight_Wall">
    <property name="text">
-    <string>Horizonal Wall</string>
+    <string>Right Wall</string>
+   </property>
+  </action>
+  <action name="actionTop_Left">
+   <property name="text">
+    <string>Top-Left</string>
+   </property>
+  </action>
+  <action name="actionTop_Right">
+   <property name="text">
+    <string>Top-Right</string>
+   </property>
+  </action>
+  <action name="actionButtom_Left">
+   <property name="text">
+    <string>Buttom-Left</string>
+   </property>
+  </action>
+  <action name="actionButtom_Right">
+   <property name="text">
+    <string>Buttom-Right</string>
+   </property>
+  </action>
+  <action name="actionTop_Wall">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Top Wall</string>
+   </property>
+  </action>
+  <action name="actionButtom_Wall">
+   <property name="text">
+    <string>Buttom Wall</string>
    </property>
   </action>
  </widget>

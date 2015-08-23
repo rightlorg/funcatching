@@ -72,22 +72,37 @@ void MapEditor::createMenuBar()
     connect(ui->actionGo_to_cell,SIGNAL(triggered()),this,SLOT(gotoCell()));
     connect(ui->action_Bat,SIGNAL(triggered()),this,SLOT(bat_table()));
     connect(ui->actionSize,SIGNAL(triggered()),this,SLOT(adjust_table_size()));
-    connect(ui->actionVertical_Wall, SIGNAL(triggered(bool)), this, SLOT(on_vwall_clicked()));
-    connect(ui->actionHorizonal_Wall, SIGNAL(triggered(bool)), this, SLOT(on_hwall_clicked()));
+
+    connect(ui->actionRight_Wall, SIGNAL(triggered(bool)), this, SLOT(on_rightwall_clicked()));
+    connect(ui->actionLeft_Wall, SIGNAL(triggered(bool)), this, SLOT(on_leftwall_clicked()));
+    connect(ui->actionTop_Wall,SIGNAL(triggered()),this,SLOT(on_topwall_clicked()));
+    connect(ui->actionButtom_Wall,SIGNAL(triggered()),this,SLOT(on_buttomwall_clicked()));
+
+    connect(ui->actionTop_Left,SIGNAL(triggered()),this,SLOT(on_top_left_clicked()));
+    connect(ui->actionTop_Right,SIGNAL(triggered()),this,SLOT(on_top_right_clicked()));
+    connect(ui->actionButtom_Left,SIGNAL(triggered()),this,SLOT(on_buttom_left_clicked()));
+    connect(ui->actionButtom_Right,SIGNAL(triggered()),this,SLOT(on_buttom_right_clicked()));
 
     connect(ui->actionNO, SIGNAL(triggered(bool)), this, SLOT(onactionNO_clicded()));
 
     ui->actionWood->setCheckable(true);
     ui->actionGlass->setCheckable(true);
     ui->actionClay->setCheckable(true);
-    ui->actionVertical_Wall->setCheckable(true);
-    ui->actionHorizonal_Wall->setCheckable(true);
+    ui->actionTop_Wall->setCheckable(true);
+    ui->actionButtom_Wall->setCheckable(true);
+    ui->actionLeft_Wall->setCheckable(true);
+    ui->actionRight_Wall->setCheckable(true);
+
+    ui->actionTop_Left->setCheckable(true);
+    ui->actionTop_Right->setCheckable(true);
+    ui->actionButtom_Left->setCheckable(true);
+    ui->actionButtom_Right->setCheckable(true);
 
     ui->actionWood->setChecked(true);
     ui->actionGlass->setChecked(false);
     ui->actionClay->setChecked(false);
-    ui->actionHorizonal_Wall->setChecked(false);
-    ui->actionVertical_Wall->setChecked(false);
+
+    clear_block_status_menu();
 
     ui->action_Bat->setShortcut(tr("Ctrl+B"));
     ui->action_Open->setShortcut(tr("Ctrl+O"));
@@ -275,7 +290,8 @@ void MapEditor::add_new_column()
 
 void MapEditor::onactionNO_clicded()
 {
-    blockStatus = 0;
+    clear_block_status_menu();
+    statusImage->load(":/tex/" + QString::number(selection) + ".png");
 }
 
 void MapEditor::ondockbuttonClicked()
@@ -334,12 +350,13 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
     qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
+    //    QStyledItemDelegate::paint(painter,option,index);
     QTableWidgetItem *item = ui->tableWidget->item(index.row(),index.column());
     {
         item->setIcon(QIcon(*statusImage));
         item->setData(88, selection);
         item->setData(66, blockStatus);
-
+        item->setTextAlignment(Qt::AlignLeft);
     }
     QApplication::restoreOverrideCursor();
 }
@@ -384,6 +401,7 @@ void MapEditor::on_noButton_clicked()
     blockStatus = 0;
     if (selection != 0)
         statusImage->load(":/tex/" + QString::number(selection) + ".png");
+    clear_block_status_menu();
 }
 
 void MapEditor::on_wallButton_clicked()
@@ -393,18 +411,73 @@ void MapEditor::on_wallButton_clicked()
         statusImage->load(":/tex/" + QString::number(selection) + "-8.png");
 }
 
-void MapEditor::on_vwall_clicked()
+void MapEditor::on_topwall_clicked()
 {
-    if(ui->actionVertical_Wall->isChecked())
-        blockStatus+=1;
-    else
-        blockStatus-=1;
+    if(ui->actionTop_Wall->isChecked()){
+        if(ui->actionRight_Wall->isChecked()){
+            statusImage->load(":/tex/" + QString::number(selection) + "-5.png");
+            clear_block_status_menu();
+            ui->actionTop_Wall->setChecked(true);
+            ui->actionRight_Wall->setChecked(true);
+        }else if(ui->actionLeft_Wall->isChecked()){
+            statusImage->load(":/tex/" + QString::number(selection) + "-6.png");
+            clear_block_status_menu();
+            ui->actionTop_Wall->setChecked(true);
+            ui->actionLeft_Wall->setChecked(true);
+        }else{
+            statusImage->load(":/tex/" + QString::number(selection) + "-3.png");
+            clear_block_status_menu();
+            ui->actionTop_Wall->setChecked(true);
+        }
+    }
 }
 
-void MapEditor::on_hwall_clicked()
+void MapEditor::on_buttomwall_clicked()
 {
-    if(ui->actionHorizonal_Wall->isChecked())
-        blockStatus+=2;
-    else
-        blockStatus-=2;
+
+}
+
+void MapEditor::on_leftwall_clicked()
+{
+
+}
+
+void MapEditor::on_rightwall_clicked()
+{
+
+}
+
+void MapEditor::on_top_left_clicked()
+{
+
+}
+
+void MapEditor::on_top_right_clicked()
+{
+
+}
+
+void MapEditor::on_buttom_left_clicked()
+{
+
+}
+
+void MapEditor::on_buttom_right_clicked()
+{
+
+}
+
+void MapEditor::clear_block_status_menu()
+{
+    ui->actionTop_Wall->setChecked(false);
+    ui->actionButtom_Wall->setChecked(false);
+    ui->actionLeft_Wall->setChecked(false);
+    ui->actionRight_Wall->setChecked(false);
+
+    ui->actionTop_Left->setChecked(false);
+    ui->actionTop_Right->setChecked(false);
+    ui->actionButtom_Left->setChecked(false);
+    ui->actionButtom_Right->setChecked(false);
+
+    ui->actionNO->setChecked(false);
 }

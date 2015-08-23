@@ -40,8 +40,14 @@ private slots:
     void on_tableWidget_clicked(const QModelIndex &index);
     void on_noButton_clicked();
     void on_wallButton_clicked();
-    void on_hwall_clicked();
-    void on_vwall_clicked();
+    void on_buttomwall_clicked();
+    void on_topwall_clicked();
+    void on_leftwall_clicked();
+    void on_rightwall_clicked();
+    void on_top_left_clicked();
+    void on_top_right_clicked();
+    void on_buttom_left_clicked();
+    void on_buttom_right_clicked();
 
 private:
     typedef QMap<int, QMap<int, QLabel*> >all_label;
@@ -52,6 +58,7 @@ private:
     void add_one_label(int row, int column, QLabel* newlabel);
     void initialize_item(int row,int column,QString status);
     void initdockButtos();
+    void clear_block_status_menu();
     all_label storing_all_label;
     QMenuBar *menuBar;
     QLabel *statusLabel;

@@ -9,7 +9,6 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
     player_index = 0;
     readypage = parent_readypage;
     mainwindow  = parent_mainwindow;
-
     scene = new QGraphicsScene(mainwindow);
 
     view = new QGraphicsView(scene, mainwindow);
@@ -27,7 +26,7 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
         }
         paintBlocks(0);
         initPlayer(SinglePlayer);
-    } else {
+    }else {
         connectServer();
         connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
         connect(&tcpSocket,SIGNAL(readyRead()),this,SLOT(getFirst()));
@@ -49,10 +48,6 @@ bool Game::eventFilter(QObject *object, QEvent *event)
         return QObject::eventFilter(object, event);
     }
 }
-
-//bool Game::genHeadPic(QImage image, Camp camp, QString playerName)
-//{
-//}
 
 void Game::initSceneBackground()
 {
@@ -219,20 +214,24 @@ void Game::loadTexture()
 void Game::handleKeyPressed(QKeyEvent *event)
 {
     switch (event->key()) {
+    case Qt::Key_Up:
     case Qt::Key_W:
-        myself->setPos(myself->pos().rx(), myself->pos().ry() - 3);
+        myself->setPos(myself->pos().rx(), myself->pos().ry() - 30);
         scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
         break;
+    case Qt::Key_Left:
     case Qt::Key_A:
-        myself->setPos(myself->pos().rx() - 3, myself->pos().ry());
+        myself->setPos(myself->pos().rx() - 30, myself->pos().ry());
         scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
         break;
+    case Qt::Key_Down:
     case Qt::Key_S:
-        myself->setPos(myself->pos().rx(), myself->pos().ry() + 3);
+        myself->setPos(myself->pos().rx(), myself->pos().ry() + 30);
         scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
         break;
+    case Qt::Key_Right:
     case Qt::Key_D:
-        myself->setPos(myself->pos().rx() + 3, myself->pos().ry());
+        myself->setPos(myself->pos().rx() + 30, myself->pos().ry());
         scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
         break;
     case Qt::Key_Escape:
