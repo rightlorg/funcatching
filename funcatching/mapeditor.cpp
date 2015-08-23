@@ -18,6 +18,7 @@ MapEditor::MapEditor(QWidget *parent) :
 {
     ui->setupUi(this);
     statusImage = new QPixmap;
+    __block = -1;
     selection = 0;
     dockbuttonList.append(NULL);
     table_view_size = 2;
@@ -36,6 +37,19 @@ MapEditor::~MapEditor()
 {
     ui->tableWidget->clearContents();
     delete ui;
+}
+
+void MapEditor::closeEvent(QCloseEvent *event)
+{
+    int r = QMessageBox::warning(this,tr("Funcatching"),
+                                 tr("Do you want to quit?"),
+                                 QMessageBox::Yes|QMessageBox::No);
+    if(QMessageBox::Yes==r){
+        ui->tableWidget->clearContents();
+        delete ui;
+        event->accept();
+    }else
+        event->ignore();
 }
 
 void MapEditor::createTableWidget(int a,int b)
@@ -71,7 +85,6 @@ void MapEditor::createMenuBar()
     connect(ui->actionAdd_new_row,SIGNAL(triggered()),this,SLOT(add_new_row()));
     connect(ui->actionGo_to_cell,SIGNAL(triggered()),this,SLOT(gotoCell()));
     connect(ui->action_Bat,SIGNAL(triggered()),this,SLOT(bat_table()));
-    connect(ui->actionSize,SIGNAL(triggered()),this,SLOT(adjust_table_size()));
 
     connect(ui->actionRight_Wall, SIGNAL(triggered(bool)), this, SLOT(on_rightwall_clicked()));
     connect(ui->actionLeft_Wall, SIGNAL(triggered(bool)), this, SLOT(on_leftwall_clicked()));
@@ -83,6 +96,7 @@ void MapEditor::createMenuBar()
     connect(ui->actionButtom_Left,SIGNAL(triggered()),this,SLOT(on_buttom_left_clicked()));
     connect(ui->actionButtom_Right,SIGNAL(triggered()),this,SLOT(on_buttom_right_clicked()));
 
+    connect(ui->action_All,SIGNAL(triggered()),this,SLOT(on_action_all_clicked()));
     connect(ui->actionNO, SIGNAL(triggered(bool)), this, SLOT(onactionNO_clicded()));
 
     ui->actionWood->setCheckable(true);
@@ -92,6 +106,7 @@ void MapEditor::createMenuBar()
     ui->actionButtom_Wall->setCheckable(true);
     ui->actionLeft_Wall->setCheckable(true);
     ui->actionRight_Wall->setCheckable(true);
+    ui->action_All->setCheckable(true);
 
     ui->actionTop_Left->setCheckable(true);
     ui->actionTop_Right->setCheckable(true);
@@ -186,6 +201,7 @@ void MapEditor::saveFile()
         out<<quint32(ui->tableWidget->columnCount());
 
         quint8 id, status;
+        qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
         QApplication::setOverrideCursor(Qt::WaitCursor);
         for(int row = 0;row<(ui->tableWidget->rowCount());++row)
         {
@@ -195,7 +211,6 @@ void MapEditor::saveFile()
                 id = ui->tableWidget->item(row,column)->data(88).toUInt();
                 status = ui->tableWidget->item(row, column)->data(66).toUInt();
                 out << id << status;
-
             }
         }
         QApplication::restoreOverrideCursor();
@@ -235,7 +250,7 @@ void MapEditor::aboutFile()
 void MapEditor::ver()
 {
     QMessageBox::about(this,tr("about funcatching"),
-                       tr("funcatching 0.0.0 beta"));
+                       tr("funcatching 0.0.1 beta"));
 }
 
 void MapEditor::on_nullButton_clicked()
@@ -291,6 +306,7 @@ void MapEditor::add_new_column()
 void MapEditor::onactionNO_clicded()
 {
     clear_block_status_menu();
+    __block = -1;
     statusImage->load(":/tex/" + QString::number(selection) + ".png");
 }
 
@@ -308,6 +324,9 @@ void MapEditor::ondockbuttonClicked()
             }
         }
     }
+    if(__block==-1)
+        __block==0;
+    update_block_status();
 }
 
 void MapEditor::gotoCell()
@@ -350,7 +369,6 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
     qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
-    //    QStyledItemDelegate::paint(painter,option,index);
     QTableWidgetItem *item = ui->tableWidget->item(index.row(),index.column());
     {
         item->setIcon(QIcon(*statusImage));
@@ -407,6 +425,7 @@ void MapEditor::on_noButton_clicked()
 void MapEditor::on_wallButton_clicked()
 {
     blockStatus = 1;
+    __block = 0;
     if (selection != 0)
         statusImage->load(":/tex/" + QString::number(selection) + "-8.png");
 }
@@ -415,16 +434,19 @@ void MapEditor::on_topwall_clicked()
 {
     if(ui->actionTop_Wall->isChecked()){
         if(ui->actionRight_Wall->isChecked()){
+            __block=5;
             statusImage->load(":/tex/" + QString::number(selection) + "-5.png");
             clear_block_status_menu();
             ui->actionTop_Wall->setChecked(true);
             ui->actionRight_Wall->setChecked(true);
         }else if(ui->actionLeft_Wall->isChecked()){
+            __block=6;
             statusImage->load(":/tex/" + QString::number(selection) + "-6.png");
             clear_block_status_menu();
             ui->actionTop_Wall->setChecked(true);
             ui->actionLeft_Wall->setChecked(true);
         }else{
+            __block=3;
             statusImage->load(":/tex/" + QString::number(selection) + "-3.png");
             clear_block_status_menu();
             ui->actionTop_Wall->setChecked(true);
@@ -434,17 +456,74 @@ void MapEditor::on_topwall_clicked()
 
 void MapEditor::on_buttomwall_clicked()
 {
-
+    if(ui->actionButtom_Wall->isChecked()){
+        if(ui->actionRight_Wall->isChecked()){
+            __block=7;
+            statusImage->load(":/tex/" + QString::number(selection) + "-7.png");
+            clear_block_status_menu();
+            ui->actionButtom_Wall->setChecked(true);
+            ui->actionRight_Wall->setChecked(true);
+        }else if(ui->actionLeft_Wall->isChecked()){
+            __block=4;
+            statusImage->load(":/tex/" + QString::number(selection) + "-4.png");
+            clear_block_status_menu();
+            ui->actionButtom_Wall->setChecked(true);
+            ui->actionLeft_Wall->setChecked(true);
+        }else{
+            __block=2;
+            statusImage->load(":/tex/" + QString::number(selection) + "-2.png");
+            clear_block_status_menu();
+            ui->actionButtom_Wall->setChecked(true);
+        }
+    }
 }
 
 void MapEditor::on_leftwall_clicked()
 {
-
+    if(ui->actionLeft_Wall->isChecked()){
+        if(ui->actionTop_Wall->isChecked()){
+            __block=6;
+            statusImage->load(":/tex/" + QString::number(selection) + "-6.png");
+            clear_block_status_menu();
+            ui->actionTop_Wall->setChecked(true);
+            ui->actionLeft_Wall->setChecked(true);
+        }else if(ui->actionButtom_Wall->isChecked()){
+            __block=4;
+            statusImage->load(":/tex/" + QString::number(selection) + "-4.png");
+            clear_block_status_menu();
+            ui->actionButtom_Wall->setChecked(true);
+            ui->actionLeft_Wall->setChecked(true);
+        }else{
+            __block=1;
+            statusImage->load(":/tex/" + QString::number(selection) + "-1.png");
+            clear_block_status_menu();
+            ui->actionLeft_Wall->setChecked(true);
+        }
+    }
 }
 
 void MapEditor::on_rightwall_clicked()
 {
-
+    if(ui->actionRight_Wall->isChecked()){
+        if(ui->actionTop_Wall->isChecked()){
+            __block=5;
+            statusImage->load(":/tex/" + QString::number(selection) + "-5.png");
+            clear_block_status_menu();
+            ui->actionTop_Wall->setChecked(true);
+            ui->actionRight_Wall->setChecked(true);
+        }else if(ui->actionButtom_Wall->isChecked()){
+            __block=7;
+            statusImage->load(":/tex/" + QString::number(selection) + "-7.png");
+            clear_block_status_menu();
+            ui->actionButtom_Wall->setChecked(true);
+            ui->actionRight_Wall->setChecked(true);
+        }else{
+            __block=0;
+            statusImage->load(":/tex/" + QString::number(selection) + "-0.png");
+            clear_block_status_menu();
+            ui->actionRight_Wall->setChecked(true);
+        }
+    }
 }
 
 void MapEditor::on_top_left_clicked()
@@ -465,6 +544,20 @@ void MapEditor::on_buttom_left_clicked()
 void MapEditor::on_buttom_right_clicked()
 {
 
+}
+
+void MapEditor::on_action_all_clicked()
+{
+    clear_block_status_menu();
+    ui->action_All->setChecked(true);
+    __block=8;
+    statusImage->load(":/tex/" + QString::number(selection) + "-8.png");
+}
+
+void MapEditor::update_block_status()
+{
+    if(__block!=-1)
+        statusImage->load(":/tex/" + QString::number(selection) + "-" + QString::number(__block) + ".png");
 }
 
 void MapEditor::clear_block_status_menu()

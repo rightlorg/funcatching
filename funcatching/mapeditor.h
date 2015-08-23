@@ -21,7 +21,7 @@ public:
     ~MapEditor();
 
 protected:
-    //void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent *event);
 
 private slots:
     bool openFile();
@@ -33,21 +33,25 @@ private slots:
     void add_new_row();
     void gotoCell();
     void bat_table();
-	void ondockbuttonClicked();
+    void ondockbuttonClicked();
     void add_new_column();
     void onactionNO_clicded();
     void on_nullButton_clicked();
     void on_tableWidget_clicked(const QModelIndex &index);
     void on_noButton_clicked();
     void on_wallButton_clicked();
+
     void on_buttomwall_clicked();
     void on_topwall_clicked();
     void on_leftwall_clicked();
     void on_rightwall_clicked();
+
     void on_top_left_clicked();
     void on_top_right_clicked();
     void on_buttom_left_clicked();
     void on_buttom_right_clicked();
+
+    void on_action_all_clicked();
 
 private:
     typedef QMap<int, QMap<int, QLabel*> >all_label;
@@ -59,6 +63,7 @@ private:
     void initialize_item(int row,int column,QString status);
     void initdockButtos();
     void clear_block_status_menu();
+    void update_block_status();
     all_label storing_all_label;
     QMenuBar *menuBar;
     QLabel *statusLabel;
@@ -68,12 +73,13 @@ private:
     QString filename;
     int selection;
     int table_view_size;
-    Ui::MapEditor *ui;
-//    0:NO
-//    1:Wall
-//    ...:...
+    //    0:NO
+    //    1:Wall
+    //    ...:...
     unsigned short blockStatus;
+    short __block;
     QList<QPushButton *> dockbuttonList;
+    Ui::MapEditor *ui;
 };
 
 #endif // MAPEDITOR_H

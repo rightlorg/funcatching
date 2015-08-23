@@ -98,6 +98,8 @@
      <addaction name="separator"/>
      <addaction name="actionTop_Wall"/>
      <addaction name="actionButtom_Wall"/>
+     <addaction name="separator"/>
+     <addaction name="action_All"/>
     </widget>
     <widget class="QMenu" name="menuCorner">
      <property name="title">
@@ -477,6 +479,11 @@
   <action name="actionButtom_Wall">
    <property name="text">
     <string>Buttom Wall</string>
+   </property>
+  </action>
+  <action name="action_All">
+   <property name="text">
+    <string>&amp;All</string>
    </property>
   </action>
  </widget>
