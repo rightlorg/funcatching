@@ -7,8 +7,6 @@
 #include <QObject>
 #include <QString>
 
-
-
 class BlockList : public QObject
 {
 	Q_OBJECT

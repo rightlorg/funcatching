@@ -60,8 +60,8 @@ private:
     void createTableWidget(int a,int b);
     void createStatusBar();
     void add_one_label(int row, int column, QLabel* newlabel);
-    void initialize_item(int row,int column,QString status);
-    void initdockButtos();
+    void initialize_item(int row,int column,int id,int status);
+    void initdockButtons();
     void clear_block_status_menu();
     void update_block_status();
     all_label storing_all_label;

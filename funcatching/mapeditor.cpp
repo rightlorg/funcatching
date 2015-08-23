@@ -30,7 +30,7 @@ MapEditor::MapEditor(QWidget *parent) :
     ui->tableWidget->setCurrentCell(0,0);
     ui->tableWidget->setIconSize(QSize(32, 32));
     setWindowIcon(QIcon(":/image/pix.png"));
-    initdockButtos();
+    initdockButtons();
 }
 
 MapEditor::~MapEditor()
@@ -171,12 +171,13 @@ bool MapEditor::openFile()
     in >> temp_column;
     quint16 row;
     quint16 column;
-    QString str;
+    quint8 id, status;
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
+    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     while(!in.atEnd()){
-        in>>row>>column>>str;
-        initialize_item(row,column,str);
+        in>>row>>column>>id>>status;
+        initialize_item(row,column,id,status);
     }
     QApplication::restoreOverrideCursor();
     ui->tableWidget->setCurrentCell(0,0);
@@ -356,7 +357,7 @@ void MapEditor::bat_table()
             {
                 item->setIcon(QIcon(*statusImage));
                 item->setData(88, selection);
-                item->setData(66, blockStatus);
+                item->setData(66, __block);
                 ui->progressBar->setValue(row*range.rowCount()+column);
             }
         }
@@ -373,20 +374,19 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
     {
         item->setIcon(QIcon(*statusImage));
         item->setData(88, selection);
-        item->setData(66, blockStatus);
+        item->setData(66, __block);
         item->setTextAlignment(Qt::AlignLeft);
     }
     QApplication::restoreOverrideCursor();
 }
 
-void MapEditor::initialize_item(int row,int column,QString status)
+void MapEditor::initialize_item(int row,int column,int id,int status)
 {
-    label = new QLabel;
     QTableWidgetItem *item = ui->tableWidget->item(row,column);
     ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(0),ui->tableWidget->columnWidth(0)));
 }
 
-void MapEditor::initdockButtos()
+void MapEditor::initdockButtons()
 {
     for (quint8 i = 1; i < blocklist.blocklist.size(); ++i) {
         QPushButton *newButton = new QPushButton(ui->dockWidget);
@@ -401,8 +401,6 @@ void MapEditor::initdockButtos()
         ui->verticalLayout->addWidget(newButton);
         dockbuttonList.append(newButton);
         connect(newButton, SIGNAL(clicked()), this, SLOT(ondockbuttonClicked()));
-
-
     }
 }
 

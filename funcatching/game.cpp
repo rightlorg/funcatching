@@ -117,8 +117,6 @@ void Game::paintBlocks(int floor)
                         32, 32);
     //    scene->itemAt();
     //    scene->setSceneRect(0,0,0,0);
-
-
 }
 
 void Game::initPlayer(int gametype)
@@ -187,7 +185,6 @@ void Game::loadTexture()
             }
         }
     }
-    //	qDebug() << list;
     //载入材质
     int i = 0, previous = 0;
     {
