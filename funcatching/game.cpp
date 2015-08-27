@@ -1,6 +1,7 @@
 #include "game.h"
 #include <QGLWidget>
 #include <QChar>
+#include "gamemenu.h"
 
 Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
            QString mapPath, int gametype):
@@ -34,9 +35,19 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
     scene->installEventFilter(this);
 }
 
+void Game::exitGame()
+{
+	//	map->saveMap();
+	delete this;
+	readypage->show();
+}
+
+
 Game::~Game()
 {
     delete map;
+	delete scene;
+	delete view;
 }
 
 bool Game::eventFilter(QObject *object, QEvent *event)
@@ -232,7 +243,7 @@ void Game::handleKeyPressed(QKeyEvent *event)
         scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
         break;
     case Qt::Key_Escape:
-        ok_to_exit();
+	gameMenu();
         break;
     case Qt::Key_E:
         //add something here
@@ -285,7 +296,7 @@ void Game::getFirst()
     in >> player_index;
     for(int i=0;i<=player_index;i++){
         in >>/* player_image >>*/ player_name >>identity >> x >> y >> z;
-        storing_player *newPlayer;
+	storing_player *newPlayer;
         newPlayer->identety = identity;
         newPlayer->x = x;
         newPlayer->y = y;
@@ -295,13 +306,9 @@ void Game::getFirst()
     }
 }
 
-void Game::ok_to_exit()
+void Game::gameMenu()
 {
-    int r = QMessageBox::warning(mainwindow,tr("Funcatching"),
-                                 tr("Do you want to quit?"),
-                                 QMessageBox::Yes|QMessageBox::No);
-    if(QMessageBox::Yes==r){
-        mainwindow->hide();
-    }
+	GameMenu *gamemenu = new GameMenu(NULL, this);
+	gamemenu->exec();
 }
 

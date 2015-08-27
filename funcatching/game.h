@@ -32,6 +32,7 @@ class Game : public QObject
 public:
     explicit Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
                   QString mapPath, int gametype);
+	void exitGame();
     ~Game();
 
     enum Camp
@@ -52,7 +53,7 @@ protected:
 private slots:
     void firstDataSubmit();
     void getFirst();
-    void ok_to_exit();
+    void gameMenu();
 
 private:
 //    bool genHeadPic(QImage image, Camp camp, QString playerName);
