@@ -177,6 +177,7 @@ bool MapEditor::openFile()
     qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     while(!in.atEnd()){
         in>>row>>column>>id>>status;
+        qDebug()<<row<<column<<id<<status;
         initialize_item(row,column,id,status);
     }
     QApplication::restoreOverrideCursor();
@@ -382,8 +383,8 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 
 void MapEditor::initialize_item(int row,int column,int id,int status)
 {
-    QTableWidgetItem *item = ui->tableWidget->item(row,column);
-    ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(0),ui->tableWidget->columnWidth(0)));
+//    QTableWidgetItem *item = ui->tableWidget->item(row,column);
+//    ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(0),ui->tableWidget->columnWidth(0)));
 }
 
 void MapEditor::initdockButtons()

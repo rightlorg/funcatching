@@ -213,23 +213,19 @@ void Game::handleKeyPressed(QKeyEvent *event)
     switch (event->key()) {
     case Qt::Key_Up:
     case Qt::Key_W:
-        myself->setPos(myself->pos().rx(), myself->pos().ry() - 30);
-        scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
+        change_y_pos(-30);
         break;
     case Qt::Key_Left:
     case Qt::Key_A:
-        myself->setPos(myself->pos().rx() - 30, myself->pos().ry());
-        scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
+        change_x_pos(-30);
         break;
     case Qt::Key_Down:
     case Qt::Key_S:
-        myself->setPos(myself->pos().rx(), myself->pos().ry() + 30);
-        scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
+        change_y_pos(30);
         break;
     case Qt::Key_Right:
     case Qt::Key_D:
-        myself->setPos(myself->pos().rx() + 30, myself->pos().ry());
-        scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
+        change_x_pos(-30);
         break;
     case Qt::Key_Escape:
         ok_to_exit();
@@ -303,5 +299,17 @@ void Game::ok_to_exit()
     if(QMessageBox::Yes==r){
         mainwindow->hide();
     }
+}
+
+inline void Game::change_x_pos(int x_pos)
+{
+    myself->setPos(myself->pos().rx(), myself->pos().ry() + x_pos);
+    scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
+}
+
+inline void Game::change_y_pos(int y_pos)
+{
+    myself->setPos(myself->pos().rx(), myself->pos().ry() + y_pos);
+    scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
 }
 

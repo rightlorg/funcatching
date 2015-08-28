@@ -62,6 +62,8 @@ private:
     void loadTexture();
     void handleKeyPressed(QKeyEvent *event);
     void getHeadPic(int gametype);
+    inline void change_x_pos(int x_pos);
+    inline void change_y_pos(int y_pos);
     //    QImage *headImage;
     QTcpSocket tcpSocket;
     Map *map;
