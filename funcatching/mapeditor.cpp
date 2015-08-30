@@ -85,6 +85,8 @@ void MapEditor::createMenuBar()
     connect(ui->actionAdd_new_row,SIGNAL(triggered()),this,SLOT(add_new_row()));
     connect(ui->actionGo_to_cell,SIGNAL(triggered()),this,SLOT(gotoCell()));
     connect(ui->action_Bat,SIGNAL(triggered()),this,SLOT(bat_table()));
+    connect(ui->actionSmall,SIGNAL(triggered()),this,SLOT(set_small_size()));
+    connect(ui->actionMidium,SIGNAL(triggered()),this,SLOT(set_midium_size()));
 
     connect(ui->actionRight_Wall, SIGNAL(triggered(bool)), this, SLOT(on_rightwall_clicked()));
     connect(ui->actionLeft_Wall, SIGNAL(triggered(bool)), this, SLOT(on_leftwall_clicked()));
@@ -177,7 +179,6 @@ bool MapEditor::openFile()
     qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     while(!in.atEnd()){
         in>>row>>column>>id>>status;
-        qDebug()<<row<<column<<id<<status;
         initialize_item(row,column,id,status);
     }
     QApplication::restoreOverrideCursor();
@@ -209,10 +210,9 @@ void MapEditor::saveFile()
         {
             for(int column = 0;column<(ui->tableWidget->columnCount());++column)
             {
-                out<<quint32(row)<<quint32(column);
                 id = ui->tableWidget->item(row,column)->data(88).toUInt();
                 status = ui->tableWidget->item(row, column)->data(66).toUInt();
-                out << id << status;
+                out<<quint32(row)<<quint32(column)<<id<<status;
             }
         }
         QApplication::restoreOverrideCursor();
@@ -314,21 +314,21 @@ void MapEditor::onactionNO_clicded()
 
 void MapEditor::ondockbuttonClicked()
 {
-    if (QPushButton* senderButton = dynamic_cast<QPushButton*>(sender())) {
+    if(QPushButton* senderButton = dynamic_cast<QPushButton*>(sender())){
         for (int i = 0; i < dockbuttonList.size(); ++i) {
             if (dockbuttonList[i] == senderButton) {
                 selection = i;
                 if (blockStatus == 1 && selection != 0)
                     statusImage->load(":/tex/" + QString::number(selection) + "-8.png");
-                else
+                else{
+                    __block=0;
+                    update_block_status();
                     statusImage->load(":/tex/" + QString::number(i) + ".png");
-                statusLabel->setText(blocklist.blocklist.key(i));
+                    statusLabel->setText(blocklist.blocklist.key(i));
+                }
             }
         }
     }
-    if(__block==-1)
-        __block==0;
-    update_block_status();
 }
 
 void MapEditor::gotoCell()
@@ -358,7 +358,7 @@ void MapEditor::bat_table()
             {
                 item->setIcon(QIcon(*statusImage));
                 item->setData(88, selection);
-                item->setData(66, __block);
+                item->setData(66, blockStatus);
                 ui->progressBar->setValue(row*range.rowCount()+column);
             }
         }
@@ -375,7 +375,7 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
     {
         item->setIcon(QIcon(*statusImage));
         item->setData(88, selection);
-        item->setData(66, __block);
+        item->setData(66, blockStatus);
         item->setTextAlignment(Qt::AlignLeft);
     }
     QApplication::restoreOverrideCursor();
@@ -383,8 +383,9 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 
 void MapEditor::initialize_item(int row,int column,int id,int status)
 {
-//    QTableWidgetItem *item = ui->tableWidget->item(row,column);
-//    ui->tableWidget->setIconSize(QSize(ui->tableWidget->rowHeight(0),ui->tableWidget->columnWidth(0)));
+    QTableWidgetItem *item = ui->tableWidget->item(row,column);
+    item->setData(88, id);
+    item->setData(66, status);
 }
 
 void MapEditor::initdockButtons()
@@ -419,12 +420,12 @@ void MapEditor::on_noButton_clicked()
     if (selection != 0)
         statusImage->load(":/tex/" + QString::number(selection) + ".png");
     clear_block_status_menu();
+    ui->actionNO->setChecked(true);
 }
 
 void MapEditor::on_wallButton_clicked()
 {
     blockStatus = 1;
-    __block = 0;
     if (selection != 0)
         statusImage->load(":/tex/" + QString::number(selection) + "-8.png");
 }
@@ -572,4 +573,22 @@ void MapEditor::clear_block_status_menu()
     ui->actionButtom_Right->setChecked(false);
 
     ui->actionNO->setChecked(false);
+}
+
+void MapEditor::set_small_size()
+{
+    for(int i = 0;i<ui->tableWidget->rowCount();++i)
+        ui->tableWidget->setRowHeight(i,20);
+    for(int i = 0;i<ui->tableWidget->columnCount();++i)
+        ui->tableWidget->setColumnWidth(i,20);
+    ui->tableWidget->setIconSize(QSize(16,16));
+}
+
+void MapEditor::set_midium_size()
+{
+    for(int i = 0;i<ui->tableWidget->rowCount();++i)
+        ui->tableWidget->setRowHeight(i,36);
+    for(int i = 0;i<ui->tableWidget->columnCount();++i)
+        ui->tableWidget->setColumnWidth(i,36);
+    ui->tableWidget->setIconSize(QSize(32,32));
 }

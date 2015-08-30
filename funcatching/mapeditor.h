@@ -40,6 +40,10 @@ private slots:
     void on_tableWidget_clicked(const QModelIndex &index);
     void on_noButton_clicked();
     void on_wallButton_clicked();
+    void set_small_size();
+    void set_midium_size();
+
+
 
     void on_buttomwall_clicked();
     void on_topwall_clicked();

@@ -24,7 +24,7 @@
 #include "mainwindow.h"
 #include <QKeyEvent>
 #include "storing_player.h"
-
+#define PACE 10
 
 class Game : public QObject
 {
@@ -32,21 +32,11 @@ class Game : public QObject
 public:
     explicit Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
                   QString mapPath, int gametype);
-	void exitGame();
+    void exitGame();
     ~Game();
+    enum Camp{Catcher,Hider,None};
+    enum GameType{SinglePlayer,Multiplayer};
 
-    enum Camp
-    {
-        Catcher,
-        Hider,
-        None
-    };
-
-    enum GameType
-    {
-        SinglePlayer,
-        Multiplayer
-    };
 protected:
     bool eventFilter(QObject *object, QEvent *event);
 
@@ -56,16 +46,14 @@ private slots:
     void gameMenu();
 
 private:
-//    bool genHeadPic(QImage image, Camp camp, QString playerName);
     void connectServer();
     void paintBlocks(int floor);
     void initPlayer(int gametype);
     void loadTexture();
     void handleKeyPressed(QKeyEvent *event);
     void getHeadPic(int gametype);
-    inline void change_x_pos(int x_pos);
-    inline void change_y_pos(int y_pos);
-    //    QImage *headImage;
+    void change_x_pos(int x_pos);
+    void change_y_pos(int y_pos);
     QTcpSocket tcpSocket;
     Map *map;
     ReadyPage *readypage;

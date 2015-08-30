@@ -224,19 +224,19 @@ void Game::handleKeyPressed(QKeyEvent *event)
     switch (event->key()) {
     case Qt::Key_Up:
     case Qt::Key_W:
-        change_y_pos(-1);
+        change_y_pos(-PACE);
         break;
     case Qt::Key_Left:
     case Qt::Key_A:
-        change_x_pos(-1);
+        change_x_pos(-PACE);
         break;
     case Qt::Key_Down:
     case Qt::Key_S:
-        change_y_pos(1);
+        change_y_pos(PACE);
         break;
     case Qt::Key_Right:
     case Qt::Key_D:
-        change_x_pos(-1);
+        change_x_pos(PACE);
         break;
     case Qt::Key_Escape:
 	gameMenu();
@@ -308,14 +308,14 @@ void Game::gameMenu()
 	gamemenu->exec();
 }
 
-inline void Game::change_x_pos(int x_pos)
+void Game::change_x_pos(int x_pos)
 {
     myself->setPos(myself->pos().rx() + x_pos, myself->pos().ry());
     scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
 }
 
-inline void Game::change_y_pos(int y_pos)
-{
+void Game::change_y_pos(int y_pos)
+{    qDebug()<<"abcd";
     myself->setPos(myself->pos().rx(), myself->pos().ry() + y_pos);
     scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
 }

@@ -106,6 +106,7 @@ bool Map::loadMap()
 			in >> tmp;				//抛弃垃圾值
 		}
 		in >> totalColumn;
+        qDebug()<<totalColumn;
 		//Get spawn point
 		{
 			quint32 spawn_row,spawn_column;
@@ -120,8 +121,7 @@ bool Map::loadMap()
 		quint32 tmp;
 		while(!in.atEnd())
 		{
-			//检查是否要换行
-			if(columnIndex == (int)totalColumn)
+            if(columnIndex == (int)totalColumn)			//检查是否要换行
 			{
 				QList<mapBlcok> newRow;
 				map[i].append(newRow);
