@@ -10,18 +10,18 @@ class GameMenu;
 
 class GameMenu : public QDialog
 {
-	Q_OBJECT
-
+    Q_OBJECT
 public:
-	explicit GameMenu(QWidget *parent = 0, Game *gameP = 0);
-	~GameMenu();
+    explicit GameMenu(QWidget *parent = 0, Game *gameP = 0);
+    ~GameMenu();
 
 private slots:
-	void on_pushButton_clicked();
+    void on_exitButton_clicked();
+    void on_pushButton_clicked();
 
 private:
-	Ui::GameMenu *ui;
-	Game *game;
+    Ui::GameMenu *ui;
+    Game *game;
 };
 
 #endif // GAMEMENU_H

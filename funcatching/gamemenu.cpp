@@ -14,8 +14,13 @@ GameMenu::~GameMenu()
 	delete ui;
 }
 
-void GameMenu::on_pushButton_clicked()
+void GameMenu::on_exitButton_clicked()
 {
 	game->exitGame();
 	delete this;
+}
+
+void GameMenu::on_pushButton_clicked()
+{
+
 }

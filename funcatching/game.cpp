@@ -37,7 +37,6 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 
 void Game::exitGame()
 {
-	//	map->saveMap();
 	delete this;
 	readypage->show();
 }
@@ -62,7 +61,6 @@ bool Game::eventFilter(QObject *object, QEvent *event)
 
 void Game::initSceneBackground()
 {
-    //	scene->setForegroundBrush(QColor(200, 255, 255));
     scene->setBackgroundBrush(QPixmap(":/image/pix3.png"));
 }
 
@@ -76,16 +74,13 @@ void Game::getHeadPic(int gametype)
         QString path = settings.value("head_image", "").toString();
         QFile a(path);
         if(!a.exists())
-        {
             return;
-        }
         settings.endGroup();
         myself_headImage.load(path);
         myself_headImage = myself_headImage.scaled(26, 26, Qt::IgnoreAspectRatio);
-    }
         break;
+    }
     case Multiplayer:
-        //		player_headImages.append(headImage);
         break;
     default:
         break;
@@ -106,7 +101,6 @@ void Game::paintBlocks(int floor)
     int rowsize = map->mapRowSize(0);
     int columnsize = map->mapRowSize(0);
     int shadowStyle = 8;
-    //    qDebug() << rowsize << columnsize;
     for(int i = 0; i < rowsize; i++) {
         for (int j = 0; j < columnsize; j++) {
             if (map->at(j, i, floor).id == 0)
@@ -119,7 +113,6 @@ void Game::paintBlocks(int floor)
             QGraphicsPixmapItem *block = new QGraphicsPixmapItem(
                         texture[map->at(j, i, floor).id]
                     [shadowStyle]);
-
             block->setPos(32 * j, 32 * i);
             scene->addItem(block);
         }
@@ -315,7 +308,7 @@ void Game::change_x_pos(int x_pos)
 }
 
 void Game::change_y_pos(int y_pos)
-{    qDebug()<<"abcd";
+{
     myself->setPos(myself->pos().rx(), myself->pos().ry() + y_pos);
     scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
 }

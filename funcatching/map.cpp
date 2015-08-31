@@ -106,7 +106,6 @@ bool Map::loadMap()
 			in >> tmp;				//抛弃垃圾值
 		}
 		in >> totalColumn;
-        qDebug()<<totalColumn;
 		//Get spawn point
 		{
 			quint32 spawn_row,spawn_column;
@@ -130,7 +129,6 @@ bool Map::loadMap()
 			}
 			in >> tmp >> tmp;			//抛弃垃圾值
 			in >> block.id >> block.status;
-//			qDebug() << block.id << block.status;
 			map[i][rowIndex].append(block);
 			columnIndex++;
 		}

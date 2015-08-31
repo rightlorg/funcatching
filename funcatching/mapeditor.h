@@ -35,27 +35,12 @@ private slots:
     void bat_table();
     void ondockbuttonClicked();
     void add_new_column();
-    void onactionNO_clicded();
     void on_nullButton_clicked();
     void on_tableWidget_clicked(const QModelIndex &index);
     void on_noButton_clicked();
     void on_wallButton_clicked();
     void set_small_size();
     void set_midium_size();
-
-
-
-    void on_buttomwall_clicked();
-    void on_topwall_clicked();
-    void on_leftwall_clicked();
-    void on_rightwall_clicked();
-
-    void on_top_left_clicked();
-    void on_top_right_clicked();
-    void on_buttom_left_clicked();
-    void on_buttom_right_clicked();
-
-    void on_action_all_clicked();
 
 private:
     typedef QMap<int, QMap<int, QLabel*> >all_label;
@@ -81,7 +66,6 @@ private:
     //    1:Wall
     //    ...:...
     unsigned short blockStatus;
-    short __block;
     QList<QPushButton *> dockbuttonList;
     Ui::MapEditor *ui;
 };
