@@ -22,7 +22,6 @@
 #include "map.h"
 #include "readypage.h"
 #include "mainwindow.h"
-#include <QKeyEvent>
 #include "storing_player.h"
 #define PACE 10
 
