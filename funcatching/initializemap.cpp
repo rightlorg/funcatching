@@ -54,10 +54,6 @@ void initializemap::on_okButton_clicked()
     foreach(initialmap_stackmap *current_stack_map,total_stack_num){
         if(!current_stack_map->directory_exist)
             return;
-        if(current_stack_map->ui->paceEdit->text().isEmpty()){
-            QMessageBox::warning(this,tr("Saving initial settings"),tr("Pace cannot be zero"));
-            return;
-        }
         quint32 magic;
         QFile current_map_file(current_stack_map->ui->directoryLabel->text());
         if(!current_map_file.open(QIODevice::ReadOnly))
@@ -73,21 +69,21 @@ void initializemap::on_okButton_clicked()
             return;
         }
         out<<current_stack_map->ui->directoryLabel->text();
-        out<<quint8(current_stack_map->ui->paceEdit->text().toInt());
-        if(current_stack_map->position_checked&&
-                (!current_stack_map->ui->rowEdit->text().isEmpty())&&
-                (!current_stack_map->ui->columnEdit->text().isEmpty())){
-            if(pos_checked){
-                QMessageBox::warning(this,tr("Saving initial settings"),tr("there are more than one initializing position\ngrammar mistake!"));
-                return;
-            }
-            out<<bool(1);
-            out<<quint32(current_stack_map->ui->rowEdit->text().toInt())
-              <<quint32(current_stack_map->ui->columnEdit->text().toInt());
-            pos_checked = true;
-        }
-        else
-            out<<bool(0);
+//        out<<quint8(current_stack_map->ui->paceEdit->text().toInt());
+//        if(current_stack_map->position_checked&&
+//                (!current_stack_map->ui->rowEdit->text().isEmpty())&&
+//                (!current_stack_map->ui->columnEdit->text().isEmpty())){
+//            if(pos_checked){
+//                QMessageBox::warning(this,tr("Saving initial settings"),tr("there are more than one initializing position\ngrammar mistake!"));
+//                return;
+//            }
+//            out<<bool(1);
+	    out<<quint32(current_stack_map->ui->rowEdit->text().toInt())
+	      <<quint32(current_stack_map->ui->columnEdit->text().toInt());
+//            pos_checked = true;
+//        }
+//        else
+//            out<<bool(0);
     }
     this->close();
 }

@@ -1,14 +1,14 @@
 #include "map.h"
+#include <QDebug>
 
 Map::Map(QObject *parent, QString path) :
 	QObject(parent)
 {
 	//读取每层地图文件名
-	QDir dir;
-	dir.cd("map");
-	dir.cd(path);
+	qDebug(path);
+	QDir dir(path);
 	QStringList filter;
-	filter << "*.map";
+	filter << "*.initmap";
 	dir.setNameFilters(filter);
 	dir.setSorting(QDir::Name);
 	floorPath << dir.entryList();
@@ -205,4 +205,91 @@ int Map::findWall(int x, int y, int z)
 QPoint Map::getspawnPoint(int floor)
 {
 	return QPoint(spawnPoint[floor].rx(), spawnPoint[floor].ry());
+}
+
+bool Map::isInitMap(QString filename) // Path is a initmap file name
+{
+	QFile file(filename);
+	if(!file.open(QIODevice::ReadOnly)){
+	QMessageBox::warning(NULL,tr("Map editor"),
+				 tr("failed to read file %1:\n%2")
+				 .arg(file.fileName())
+				 .arg(file.errorString()));
+	    return false;
+	}
+    QDataStream in(&file);
+	in.setVersion(QDataStream::Qt_4_8);
+
+	quint32 magic;
+	in >> magic;
+	if(magic!=ini_MagicNum){
+		return false;
+	}
+	file.close();
+	return true;
+}
+
+bool Map::readInitMapFile(QString filename) // Path is a initmap file name
+{
+	QFile file(filename);
+	if(!file.open(QIODevice::WriteOnly))
+	{
+	       QMessageBox::warning(NULL,tr("Saving initial settings"),tr("failed to save settings"));
+	    return false;
+	}
+	QDataStream in(&file);
+	in.setVersion(QDataStream::Qt_4_8);
+	{
+		quint32 magicnum;
+		in >> magicnum;
+		if (magicnum != Map::ini_MagicNum) {
+			return false;
+		}
+	}
+	//How many maps are there
+	quint8 tempMapCount;
+	in >> tempMapCount;
+
+	MapImformations spawnT;			//T means temp
+	quint32 spawnRowT, spawnColoumnT;
+	QString mapFloorPath;
+	for (int i = 0; i < tempMapCount; ++i) {
+		in >> mapFloorPath;
+		if (isMap(mapFloorPath)) {
+			spawnT.filePath.append(mapFloorPath);
+			mapCount++;
+		} else {
+			quint32 garbage;
+			in >> garbage >> garbage;
+			continue;
+		}
+		in >> spawnRowT >> spawnColoumnT;
+		spawnT.spawnPoint.setX(spawnColoumnT);
+		spawnT.spawnPoint.setY(spawnRowT);
+		spawnT.floor = mapCount - 1;
+		mapImform.append(spawnT);
+	}
+	return true;
+}
+
+bool Map::isMap(QString filename) // Path is a map file name
+{
+	QFile file(filename);
+	if(!file.open(QIODevice::ReadOnly)){
+	QMessageBox::warning(NULL,tr("Map editor"),
+				 tr("failed to read file %1:\n%2")
+				 .arg(file.fileName())
+				 .arg(file.errorString()));
+	    return false;
+	}
+    QDataStream in(&file);
+	in.setVersion(QDataStream::Qt_4_8);
+
+	quint32 magic;
+	in >> magic;
+	if(magic!=map_MagicNum){
+		return false;
+	}
+	file.close();
+	return true;
 }

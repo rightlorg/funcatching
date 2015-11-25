@@ -37,7 +37,7 @@ private:
 	MainWindow *mainwindow;
 	int mapIndex;
 	QDir dir;
-	QStringList maps;
+	QStringList maps; //who store dir name of the map
 	QString ip;
 };
 
