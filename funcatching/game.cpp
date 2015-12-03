@@ -21,6 +21,10 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 
     if(gametype == SinglePlayer) {
         map = new Map(NULL, mapPath);
+	if (!map->readInitMapFile()) {
+		readypage->back();
+		delete this;
+	}
         if(!map->loadMap()) {
             readypage->back();
             delete this;
@@ -117,7 +121,7 @@ void Game::paintBlocks(int floor)
             scene->addItem(block);
         }
     }
-    scene->setSceneRect(map->getspawnPoint(0).rx() * 32, map->getspawnPoint(0).ry() * 32,
+    scene->setSceneRect(map->getSpawnPoint(0).rx() * 32, map->getSpawnPoint(0).ry() * 32,
                         32, 32);
     //    scene->itemAt();
     //    scene->setSceneRect(0,0,0,0);
@@ -125,7 +129,7 @@ void Game::paintBlocks(int floor)
 
 void Game::initPlayer(int gametype)
 {
-    QPoint spawnPoint = map->getspawnPoint(0);
+    QPoint spawnPoint = map->getSpawnPoint(0);
     switch (gametype) {
     case SinglePlayer:
         getHeadPic(SinglePlayer);

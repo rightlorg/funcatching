@@ -6,7 +6,7 @@ initializemap::initializemap(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::initializemap)
 {
-    pos_checked = false;
+//    pos_checked = false;
     map_num = 0;
     ui->setupUi(this);
 
