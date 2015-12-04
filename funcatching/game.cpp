@@ -23,11 +23,11 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
         map = new Map(NULL, mapPath);
 	if (!map->readInitMapFile()) {
 		readypage->back();
-		delete this;
+//		delete this;
 	}
         if(!map->loadMap()) {
             readypage->back();
-            delete this;
+//            delete this;
         }
         paintBlocks(0);
         initPlayer(SinglePlayer);
@@ -41,8 +41,7 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 
 void Game::exitGame()
 {
-	delete this;
-	readypage->show();
+	readypage->back();
 }
 
 

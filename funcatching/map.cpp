@@ -228,7 +228,7 @@ bool Map::isInitMap(QString filename) // Path is a initmap file name
 bool Map::readInitMapFile() // Path is a initmap file name
 {
 	QFile file(initMapFileName[0]);
-	if(!file.open(QIODevice::WriteOnly))
+	if(!file.open(QIODevice::ReadOnly))
 	{
 		QMessageBox::warning(NULL,tr("Saving initial settings"),tr("failed to save settings"));
 		return false;

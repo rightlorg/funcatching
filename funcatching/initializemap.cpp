@@ -49,6 +49,14 @@ void initializemap::on_okButton_clicked()
     QDataStream out(&file);
     out.setVersion(QDataStream::Qt_4_8);
 
+    {
+	    quint32 magicnum;
+	    out << magicnum;
+	    if (magicnum != initializemap::ini_MagicNum) {
+		    return false;
+	    }
+    }
+
     out<<quint8(map_num);
 
     foreach(initialmap_stackmap *current_stack_map,total_stack_num){
