@@ -1,22 +1,24 @@
 #include "map.h"
+#include <QDebug>
 
 Map::Map(QObject *parent, QString path) :
 	QObject(parent)
 {
 	//读取每层地图文件名
-	QDir dir;
-	dir.cd("map");
-	dir.cd(path);
+	qDebug() << path;
+	QDir dir(path);
 	QStringList filter;
-	filter << "*.map";
+	filter << "*.initmap";
 	dir.setNameFilters(filter);
 	dir.setSorting(QDir::Name);
-	floorPath << dir.entryList();
+	mapCount = 0;
+	initMapFileName << dir.entryList();
+	initMapFileName[0] = dir.absoluteFilePath(initMapFileName[0]);
 	//将文件名转换成文件的绝对路径
-	for(int i = 0; i < floorPath.size(); i++)
-	{
-		floorPath[i] = dir.absoluteFilePath(floorPath[i]);
-	}
+	//	for(int i = 0; i < floorPath.size(); i++)
+	//	{
+	//		floorPath[i] = dir.absoluteFilePath(floorPath[i]);
+	//	}
 
 }
 
@@ -29,9 +31,9 @@ bool Map::saveMap()
 {
 	QFile file;
 
-	for(int i = 0; i < floorPath.size(); i++)
+	for(int i = 0; i < mapImform.size(); i++)
 	{
-		file.setFileName(floorPath[i]);
+		file.setFileName(mapImform[i].filePath);
 		if(!file.open(QIODevice::WriteOnly))
 		{
 			QMessageBox::warning(NULL,tr("Map editor"),
@@ -41,18 +43,13 @@ bool Map::saveMap()
 
 		QDataStream out(&file);
 		out.setVersion(QDataStream::Qt_4_8);
-        out << map_MagicNum;
+		out << map_MagicNum;
 
 		quint32 totalColumn = map[i].size();
 		quint32 totalRow = map[i][0].size();
 
 		out << totalRow;
 		out << totalColumn;
-		{
-			quint32 spawn_row = spawnPoint[i].ry(),
-				spawn_column = spawnPoint[i].rx();
-			out << spawn_row << spawn_column;
-		}
 		for(quint32 rowIndex = 0; rowIndex < totalRow; rowIndex++)
 		{
 			for(quint32 columnIndex = 0; columnIndex < totalColumn; totalColumn++)
@@ -70,9 +67,13 @@ bool Map::saveMap()
 bool Map::loadMap()
 {
 	QFile file;
-	for(int i = 0; i < floorPath.size(); i++)
+	for(int i = 0; i < mapImform.size(); i++)
 	{
-		file.setFileName(floorPath[i]);
+		if (!isMap(mapImform[i].filePath)) {
+			return false;
+		}
+
+		file.setFileName(mapImform[i].filePath);
 		if(!file.open(QIODevice::ReadOnly))
 		{
 			QMessageBox::warning(NULL,tr("Map editor"),
@@ -89,14 +90,10 @@ bool Map::loadMap()
 
 		QDataStream in(&file);
 		in.setVersion(QDataStream::Qt_4_8);
-		quint32 magic;
-		in >> magic;
-        if(magic!=map_MagicNum){
-			QMessageBox::warning(NULL,tr("Map editor"),
-					     tr("This file is not a Map file\nPlease rechoose the map"));
-			return false;
+		{
+			quint32 magic;		//magic is garbage
+			in >> magic;
 		}
-
 		quint32 totalColumn = 0;
 		int columnIndex = 0;
 		int rowIndex = 0;
@@ -107,12 +104,12 @@ bool Map::loadMap()
 		}
 		in >> totalColumn;
 		//Get spawn point
-		{
-			quint32 spawn_row,spawn_column;
-			in >> spawn_row >> spawn_column;
-			spawnPoint.append(QPoint(spawn_column, spawn_row));
+		//		{
+		//			quint32 spawn_row,spawn_column;
+		//			in >> spawn_row >> spawn_column;
+		//			spawnPoint.append(QPoint(spawn_column, spawn_row));
 
-		}
+		//		}
 		{
 			QList<mapBlcok> newRow;
 			map[i].append(newRow);
@@ -120,7 +117,7 @@ bool Map::loadMap()
 		quint32 tmp;
 		while(!in.atEnd())
 		{
-            if(columnIndex == (int)totalColumn)			//检查是否要换行
+			if(columnIndex == (int)totalColumn)			//检查是否要换行
 			{
 				QList<mapBlcok> newRow;
 				map[i].append(newRow);
@@ -202,7 +199,128 @@ int Map::findWall(int x, int y, int z)
 	return -1;
 }
 
-QPoint Map::getspawnPoint(int floor)
+QPoint Map::getSpawnPoint(int floor)
 {
-	return QPoint(spawnPoint[floor].rx(), spawnPoint[floor].ry());
+	return QPoint(mapImform[floor].spawnPoint.rx(),
+		      mapImform[floor].spawnPoint.ry());
+}
+
+bool Map::isInitMap(QString filename) // Path is a initmap file name
+{
+	QFile file(filename);
+	if(!file.open(QIODevice::ReadOnly)){
+		QMessageBox::warning(NULL,tr("Map editor"),
+				     tr("failed to read file %1:\n%2")
+				     .arg(file.fileName())
+				     .arg(file.errorString()));
+		return false;
+	}
+	QDataStream in(&file);
+	in.setVersion(QDataStream::Qt_4_8);
+
+	quint32 magic;
+	in >> magic;
+	if(magic!=ini_MagicNum){
+		return false;
+	}
+	file.close();
+	return true;
+}
+
+bool Map::readInitMapFile() // Path is a initmap file name
+{
+	QFile file(initMapFileName[0]);
+	if(!file.open(QIODevice::ReadOnly))
+	{
+		QMessageBox::warning(NULL,tr("Saving initial settings"),tr("failed to read settings"));
+		return false;
+	}
+	QDataStream in(&file);
+	in.setVersion(QDataStream::Qt_4_8);
+	{
+		quint32 magicnum;
+		in >> magicnum;
+		if (magicnum != Map::ini_MagicNum) {
+			return false;
+		}
+	}
+	//How many maps are there
+	quint8 tempMapCount;
+	in >> tempMapCount;
+
+	quint32 spawnRowT, spawnColoumnT;
+	for (int i = 0; i < tempMapCount; ++i) {
+		QString mapFloorPath;
+		MapImformations spawnT;			//T means temp
+
+		in >> mapFloorPath;
+		if (isMap(mapFloorPath)) {
+			spawnT.filePath.append(mapFloorPath);
+			mapCount++;
+		} else {
+			quint32 garbage;
+			in >> garbage >> garbage;
+			continue;
+		}
+		in >> spawnRowT >> spawnColoumnT;
+		spawnT.spawnPoint.setX(spawnColoumnT);
+		spawnT.spawnPoint.setY(spawnRowT);
+		spawnT.floor = mapCount - 1;
+		mapImform.append(spawnT);
+	}
+	return true;
+}
+
+bool Map::isMap(QString filename) // Path is a map file name
+{
+	QFile file(filename);
+	if(!file.open(QIODevice::ReadOnly)){
+		QMessageBox::warning(NULL,tr("Map editor"),
+				     tr("failed to read file %1:\n%2")
+				     .arg(file.fileName())
+				     .arg(file.errorString()));
+		return false;
+	}
+	QDataStream in(&file);
+	in.setVersion(QDataStream::Qt_4_8);
+
+	quint32 magic;
+	in >> magic;
+	if(magic!=map_MagicNum){
+		return false;
+	}
+	file.close();
+	return true;
+}
+
+//initmappath is a dirname and mapPath is a filename
+bool Map::saveInitMap(QString initmapPath, QList<MapImformations> inputMapImformation)
+{
+	QFile file(initmapPath);
+	bool ok = true;
+	if(!file.open(QIODevice::WriteOnly))
+	{
+		QMessageBox::warning(NULL,tr("Saving initial settings"),tr("failed to save settings"));
+		return false;
+	}
+	QDataStream out(&file);
+	out.setVersion(QDataStream::Qt_4_8);
+
+	out << quint32(ini_MagicNum);
+	out<< quint8(inputMapImformation.size());
+	for(int i = 0; i < inputMapImformation.size(); i++) {
+		if (isMap(inputMapImformation[i].filePath)) {
+			ok = false;
+			continue;
+		}
+		out << inputMapImformation[i].filePath;
+		out << quint32(inputMapImformation[i].spawnPoint.ry())
+		    << quint32(inputMapImformation[i].spawnPoint.ry());
+	}
+	return ok;
+}
+
+QList<MapImformations> Map::getMapImformations()
+{
+    return mapImform;
 }

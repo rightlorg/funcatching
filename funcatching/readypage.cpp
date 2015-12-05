@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <game.h>
 
+
 ReadyPage::ReadyPage(MainWindow *parent) :
 	QWidget(parent),
 	ui(new Ui::ReadyPage)
@@ -61,13 +62,21 @@ void ReadyPage::on_go_clicked()
 			return;
 		}
 		this->hide();
-		Game *game = new Game(this, mainwindow, maps[mapIndex], Game::SinglePlayer);
+		Game *game = new Game(this, mainwindow, dir.absoluteFilePath(maps[mapIndex]), Game::SinglePlayer);
+		if (!game->loadMap()) {
+			delete game;
+			this->show();
+		} else {
+			game->paintBlocks(0); //paint the map at floor 0
+			game->initPlayer(Game::SinglePlayer);
+		}
 	}
 }
 
 void ReadyPage::back()
 {
 //	mainwindow->showWidget();
+//	delete game;
 	this->show();
 }
 
@@ -85,5 +94,7 @@ void ReadyPage::on_server_clicked()
 	if (ok) {
 			this->hide();
 			Game *game = new Game(this, mainwindow, "", Game::Multiplayer);
+			if (game == NULL)
+				this->show();
 	}
 }

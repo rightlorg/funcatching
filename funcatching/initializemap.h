@@ -29,7 +29,7 @@ private slots:
 
 private:
     enum{map_MagicNum = 0x2FA3120C,ini_MagicNum = 0x2FA3120D};
-    unsigned int map_num;
+    quint8 map_num;
     QMap<unsigned int, initialmap_stackmap*>total_stack_num;
     bool pos_checked;
     Ui::initializemap *ui;

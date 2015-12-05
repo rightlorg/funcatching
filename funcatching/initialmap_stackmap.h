@@ -16,15 +16,17 @@ public:
     explicit initialmap_stackmap(QWidget *parent = 0);
     ~initialmap_stackmap();
     Ui::initialmap_stackmap *ui;
-    bool position_checked;
+//    bool position_checked;
     bool directory_exist;
+    QString getFileName();
 
 private slots:
     void on_directoryButton_clicked();
-    void on_poscheckBox_clicked();
+//    void on_poscheckBox_clicked();
 
 private:
     enum{map_MagicNum = 0x2FA3120C};
+    QString opendMapFileName;
 };
 
 #endif // INITIALMAP_STACKMAP_H

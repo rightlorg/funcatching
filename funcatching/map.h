@@ -26,6 +26,13 @@ struct mapBlcok
 	quint8 status;
 };
 
+struct MapImformations
+{
+	quint8 floor;
+	QString filePath;
+	QPoint spawnPoint;
+};
+
 typedef QList<QList<mapBlcok> > DoublemapBlockList;
 
 class Map : public QObject
@@ -41,16 +48,25 @@ public:
 	int mapRowSize(int floor);
 	int mapColumnSize(int floor);
 	int findWall(int x, int y, int z);
-	QPoint getspawnPoint(int floor);
+	QPoint getSpawnPoint(int floor);
+	bool isInitMap(QString filename);
+	bool readInitMapFile();
+	bool isMap(QString filename);
+	bool saveInitMap(QString initmapPath, QList<MapImformations> inputMapImformation);
+	QList<MapImformations> getMapImformations();
 signals:
 
 public slots:
 
 private:
 	QList<DoublemapBlockList> map;		//相当于三维数组
-    enum {map_MagicNum = 0x2FA3120C};
-	QStringList floorPath;					//每层地图文件名
-	QList<QPoint> spawnPoint;
+	enum {map_MagicNum = 0x2FA3120C, ini_MagicNum = 0x2FA3120D};
+//	QStringList floorPath;					//每层地图文件名
+	quint8 mapCount;//有多少个地图文件
+	QList<MapImformations> mapImform; //每层地图的地图信
+	QStringList initMapFileName;
+
+
 };
 
 #endif // MAP_H

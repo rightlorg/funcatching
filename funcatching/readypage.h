@@ -8,6 +8,7 @@
 #include <QStringList>
 #include <QSettings>
 #include <QInputDialog>
+//#include <game.h>
 
 namespace Ui {
 class ReadyPage;
@@ -37,8 +38,9 @@ private:
 	MainWindow *mainwindow;
 	int mapIndex;
 	QDir dir;
-	QStringList maps;
+	QStringList maps; //who store dir name of the map
 	QString ip;
+//	void *game;
 };
 
 #endif // READYPAGE_H
