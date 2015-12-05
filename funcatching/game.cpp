@@ -69,8 +69,8 @@ bool Game::loadMap()
 //			readypage->back();
 			//            delete this;
 		}
-		paintBlocks(0);
-		initPlayer(SinglePlayer);
+//		paintBlocks(0);
+//		initPlayer(SinglePlayer);
 	}/*else {
 		connectServer();
 		connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));

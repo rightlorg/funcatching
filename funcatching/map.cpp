@@ -11,7 +11,9 @@ Map::Map(QObject *parent, QString path) :
 	filter << "*.initmap";
 	dir.setNameFilters(filter);
 	dir.setSorting(QDir::Name);
+	mapCount = 0;
 	initMapFileName << dir.entryList();
+	initMapFileName[0] = dir.absoluteFilePath(initMapFileName[0]);
 	//将文件名转换成文件的绝对路径
 	//	for(int i = 0; i < floorPath.size(); i++)
 	//	{
@@ -67,7 +69,7 @@ bool Map::loadMap()
 	QFile file;
 	for(int i = 0; i < mapImform.size(); i++)
 	{
-		if (isMap(mapImform[i].filePath)) {
+		if (!isMap(mapImform[i].filePath)) {
 			return false;
 		}
 
@@ -230,7 +232,7 @@ bool Map::readInitMapFile() // Path is a initmap file name
 	QFile file(initMapFileName[0]);
 	if(!file.open(QIODevice::ReadOnly))
 	{
-		QMessageBox::warning(NULL,tr("Saving initial settings"),tr("failed to save settings"));
+		QMessageBox::warning(NULL,tr("Saving initial settings"),tr("failed to read settings"));
 		return false;
 	}
 	QDataStream in(&file);
@@ -246,10 +248,11 @@ bool Map::readInitMapFile() // Path is a initmap file name
 	quint8 tempMapCount;
 	in >> tempMapCount;
 
-	MapImformations spawnT;			//T means temp
 	quint32 spawnRowT, spawnColoumnT;
-	QString mapFloorPath;
 	for (int i = 0; i < tempMapCount; ++i) {
+		QString mapFloorPath;
+		MapImformations spawnT;			//T means temp
+
 		in >> mapFloorPath;
 		if (isMap(mapFloorPath)) {
 			spawnT.filePath.append(mapFloorPath);
