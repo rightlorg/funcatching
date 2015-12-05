@@ -27,10 +27,10 @@ BlockList::BlockList(QObject *parent) : QObject(parent)
 	blocklist[tr("Grey Woll")] = 22;
 	blocklist[tr("Stone")] = 23;
 	blocklist[tr("STUPID")] = 24;
-	blocklist[tr("Square Wood")] = 24;
-	blocklist[tr("STUPID")] = 24;
-	blocklist[tr("STUPID")] = 24;
-	blocklist[tr("STUPID")] = 24;
+	// blocklist[tr("Square Wood")] = 24;
+	// blocklist[tr("STUPID")] = 24;
+	// blocklist[tr("STUPID")] = 24;
+	// blocklist[tr("STUPID")] = 24;
 
 	//	blocklist[tr("Sand")]= 37;
 

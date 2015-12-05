@@ -30,11 +30,15 @@ class Game : public QObject
     Q_OBJECT
 public:
     explicit Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
-                  QString mapPath, int gametype);
+		  QString mapPathTem, int gameTypeTem);
     void exitGame();
     ~Game();
     enum Camp{Catcher,Hider,None};
     enum GameType{SinglePlayer,Multiplayer};
+//    bool isInitOK();		//Check if readinitmap and loadmap faild in Game
+    bool loadMap();
+    void paintBlocks(int floor);
+    void initPlayer(int gametype);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
@@ -46,8 +50,6 @@ private slots:
 
 private:
     void connectServer();
-    void paintBlocks(int floor);
-    void initPlayer(int gametype);
     void loadTexture();
     void handleKeyPressed(QKeyEvent *event);
     void getHeadPic(int gametype);
@@ -68,6 +70,9 @@ private:
     unsigned short player_index;
     QList<QList<QPixmap> > texture;
     void initSceneBackground();
+    int gameType;
+    QString mapPath;
+//    bool loadSuccess;
 };
 
 #endif // GAME_H
