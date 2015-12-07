@@ -45,6 +45,7 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 void Game::exitGame()
 {
 	readypage->back();
+	delete this;
 }
 
 

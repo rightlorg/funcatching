@@ -144,10 +144,10 @@ bool MapEditor::openFile()
     ui->tableWidget->clearContents();
 
     createTableWidget(temp_row,temp_column);
-    in >> temp_row;
-    in >> temp_column;
-    quint16 row;
-    quint16 column;
+//    in >> temp_row;
+//    in >> temp_column;
+    quint32 row;
+    quint32 column;
     quint8 id, status;
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -350,6 +350,20 @@ void MapEditor::on_tableWidget_clicked(const QModelIndex &index)
 void MapEditor::initialize_item(int row,int column,int id,int status)
 {
     QTableWidgetItem *item = ui->tableWidget->item(row,column);
+    if (item == NULL) {
+	    qDebug() << "faild to get a item";
+	    return;
+    }
+    QPixmap icon;
+    switch (status) {
+    case 1:
+	    icon.load(":/tex/" + QString::number(id) + "-8.png");
+	    break;
+    default:
+	    icon.load(":/tex/" + QString::number(id) + ".png");
+	    break;
+    }
+    item->setIcon(QIcon(icon));
     item->setData(88, id);
     item->setData(66, status);
 }
