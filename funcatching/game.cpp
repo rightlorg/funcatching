@@ -3,13 +3,15 @@
 #include <QChar>
 #include "gamemenu.h"
 
+#define GAME_TICK 20	//Update 20 times per second
+
 Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
-	   QString mapPathTem, int gameTypeTem):
+	   QString mapPathTemp, int gameTypeTemp):
 	QObject(parent_readypage)
 {
 	//	loadSuccess = false;
-	gameType = gameTypeTem;
-	mapPath = mapPathTem;
+	gameType = gameTypeTemp;
+	mapPath = mapPathTemp;
 	player_index = 0;
 	readypage = parent_readypage;
 	mainwindow  = parent_mainwindow;
@@ -17,9 +19,11 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 
 	view = new QGraphicsView(scene, mainwindow);
 	view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+	view->setFocusPolicy(Qt::StrongFocus);
+	view->setFocus();
 	mainwindow->addviewWidget(view);
 	initSceneBackground();
-
+	connect(&gameTick, SIGNAL(timeout()), SLOT(timerUpdate()));
 	loadTexture();
 
 //	if(gametype == SinglePlayer) {
@@ -87,12 +91,17 @@ bool Game::loadMap()
 
 bool Game::eventFilter(QObject *object, QEvent *event)
 {
-	if (event->type() == QEvent::KeyPress) {
-		handleKeyPressed((QKeyEvent *)event);
-		return true;
-	} else {
+	switch (event->type()) {
+	case QEvent::KeyPress:
+		whenKeyPressed((QKeyEvent *)event);
+		break;
+	case QEvent::KeyRelease:
+		whenKeyReleased((QKeyEvent *)event);
+		break;
+	default:
 		return QObject::eventFilter(object, event);
 	}
+	return true;
 }
 
 void Game::initSceneBackground()
@@ -184,6 +193,14 @@ void Game::initPlayer(int gametype)
 
 }
 
+void Game::initGame()
+{
+	initPlayer(gameType);
+	paintBlocks(0);
+	gameTick.start(1000 / GAME_TICK);
+
+}
+
 void Game::loadTexture()
 {
 	QDir dir(":/tex/");
@@ -248,35 +265,53 @@ void Game::loadTexture()
 	}
 }
 
-void Game::handleKeyPressed(QKeyEvent *event)
+void Game::whenKeyPressed(QKeyEvent *event)
 {
-	switch (event->key()) {
-	case Qt::Key_Up:
-	case Qt::Key_W:
-		change_y_pos(-PACE);
-		break;
-	case Qt::Key_Left:
-	case Qt::Key_A:
-		change_x_pos(-PACE);
-		break;
-	case Qt::Key_Down:
-	case Qt::Key_S:
-		change_y_pos(PACE);
-		break;
-	case Qt::Key_Right:
-	case Qt::Key_D:
-		change_x_pos(PACE);
-		break;
-	case Qt::Key_Escape:
-		gameMenu();
-		break;
-	case Qt::Key_E:
-		//add something here
-		break;
-	default:
-		break;
-	}
+	qDebug("press");
 }
+
+void Game::whenKeyReleased(QKeyEvent *event)
+{
+	qDebug("release");
+
+}
+
+//void Game::handleKeyPressed(QKeyEvent *event)
+//{
+//	if ( event->isAutoRepeat() || !actions.contains( event->key() ) )
+//	{
+//	    event->ignore();
+//	    return;
+//	}
+//	Action a = actions[ event->key() ];
+
+//	switch (event->key()) {
+//	case Qt::Key_Up:
+//	case Qt::Key_W:
+//		setYPos(-PACE);
+//		break;
+//	case Qt::Key_Left:
+//	case Qt::Key_A:
+//		setXPos(-PACE);
+//		break;
+//	case Qt::Key_Down:
+//	case Qt::Key_S:
+//		setYPos(PACE);
+//		break;
+//	case Qt::Key_Right:
+//	case Qt::Key_D:
+//		setXPos(PACE);
+//		break;
+//	case Qt::Key_Escape:
+//		gameMenu();
+//		break;
+//	case Qt::Key_E:
+//		//add something here
+//		break;
+//	default:
+//		break;
+//	}
+//}
 
 void Game::firstDataSubmit()
 {
@@ -337,13 +372,18 @@ void Game::gameMenu()
 	gamemenu->exec();
 }
 
-void Game::change_x_pos(int x_pos)
+void Game::timerUpdate()
+{
+
+}
+
+void Game::setXPos(int x_pos)
 {
 	myself->setPos(myself->pos().rx() + x_pos, myself->pos().ry());
 	scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
 }
 
-void Game::change_y_pos(int y_pos)
+void Game::setYPos(int y_pos)
 {
 	myself->setPos(myself->pos().rx(), myself->pos().ry() + y_pos);
 	scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);

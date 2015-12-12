@@ -19,10 +19,13 @@
 #include <QSettings>
 #include <QEvent>
 #include <QKeyEvent>
+#include <QTimer>
 #include "map.h"
 #include "readypage.h"
 #include "mainwindow.h"
 #include "storing_player.h"
+
+
 #define PACE 10
 
 class Game : public QObject
@@ -30,7 +33,7 @@ class Game : public QObject
     Q_OBJECT
 public:
     explicit Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
-		  QString mapPathTem, int gameTypeTem);
+		  QString mapPathTemp, int gameTypeTemp);
     void exitGame();
     ~Game();
     enum Camp{Catcher,Hider,None};
@@ -39,22 +42,30 @@ public:
     bool loadMap();
     void paintBlocks(int floor);
     void initPlayer(int gametype);
+    void initGame();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);
+//	void keyPressEvent(QKeyEvent *event);
+//	void keyReleaseEvent(QKeyEvent *event);
 
 private slots:
     void firstDataSubmit();
     void getFirst();
     void gameMenu();
+    void timerUpdate();
 
 private:
     void connectServer();
     void loadTexture();
-    void handleKeyPressed(QKeyEvent *event);
+    void whenKeyPressed(QKeyEvent *event);
+    void whenKeyReleased(QKeyEvent *event);
+
+//    void handleKeyPressed(QKeyEvent *event);
+
     void getHeadPic(int gametype);
-    void change_x_pos(int x_pos);
-    void change_y_pos(int y_pos);
+    void setXPos(int x_pos);
+    void setYPos(int y_pos);
     QTcpSocket tcpSocket;
     Map *map;
     ReadyPage *readypage;
@@ -72,6 +83,12 @@ private:
     void initSceneBackground();
     int gameType;
     QString mapPath;
+    QTimer gameTick;
+
+    enum Action { Launch, Thrust, RotateLeft, RotateRight, Shoot, Teleport,
+		    Brake, Shield, Pause, NewGame  };
+    QMap<int, Action> actions;
+
 //    bool loadSuccess;
 };
 

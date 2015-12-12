@@ -67,8 +67,7 @@ void ReadyPage::on_go_clicked()
 			delete game;
 			this->show();
 		} else {
-			game->paintBlocks(0); //paint the map at floor 0
-			game->initPlayer(Game::SinglePlayer);
+			game->initGame();
 		}
 	}
 }
