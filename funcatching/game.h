@@ -7,6 +7,7 @@
 #include <QSettings>
 #include <QDir>
 #include <QImage>
+#include <QPointF>
 #include <QTcpSocket>
 #include <QGraphicsView>
 #include <QGraphicsScene>
@@ -26,7 +27,7 @@
 #include "storing_player.h"
 
 
-#define PACE 10
+#define PACE 1
 
 class Game : public QObject
 {
@@ -58,6 +59,7 @@ private slots:
 private:
     void connectServer();
     void loadTexture();
+    void movePlayer();
     void whenKeyPressed(QKeyEvent *event);
     void whenKeyReleased(QKeyEvent *event);
 
@@ -84,6 +86,8 @@ private:
     int gameType;
     QString mapPath;
     QTimer gameTick;
+//    QGraphicsPixmapItem collisionCheckBlock;
+//    QPointF myselfPos;
 
     //move
 	bool moveRight;

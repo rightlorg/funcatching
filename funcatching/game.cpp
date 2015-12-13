@@ -3,7 +3,7 @@
 #include <QChar>
 #include "gamemenu.h"
 
-#define GAME_TICK 20	//Update 20 times per second
+#define GAME_TICK 50	//Update n times per second
 
 Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	   QString mapPathTemp, int gameTypeTemp):
@@ -36,6 +36,7 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	view->setFocusPolicy(Qt::StrongFocus);
 	view->setFocus();
 	mainwindow->addviewWidget(view);
+//	collisionCheckBlock.setPixmap(QPixmap(":/image/white.png"));
 	initSceneBackground();
 	connect(&gameTick, SIGNAL(timeout()), SLOT(timerUpdate()));
 	loadTexture();
@@ -123,6 +124,7 @@ void Game::initSceneBackground()
 	scene->setBackgroundBrush(QPixmap(":/image/pix3.png"));
 }
 
+
 void Game::getHeadPic(int gametype)
 {
 	switch (gametype) {
@@ -136,7 +138,7 @@ void Game::getHeadPic(int gametype)
 			return;
 		settings.endGroup();
 		myself_headImage.load(path);
-		myself_headImage = myself_headImage.scaled(26, 26, Qt::IgnoreAspectRatio);
+		myself_headImage = myself_headImage.scaled(27, 27, Qt::IgnoreAspectRatio);
 		break;
 	}
 	case Multiplayer:
@@ -280,6 +282,18 @@ void Game::loadTexture()
 	}
 }
 
+void Game::movePlayer()
+{
+	if (moveDown)
+		setYPos(PACE);
+	if (moveUp)
+		setYPos(-PACE);
+	if (moveLeft)
+		setXPos(-PACE);
+	if (moveRight)
+		setXPos(PACE);
+}
+
 void Game::whenKeyPressed(QKeyEvent *event)
 {
 	qDebug() << myself->pos();
@@ -309,9 +323,6 @@ void Game::whenKeyPressed(QKeyEvent *event)
 	case Qt::Key_D:
 //		setXPos(PACE);
 		moveRight = true;
-		break;
-	case Qt::Key_Escape:
-		gameMenu();
 		break;
 	case Qt::Key_E:
 		//add something here
@@ -465,13 +476,42 @@ void Game::timerUpdate()
 //	qDebug("timer");
 //	QGraphicsPixmapItem *hit
 	QList<QGraphicsItem*> hits = myself->collidingItems(Qt::IntersectsItemBoundingRect);
-	QList<QGraphicsItem*>::iterator itHit = hits.begin();
+	QList<QGraphicsItem*>::iterator it;
 
-	while (itHit != hits.end())
-	{
-		if ((*itHit)->data(66) == 1) {
+	for (it = hits.begin(); it < hits.end(); ++it) {
+		if ((*it)->data(66) == 1) {
+
+//			collisionCheckBlock.setPos(myself->pos());
+			if (myself->x() > (*it)->x()) {
+				if (myself->x() - (*it)->x() <= 32) {
+					moveLeft = false;
+				}
+			}
+			if (myself->x() < (*it)->x()) {
+				if ((*it)->x() - myself->x()<= 32) {
+					moveRight = false;
+				}
+			}
+			if (myself->y() > (*it)->y()) {
+				if (myself->y() - (*it)->y() <= 32) {
+					moveUp = false;
+				}
+			}
+			if (myself->y() < (*it)->y()) {
+				if ((*it)->y() - myself->y()<= 32) {
+					moveDown = false;
+				}
+			}
+
 			qDebug("hitwall");
 		}
+	}
+	movePlayer();
+//	while (itHit != hits.end())
+//	{
+//		if ((*itHit)->data(66) == 1) {
+//			qDebug("hitwall");
+//		}
 //            if ( (*itHit)->type() >= ID_ROCK_LARGE &&
 //                 (*itHit)->type() <= ID_ROCK_SMALL && (*itHit)->collidesWithItem(*itMissile) )
 //	    {
@@ -483,7 +523,7 @@ void Game::timerUpdate()
 //                break;
 //	    }
 //            itHit++;
-	}
+//	}
 
 
 }
