@@ -85,9 +85,15 @@ private:
     QString mapPath;
     QTimer gameTick;
 
-    enum Action { Launch, Thrust, RotateLeft, RotateRight, Shoot, Teleport,
-		    Brake, Shield, Pause, NewGame  };
-    QMap<int, Action> actions;
+    //move
+	bool moveRight;
+	bool moveLeft;
+	bool moveUp;
+	bool moveDown;
+
+
+//    enum Action {Left, Right, Up, Down, Pause};
+//    QMap<int, Action> actions;
 
 //    bool loadSuccess;
 };

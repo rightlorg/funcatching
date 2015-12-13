@@ -9,15 +9,29 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	   QString mapPathTemp, int gameTypeTemp):
 	QObject(parent_readypage)
 {
-	//	loadSuccess = false;
-	gameType = gameTypeTemp;
-	mapPath = mapPathTemp;
-	player_index = 0;
-	readypage = parent_readypage;
-	mainwindow  = parent_mainwindow;
-	scene = new QGraphicsScene(mainwindow);
+//	//	loadSuccess = false;
+//	actions.insert( Qt::Key_Up, Up );
+//        actions.insert( Qt::Key_Left, Left );
+//        actions.insert( Qt::Key_Right, Right );
+//        actions.insert( Qt::Key_Space, Shoot );
+//        actions.insert( Qt::Key_Z, Teleport );
+//        actions.insert( Qt::Key_X, Brake );
+//        actions.insert( Qt::Key_S, Shield );
+//        actions.insert( Qt::Key_P, Pause );
+//        actions.insert( Qt::Key_L, Launch );
+//        actions.insert( Qt::Key_N, NewGame );
 
-	view = new QGraphicsView(scene, mainwindow);
+	moveDown	= false;
+	moveLeft	= false;
+	moveUp		= false;
+	moveRight	= false;
+	gameType	= gameTypeTemp;
+	mapPath		= mapPathTemp;
+	player_index	= 0;
+	readypage	= parent_readypage;
+	mainwindow	= parent_mainwindow;
+	scene		= new QGraphicsScene(mainwindow);
+	view		= new QGraphicsView(scene, mainwindow);
 	view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
 	view->setFocusPolicy(Qt::StrongFocus);
 	view->setFocus();
@@ -156,9 +170,9 @@ void Game::paintBlocks(int floor)
 			if (shadowStyle == -1)
 				shadowStyle = texture[map->at(j, i, floor).id].size() - 1;
 			QGraphicsPixmapItem *block = new QGraphicsPixmapItem(
-						texture[map->at(j, i, floor).id]
-					[shadowStyle]);
+						texture[map->at(j, i, floor).id][shadowStyle]);
 			block->setPos(32 * j, 32 * i);
+			block->setData(66, map->blockStatus(j, i, floor));
 			scene->addItem(block);
 		}
 	}
@@ -195,8 +209,9 @@ void Game::initPlayer(int gametype)
 
 void Game::initGame()
 {
-	initPlayer(gameType);
 	paintBlocks(0);
+	initPlayer(gameType);
+
 	gameTick.start(1000 / GAME_TICK);
 
 }
@@ -267,12 +282,85 @@ void Game::loadTexture()
 
 void Game::whenKeyPressed(QKeyEvent *event)
 {
-	qDebug("press");
+	qDebug() << myself->pos();
+	if (event->isAutoRepeat())
+	{
+	    event->ignore();
+	    return;
+	}
+
+	switch (event->key()) {
+	case Qt::Key_Up:
+	case Qt::Key_W:
+//		setYPos(-PACE);
+		moveUp = true;
+		break;
+	case Qt::Key_Left:
+	case Qt::Key_A:
+//		setXPos(-PACE);
+		moveLeft = true;
+		break;
+	case Qt::Key_Down:
+	case Qt::Key_S:
+//		setYPos(PACE);
+		moveDown = true;
+		break;
+	case Qt::Key_Right:
+	case Qt::Key_D:
+//		setXPos(PACE);
+		moveRight = true;
+		break;
+	case Qt::Key_Escape:
+		gameMenu();
+		break;
+	case Qt::Key_E:
+		//add something here
+		break;
+	default:
+		break;
+	}
+
 }
 
 void Game::whenKeyReleased(QKeyEvent *event)
 {
 	qDebug("release");
+	if (event->isAutoRepeat())
+	{
+	    event->ignore();
+	    return;
+	}
+
+	switch (event->key()) {
+	case Qt::Key_Up:
+	case Qt::Key_W:
+//		setYPos(-PACE);
+		moveUp = false;
+		break;
+	case Qt::Key_Left:
+	case Qt::Key_A:
+//		setXPos(-PACE);
+		moveLeft = false;
+		break;
+	case Qt::Key_Down:
+	case Qt::Key_S:
+//		setYPos(PACE);
+		moveDown = false;
+		break;
+	case Qt::Key_Right:
+	case Qt::Key_D:
+//		setXPos(PACE);
+		moveRight = false;
+		break;
+	case Qt::Key_Escape:
+		gameMenu();
+		break;
+	case Qt::Key_E:
+		//add something here
+		break;
+	default:
+		break;
+	}
 
 }
 
@@ -374,6 +462,29 @@ void Game::gameMenu()
 
 void Game::timerUpdate()
 {
+//	qDebug("timer");
+//	QGraphicsPixmapItem *hit
+	QList<QGraphicsItem*> hits = myself->collidingItems(Qt::IntersectsItemBoundingRect);
+	QList<QGraphicsItem*>::iterator itHit = hits.begin();
+
+	while (itHit != hits.end())
+	{
+		if ((*itHit)->data(66) == 1) {
+			qDebug("hitwall");
+		}
+//            if ( (*itHit)->type() >= ID_ROCK_LARGE &&
+//                 (*itHit)->type() <= ID_ROCK_SMALL && (*itHit)->collidesWithItem(*itMissile) )
+//	    {
+//                shotsHit++;
+//                rockHit( static_cast<AnimatedPixmapItem *>(*itHit) );
+//                delete *itMissile;
+//                itMissile = missiles.erase(itMissile);
+//                missileErased = true;
+//                break;
+//	    }
+//            itHit++;
+	}
+
 
 }
 

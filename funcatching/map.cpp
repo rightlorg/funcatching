@@ -227,6 +227,11 @@ bool Map::isInitMap(QString filename) // Path is a initmap file name
 	return true;
 }
 
+unsigned short Map::blockStatus(int x, int y, int z)
+{
+	return map[z][y][x].status;
+}
+
 bool Map::readInitMapFile() // Path is a initmap file name
 {
 	QFile file(initMapFileName[0]);
