@@ -59,7 +59,7 @@ private slots:
 private:
     void connectServer();
     void loadTexture();
-    void movePlayer();
+    void movePlayer(bool up, bool down, bool left, bool right);
     void whenKeyPressed(QKeyEvent *event);
     void whenKeyReleased(QKeyEvent *event);
 
@@ -73,8 +73,8 @@ private:
     ReadyPage *readypage;
     quint32 nextBlockSize;
     MainWindow *mainwindow;
-    QGraphicsScene *scene;
-    QGraphicsView *view;
+    QGraphicsScene scene;
+    QGraphicsView view;
     QString player_name;
     QGraphicsPixmapItem *myself;
     QPixmap myself_headImage;
@@ -86,11 +86,16 @@ private:
     int gameType;
     QString mapPath;
     QTimer gameTick;
-//    QGraphicsPixmapItem collisionCheckBlock;
+    bool haveWallA, haveWallB;
+    QGraphicsPixmapItem collisionCheckBlock;
 //    QPointF myselfPos;
 
     //move
-	bool moveRight;
+	bool finalMoveRight;
+	bool finalMoveLeft;
+	bool finalMoveUp;
+	bool finalMoveDown;
+        bool moveRight;
 	bool moveLeft;
 	bool moveUp;
 	bool moveDown;
