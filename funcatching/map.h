@@ -50,6 +50,7 @@ public:
 	int findWall(int x, int y, int z);
 	QPoint getSpawnPoint(int floor);
 	bool isInitMap(QString filename);
+	unsigned short blockStatus(int x, int y, int z);
 	bool readInitMapFile();
 	bool isMap(QString filename);
 	bool saveInitMap(QString initmapPath, QList<MapImformations> inputMapImformation);

@@ -3,57 +3,90 @@
 #include <QChar>
 #include "gamemenu.h"
 
+#define GAME_TICK 50	//Update n times per second
+
 Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
-	   QString mapPathTem, int gameTypeTem):
+	   QString mapPathTemp, int gameTypeTemp):
 	QObject(parent_readypage)
 {
-	//	loadSuccess = false;
-	gameType = gameTypeTem;
-	mapPath = mapPathTem;
-	player_index = 0;
-	readypage = parent_readypage;
-	mainwindow  = parent_mainwindow;
-	scene = new QGraphicsScene(mainwindow);
+	//	//	loadSuccess = false;
+	//	actions.insert( Qt::Key_Up, Up );
+	//        actions.insert( Qt::Key_Left, Left );
+	//        actions.insert( Qt::Key_Right, Right );
+	//        actions.insert( Qt::Key_Space, Shoot );
+	//        actions.insert( Qt::Key_Z, Teleport );
+	//        actions.insert( Qt::Key_X, Brake );
+	//        actions.insert( Qt::Key_S, Shield );
+	//        actions.insert( Qt::Key_P, Pause );
+	//        actions.insert( Qt::Key_L, Launch );
+	//        actions.insert( Qt::Key_N, NewGame );
 
-	view = new QGraphicsView(scene, mainwindow);
-	view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
-	mainwindow->addviewWidget(view);
+	moveDown	= false;
+	moveLeft	= false;
+	moveUp		= false;
+	moveRight	= false;
+	finalMoveDown	= false;
+	finalMoveLeft	= false;
+	finalMoveUp	= false;
+	finalMoveRight	= false;
+
+	gameType	= gameTypeTemp;
+	mapPath		= mapPathTemp;
+	player_index	= 0;
+	readypage	= parent_readypage;
+	mainwindow	= parent_mainwindow;
+//	scene		= new QGraphicsScene(mainwindow);
+
+//	view		= new QGraphicsView(scene, mainwindow);
+	view.setScene(&scene);
+	view.setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+	view.setFocusPolicy(Qt::StrongFocus);
+	mainwindow->addviewWidget(&view);
+	QPixmap white(":/image/white.png");
+	white = white.scaled(27, 27, Qt::IgnoreAspectRatio);
+	collisionCheckBlock.setPixmap(white);
+	scene.addItem(&collisionCheckBlock);
 	initSceneBackground();
-
+	connect(&gameTick, SIGNAL(timeout()), SLOT(timerUpdate()));
 	loadTexture();
 
-//	if(gametype == SinglePlayer) {
-//		map = new Map(NULL, mapPath);
-//		if (!map->readInitMapFile()) {
-//			readypage->back();
-//			//		delete this;
-//		}
-//		if(!map->loadMap()) {
-//			readypage->back();
-//			//            delete this;
-//		}
-//		paintBlocks(0);
-//		initPlayer(SinglePlayer);
-//	}else {
-//		connectServer();
-//		connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
-//		connect(&tcpSocket,SIGNAL(readyRead()),this,SLOT(getFirst()));
-//	}
-	scene->installEventFilter(this);
+	//	if(gametype == SinglePlayer) {
+	//		map = new Map(NULL, mapPath);
+	//		if (!map->readInitMapFile()) {
+	//			readypage->back();
+	//			//		delete this;
+	//		}
+	//		if(!map->loadMap()) {
+	//			readypage->back();
+	//			//            delete this;
+	//		}
+	//		paintBlocks(0);
+	//		initPlayer(SinglePlayer);
+	//	}else {
+	//		connectServer();
+	//		connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
+	//		connect(&tcpSocket,SIGNAL(readyRead()),this,SLOT(getFirst()));
+	//	}
+	scene.installEventFilter(this);
+	view.setFocus();
+
 }
 
 void Game::exitGame()
 {
 	readypage->back();
+	gameTick.stop();
+	delete map;
+//	delete scene;
+//	delete view;
+	delete myself;
 	delete this;
 }
 
 
 Game::~Game()
 {
-	delete map;
-	delete scene;
-	delete view;
+
 }
 
 bool Game::loadMap()
@@ -62,16 +95,16 @@ bool Game::loadMap()
 		map = new Map(NULL, mapPath);
 		if (!map->readInitMapFile()) {
 			return false;
-//			readypage->back();
+			//			readypage->back();
 			//		delete this;
 		}
 		if(!map->loadMap()) {
 			return false;
-//			readypage->back();
+			//			readypage->back();
 			//            delete this;
 		}
-//		paintBlocks(0);
-//		initPlayer(SinglePlayer);
+		//		paintBlocks(0);
+		//		initPlayer(SinglePlayer);
 	}/*else {
 		connectServer();
 		connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
@@ -87,18 +120,24 @@ bool Game::loadMap()
 
 bool Game::eventFilter(QObject *object, QEvent *event)
 {
-	if (event->type() == QEvent::KeyPress) {
-		handleKeyPressed((QKeyEvent *)event);
-		return true;
-	} else {
+	switch (event->type()) {
+	case QEvent::KeyPress:
+		whenKeyPressed((QKeyEvent *)event);
+		break;
+	case QEvent::KeyRelease:
+		whenKeyReleased((QKeyEvent *)event);
+		break;
+	default:
 		return QObject::eventFilter(object, event);
 	}
+	return true;
 }
 
 void Game::initSceneBackground()
 {
-	scene->setBackgroundBrush(QPixmap(":/image/pix3.png"));
+	scene.setBackgroundBrush(QPixmap(":/image/pix3.png"));
 }
+
 
 void Game::getHeadPic(int gametype)
 {
@@ -113,7 +152,7 @@ void Game::getHeadPic(int gametype)
 			return;
 		settings.endGroup();
 		myself_headImage.load(path);
-		myself_headImage = myself_headImage.scaled(26, 26, Qt::IgnoreAspectRatio);
+		myself_headImage = myself_headImage.scaled(27, 27, Qt::IgnoreAspectRatio);
 		break;
 	}
 	case Multiplayer:
@@ -147,13 +186,13 @@ void Game::paintBlocks(int floor)
 			if (shadowStyle == -1)
 				shadowStyle = texture[map->at(j, i, floor).id].size() - 1;
 			QGraphicsPixmapItem *block = new QGraphicsPixmapItem(
-						texture[map->at(j, i, floor).id]
-					[shadowStyle]);
+						texture[map->at(j, i, floor).id][shadowStyle]);
 			block->setPos(32 * j, 32 * i);
-			scene->addItem(block);
+			block->setData(66, map->blockStatus(j, i, floor));
+			scene.addItem(block);
 		}
 	}
-	scene->setSceneRect(map->getSpawnPoint(0).rx() * 32, map->getSpawnPoint(0).ry() * 32,
+	scene.setSceneRect(map->getSpawnPoint(0).rx() * 32, map->getSpawnPoint(0).ry() * 32,
 			    32, 32);
 	//    scene->itemAt();
 	//    scene->setSceneRect(0,0,0,0);
@@ -167,13 +206,13 @@ void Game::initPlayer(int gametype)
 		getHeadPic(SinglePlayer);
 		myself = new QGraphicsPixmapItem(myself_headImage);
 		myself->setPos(spawnPoint.rx() * 32 + 3, spawnPoint.ry() * 32 + 3);
-		scene->addItem(myself);
+		scene.addItem(myself);
 		break;
 	case Multiplayer:
 		for (int i = 0; i < player_headImages.size(); ++i) {
 			QGraphicsPixmapItem *newplayer = new QGraphicsPixmapItem(player_headImages[i]);
 			newplayer->setPos(spawnPoint.rx() * 32 + 3, spawnPoint.ry() * 32 + 3);
-			scene->addItem(newplayer);
+			scene.addItem(newplayer);
 		}
 
 		break;
@@ -181,6 +220,15 @@ void Game::initPlayer(int gametype)
 		return;
 	}
 
+
+}
+
+void Game::initGame()
+{
+	paintBlocks(0);
+	initPlayer(gameType);
+
+	gameTick.start(1000 / GAME_TICK);
 
 }
 
@@ -248,24 +296,86 @@ void Game::loadTexture()
 	}
 }
 
-void Game::handleKeyPressed(QKeyEvent *event)
+void Game::movePlayer(bool up, bool down, bool left, bool right)
 {
+	if (down)
+		setYPos(PACE);
+	if (up)
+		setYPos(-PACE);
+	if (left)
+		setXPos(-PACE);
+	if (right)
+		setXPos(PACE);
+}
+
+void Game::whenKeyPressed(QKeyEvent *event)
+{
+	qDebug() << myself->pos();
+	if (event->isAutoRepeat())
+	{
+		event->ignore();
+		return;
+	}
+
 	switch (event->key()) {
 	case Qt::Key_Up:
 	case Qt::Key_W:
-		change_y_pos(-PACE);
+		//		setYPos(-PACE);
+		finalMoveUp = true;
 		break;
 	case Qt::Key_Left:
 	case Qt::Key_A:
-		change_x_pos(-PACE);
+		//		setXPos(-PACE);
+		finalMoveLeft = true;
 		break;
 	case Qt::Key_Down:
 	case Qt::Key_S:
-		change_y_pos(PACE);
+		//		setYPos(PACE);
+		finalMoveDown = true;
 		break;
 	case Qt::Key_Right:
 	case Qt::Key_D:
-		change_x_pos(PACE);
+		//		setXPos(PACE);
+		finalMoveRight = true;
+		break;
+	case Qt::Key_E:
+		//add something here
+		break;
+	default:
+		break;
+	}
+
+}
+
+void Game::whenKeyReleased(QKeyEvent *event)
+{
+	qDebug("release");
+	if (event->isAutoRepeat())
+	{
+		event->ignore();
+		return;
+	}
+
+	switch (event->key()) {
+	case Qt::Key_Up:
+	case Qt::Key_W:
+		//		setYPos(-PACE);
+		finalMoveUp = false;
+		break;
+	case Qt::Key_Left:
+	case Qt::Key_A:
+		//		setXPos(-PACE);
+		finalMoveLeft = false;
+		break;
+	case Qt::Key_Down:
+	case Qt::Key_S:
+		//		setYPos(PACE);
+		finalMoveDown = false;
+		break;
+	case Qt::Key_Right:
+	case Qt::Key_D:
+		//		setXPos(PACE);
+		finalMoveRight = false;
 		break;
 	case Qt::Key_Escape:
 		gameMenu();
@@ -276,7 +386,45 @@ void Game::handleKeyPressed(QKeyEvent *event)
 	default:
 		break;
 	}
+
 }
+
+//void Game::handleKeyPressed(QKeyEvent *event)
+//{
+//	if ( event->isAutoRepeat() || !actions.contains( event->key() ) )
+//	{
+//	    event->ignore();
+//	    return;
+//	}
+//	Action a = actions[ event->key() ];
+
+//	switch (event->key()) {
+//	case Qt::Key_Up:
+//	case Qt::Key_W:
+//		setYPos(-PACE);
+//		break;
+//	case Qt::Key_Left:
+//	case Qt::Key_A:
+//		setXPos(-PACE);
+//		break;
+//	case Qt::Key_Down:
+//	case Qt::Key_S:
+//		setYPos(PACE);
+//		break;
+//	case Qt::Key_Right:
+//	case Qt::Key_D:
+//		setXPos(PACE);
+//		break;
+//	case Qt::Key_Escape:
+//		gameMenu();
+//		break;
+//	case Qt::Key_E:
+//		//add something here
+//		break;
+//	default:
+//		break;
+//	}
+//}
 
 void Game::firstDataSubmit()
 {
@@ -337,14 +485,222 @@ void Game::gameMenu()
 	gamemenu->exec();
 }
 
-void Game::change_x_pos(int x_pos)
+void Game::timerUpdate()
 {
-	myself->setPos(myself->pos().rx() + x_pos, myself->pos().ry());
-	scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
+	//	qDebug("timer");
+	//	QGraphicsPixmapItem *hit
+	moveUp = false;
+	moveDown = false;
+	moveLeft = false;
+	moveRight = false;
+	haveWallA = false;
+	haveWallB = false;
+
+	QList<QGraphicsItem*> hits = myself->collidingItems(Qt::IntersectsItemBoundingRect);
+	QList<QGraphicsItem*> hitsChecking;
+	QList<QGraphicsItem*>::iterator it, itChecking;
+
+	for (it = hits.begin(); it < hits.end(); ++it) {
+		if ((*it)->data(66) == 1) {
+			//MOVE RIGHT
+			haveWallA = false;
+			haveWallB = false;
+			collisionCheckBlock.setPos(myself->x() + 1, myself->y());
+			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
+			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
+				if ((*itChecking)->data(66) == 1) {
+					moveRight = false;
+				}
+			}
+			collisionCheckBlock.setPos(myself->x() + 1, myself->y() - 1);
+			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
+			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
+				if ((*itChecking)->data(66) == 1) {
+					haveWallA = true;
+					break;
+				}
+			}
+//			if (finalMoveRight == true) {
+//				moveRight = !haveWall;
+//				goto A;
+//			}
+//			haveWall = false;
+
+			collisionCheckBlock.setPos(myself->x() + 1, myself->y() + 1);
+			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
+			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
+				if ((*itChecking)->data(66) == 1) {
+					haveWallB = true;
+					break;
+
+				}
+			}
+			if (finalMoveRight == true) {
+				moveRight = !(haveWallA && haveWallB);
+			}
+//			A:
+			haveWallA = false;
+			haveWallB = false;
+
+			//MOVE LEFT
+			collisionCheckBlock.setPos(myself->x() - 1, myself->y());
+			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
+			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
+				if ((*itChecking)->data(66) == 1) {
+					moveLeft = false;
+				}
+			}
+			collisionCheckBlock.setPos(myself->x() - 1, myself->y() - 1);
+			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
+			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
+				if ((*itChecking)->data(66) == 1) {
+					haveWallA = true;
+					break;
+				}
+			}
+//			if (finalMoveLeft == true) {
+//				moveLeft = !haveWall;
+
+//				goto B;
+//			}
+//			haveWall = false;
+			collisionCheckBlock.setPos(myself->x() - 1, myself->y() + 1);
+			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
+			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
+				if ((*itChecking)->data(66) == 1) {
+					haveWallB = true;
+					break;
+
+				}
+			}
+			if (finalMoveLeft == true) {
+				moveLeft = !(haveWallA && haveWallB);
+			}
+			haveWallA = false;
+			haveWallB = false;
+//			B:
+			//MOVE DOWN
+			collisionCheckBlock.setPos(myself->x(), myself->y() + 1);
+			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
+			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
+				if ((*itChecking)->data(66) == 1) {
+					moveDown = false;
+				}
+			}
+			collisionCheckBlock.setPos(myself->x() + 1, myself->y() + 1);
+			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
+			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
+				if ((*itChecking)->data(66) == 1) {
+					haveWallA = true;
+					break;
+				}
+			}
+//			if (finalMoveDown == true) {
+//				moveDown = !haveWall;
+
+//				goto C;
+//			}
+//			haveWall = false;
+			collisionCheckBlock.setPos(myself->x() - 1, myself->y() + 1);
+			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
+			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
+				if ((*itChecking)->data(66) == 1) {
+					haveWallB = true;
+					break;
+
+				}
+			}
+			if (finalMoveDown == true) {
+				moveDown = !(haveWallA && haveWallB);
+			}
+			haveWallA = false;
+			haveWallB = false;
+
+
+//			C:
+			//MOVE UP
+			collisionCheckBlock.setPos(myself->x(), myself->y() - 1);
+			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
+			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
+				if ((*itChecking)->data(66) == 1) {
+					moveUp = false;
+				}
+			}
+
+			collisionCheckBlock.setPos(myself->x() + 1, myself->y() - 1);
+			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
+			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
+				if ((*itChecking)->data(66) == 1) {
+					haveWallA = true;
+					break;
+				}
+			}
+//			if (finalMoveUp == true) {
+//				moveUp = !haveWall;
+
+//				goto D;
+//			}
+//			haveWall = false;
+
+			collisionCheckBlock.setPos(myself->x() - 1, myself->y() - 1);
+			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
+			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
+				if ((*itChecking)->data(66) == 1) {
+					haveWallB = true;
+					break;
+				}
+			}
+			if (finalMoveUp == true) {
+				moveUp = !(haveWallA && haveWallB);
+			}
+			haveWallA = false;
+			haveWallB = false;
+//			D:
+			movePlayer(moveUp, moveDown, moveLeft, moveRight);
+			return;
+//			finalMoveUp = moveUp;
+//			finalMoveDown = moveDown;
+//			finalMoveLeft = moveLeft;
+//			finalMoveRight = moveRight;
+
+
+			//			if (myself->x() > (*it)->x()) {
+			//				if (myself->x() - (*it)->x() <= 32) {
+			//					moveLeft = false;
+			//				}
+			//			}
+			//			if (myself->x() < (*it)->x()) {
+			//				if ((*it)->x() - myself->x()<= 32) {
+			//					moveRight = false;
+			//				}
+			//			}
+			//			if (myself->y() > (*it)->y()) {
+			//				if (myself->y() - (*it)->y() <= 32) {
+			//					moveUp = false;
+			//				}
+			//			}
+			//			if (myself->y() < (*it)->y()) {
+			//				if ((*it)->y() - myself->y()<= 32) {
+			//					moveDown = false;
+			//				}
+			//			}
+
+			qDebug("hitwall");
+		}
+	}
+	//	qDebug();
+	movePlayer(finalMoveUp, finalMoveDown, finalMoveLeft, finalMoveRight);
+
 }
 
-void Game::change_y_pos(int y_pos)
+void Game::setXPos(int x_pos)
+{
+	myself->setPos(myself->pos().rx() + x_pos, myself->pos().ry());
+	scene.setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
+}
+
+void Game::setYPos(int y_pos)
 {
 	myself->setPos(myself->pos().rx(), myself->pos().ry() + y_pos);
-	scene->setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
+	scene.setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
 }
