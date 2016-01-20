@@ -27,7 +27,7 @@
 #include "storing_player.h"
 
 
-#define PACE 1
+#define PACE 1          // It can only be 1
 
 class Game : public QObject
 {
