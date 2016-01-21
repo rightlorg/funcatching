@@ -1,18 +1,24 @@
 #include "server.h"
 #include "clientthread.h"
-#include <QDebug>
-server::server(QObject *parent):
-    QTcpServer(parent)
+
+#include <stdlib.h>
+
+FortuneServer::FortuneServer(QObject *parent)
+    : QTcpServer(parent)
 {
+    fortunes << tr("You've been leading a dog's life. Stay off the furniture.")
+             << tr("You've got to think about tomorrow.")
+             << tr("You will be surprised by a loud noise.")
+             << tr("You will feel hungry again in another hour.")
+             << tr("You might have mail.")
+             << tr("You cannot kill time without injuring eternity.")
+             << tr("Computers are not intelligent. They only think they are.");
 }
 
-server::~server()
+void FortuneServer::incomingConnection(int socketDescriptor)
 {
-}
-
-void server::incomingConnection(int socketId)
-{
-//    ClientThread *socket = new ClientThread();
-//    socket->setSocketDescriptor(socketId);
-    qDebug()<<"connect successfully";
+    QString fortune = fortunes.at(qrand() % fortunes.size());
+    FortuneThread *thread = new FortuneThread(socketDescriptor, fortune, this);
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    thread->start();
 }

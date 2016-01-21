@@ -370,5 +370,13 @@
         <file>tex/34-8.png</file>
         <file>tex/35-8.png</file>
         <file>tex/36-8.png</file>
+        <file>item/image/stair/stair-7.png</file>
+        <file>item/image/stair/stair-6.png</file>
+        <file>item/image/stair/stair-5.png</file>
+        <file>item/image/stair/stair-4.png</file>
+        <file>item/image/stair/stair-3.png</file>
+        <file>item/image/stair/stair-2.png</file>
+        <file>item/image/stair/stair-1.png</file>
+        <file>item/image/stair/stair-0.png</file>
     </qresource>
 </RCC>

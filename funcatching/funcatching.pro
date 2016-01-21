@@ -21,7 +21,11 @@ HEADERS += block.h \
            storing_player.h \
     initializemap.h \
     initialmap_stackmap.h \
-    gamemenu.h
+    gamemenu.h \
+    item/lift.h \
+    item/window.h \
+    item/door.h \
+    item/stair.h
 FORMS += gotocell.ui mainwindow.ui mapeditor.ui readypage.ui settings.ui \
     initializemap.ui \
     initialmap_stackmap.ui \
@@ -40,7 +44,11 @@ SOURCES += block.cpp \
            storing_player.cpp \
     initializemap.cpp \
     initialmap_stackmap.cpp \
-    gamemenu.cpp
+    gamemenu.cpp \
+    item/lift.cpp \
+    item/window.cpp \
+    item/door.cpp \
+    item/stair.cpp
 RESOURCES += funcatching.qrc
 
 DISTFILES += \

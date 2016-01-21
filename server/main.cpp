@@ -1,16 +1,19 @@
-#include "server_start.h"
-#include <server.h>
 #include <QApplication>
-#include <QDebug>
+#include <QtCore>
+
+#include <stdlib.h>
+
+#include "dialog.h"
+
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    server_start w;
-    w.show();
-    server Server;
-    if(!Server.listen(QHostAddress::Any,2048)){
-        return 0;
-    }
-
-    return a.exec();
+    QApplication app(argc, argv);
+    Dialog dialog;
+#ifdef Q_OS_SYMBIAN
+    dialog.showMaximized();
+#else
+    dialog.show();
+#endif
+    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+    return app.exec();
 }

@@ -1,17 +1,22 @@
-#ifndef SERVER_H
-#define SERVER_H
 
+#ifndef FORTUNESERVER_H
+#define FORTUNESERVER_H
+
+#include <QStringList>
 #include <QTcpServer>
 
-class server : public QTcpServer
+class FortuneServer : public QTcpServer
 {
     Q_OBJECT
+
 public:
-    explicit server(QObject *parent = 0);
-    ~server();
+    FortuneServer(QObject *parent = 0);
+
+protected:
+    void incomingConnection(int socketDescriptor);
 
 private:
-    void incomingConnection(int socketId);
+    QStringList fortunes;
 };
 
-#endif // SERVER_H
+#endif

@@ -1,17 +1,25 @@
-//#ifndef CLIENTSOCKET_H
-//#define CLIENTSOCKET_H
 
-//#include <QTcpSocket>
-//#include <QThread>
+#ifndef FORTUNETHREAD_H
+#define FORTUNETHREAD_H
 
-//class ClientThread : public QThread,public QTcpSocket
-//{
-//    Q_OBJECT
-//public:
-//    ClientThread(QObject *parent = 0);
-//    quint16 nextBlockSize;
-//protected:
-//    void run();
-//};
+#include <QThread>
+#include <QTcpSocket>
 
-//#endif
+class FortuneThread : public QThread
+{
+    Q_OBJECT
+
+public:
+    FortuneThread(int socketDescriptor, const QString &fortune, QObject *parent);
+
+    void run();
+
+signals:
+    void error(QTcpSocket::SocketError socketError);
+
+private:
+    int socketDescriptor;
+    QString text;
+};
+
+#endif
