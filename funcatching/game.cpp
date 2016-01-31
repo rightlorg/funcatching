@@ -9,18 +9,6 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	   QString mapPathTemp, int gameTypeTemp):
 	QObject(parent_readypage)
 {
-	//	//	loadSuccess = false;
-	//	actions.insert( Qt::Key_Up, Up );
-	//        actions.insert( Qt::Key_Left, Left );
-	//        actions.insert( Qt::Key_Right, Right );
-	//        actions.insert( Qt::Key_Space, Shoot );
-	//        actions.insert( Qt::Key_Z, Teleport );
-	//        actions.insert( Qt::Key_X, Brake );
-	//        actions.insert( Qt::Key_S, Shield );
-	//        actions.insert( Qt::Key_P, Pause );
-	//        actions.insert( Qt::Key_L, Launch );
-	//        actions.insert( Qt::Key_N, NewGame );
-
 	moveDown	= false;
 	moveLeft	= false;
 	moveUp		= false;
@@ -122,10 +110,10 @@ bool Game::eventFilter(QObject *object, QEvent *event)
 {
 	switch (event->type()) {
 	case QEvent::KeyPress:
-		whenKeyPressed((QKeyEvent *)event);
+		onKeyPressed((QKeyEvent *)event);
 		break;
 	case QEvent::KeyRelease:
-		whenKeyReleased((QKeyEvent *)event);
+		onKeyReleased((QKeyEvent *)event);
 		break;
 	default:
 		return QObject::eventFilter(object, event);
@@ -308,7 +296,7 @@ void Game::movePlayer(bool up, bool down, bool left, bool right)
 		setXPos(PACE);
 }
 
-void Game::whenKeyPressed(QKeyEvent *event)
+void Game::onKeyPressed(QKeyEvent *event)
 {
 	qDebug() << myself->pos();
 	if (event->isAutoRepeat())
@@ -321,21 +309,25 @@ void Game::whenKeyPressed(QKeyEvent *event)
 	case Qt::Key_Up:
 	case Qt::Key_W:
 		//		setYPos(-PACE);
+		KeyUpTick.start();
 		finalMoveUp = true;
 		break;
 	case Qt::Key_Left:
 	case Qt::Key_A:
 		//		setXPos(-PACE);
+		keyLeftTick.start();
 		finalMoveLeft = true;
 		break;
 	case Qt::Key_Down:
 	case Qt::Key_S:
 		//		setYPos(PACE);
+		keyDownTick.start();
 		finalMoveDown = true;
 		break;
 	case Qt::Key_Right:
 	case Qt::Key_D:
 		//		setXPos(PACE);
+		keyRightTick.start();
 		finalMoveRight = true;
 		break;
 	case Qt::Key_E:
@@ -347,7 +339,7 @@ void Game::whenKeyPressed(QKeyEvent *event)
 
 }
 
-void Game::whenKeyReleased(QKeyEvent *event)
+void Game::onKeyReleased(QKeyEvent *event)
 {
 	qDebug("release");
 	if (event->isAutoRepeat())
@@ -360,25 +352,33 @@ void Game::whenKeyReleased(QKeyEvent *event)
 	case Qt::Key_Up:
 	case Qt::Key_W:
 		//		setYPos(-PACE);
+		KeyUpTick.stop();
 		finalMoveUp = false;
 		break;
 	case Qt::Key_Left:
 	case Qt::Key_A:
 		//		setXPos(-PACE);
+		keyLeftTick.stop();
 		finalMoveLeft = false;
 		break;
 	case Qt::Key_Down:
 	case Qt::Key_S:
 		//		setYPos(PACE);
+		keyDownTick.stop();
 		finalMoveDown = false;
 		break;
 	case Qt::Key_Right:
 	case Qt::Key_D:
+		keyRightTick.stop();
 		//		setXPos(PACE);
 		finalMoveRight = false;
 		break;
 	case Qt::Key_Escape:
 		gameMenu();
+		KeyUpTick.stop();
+		keyLeftTick.stop();
+		keyDownTick.stop();
+		keyRightTick.stop();
 		break;
 	case Qt::Key_E:
 		//add something here
@@ -388,43 +388,6 @@ void Game::whenKeyReleased(QKeyEvent *event)
 	}
 
 }
-
-//void Game::handleKeyPressed(QKeyEvent *event)
-//{
-//	if ( event->isAutoRepeat() || !actions.contains( event->key() ) )
-//	{
-//	    event->ignore();
-//	    return;
-//	}
-//	Action a = actions[ event->key() ];
-
-//	switch (event->key()) {
-//	case Qt::Key_Up:
-//	case Qt::Key_W:
-//		setYPos(-PACE);
-//		break;
-//	case Qt::Key_Left:
-//	case Qt::Key_A:
-//		setXPos(-PACE);
-//		break;
-//	case Qt::Key_Down:
-//	case Qt::Key_S:
-//		setYPos(PACE);
-//		break;
-//	case Qt::Key_Right:
-//	case Qt::Key_D:
-//		setXPos(PACE);
-//		break;
-//	case Qt::Key_Escape:
-//		gameMenu();
-//		break;
-//	case Qt::Key_E:
-//		//add something here
-//		break;
-//	default:
-//		break;
-//	}
-//}
 
 void Game::firstDataSubmit()
 {
@@ -487,8 +450,6 @@ void Game::gameMenu()
 
 void Game::timerUpdate()
 {
-	//	qDebug("timer");
-	//	QGraphicsPixmapItem *hit
 	moveUp = false;
 	moveDown = false;
 	moveLeft = false;
@@ -520,12 +481,6 @@ void Game::timerUpdate()
 					break;
 				}
 			}
-//			if (finalMoveRight == true) {
-//				moveRight = !haveWall;
-//				goto A;
-//			}
-//			haveWall = false;
-
 			collisionCheckBlock.setPos(myself->x() + 1, myself->y() + 1);
 			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
 			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
@@ -538,11 +493,9 @@ void Game::timerUpdate()
 			if (finalMoveRight == true) {
 				moveRight = !(haveWallA && haveWallB);
 			}
-//			A:
 			haveWallA = false;
 			haveWallB = false;
 
-			//MOVE LEFT
 			collisionCheckBlock.setPos(myself->x() - 1, myself->y());
 			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
 			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
@@ -558,12 +511,6 @@ void Game::timerUpdate()
 					break;
 				}
 			}
-//			if (finalMoveLeft == true) {
-//				moveLeft = !haveWall;
-
-//				goto B;
-//			}
-//			haveWall = false;
 			collisionCheckBlock.setPos(myself->x() - 1, myself->y() + 1);
 			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
 			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
@@ -578,8 +525,6 @@ void Game::timerUpdate()
 			}
 			haveWallA = false;
 			haveWallB = false;
-//			B:
-			//MOVE DOWN
 			collisionCheckBlock.setPos(myself->x(), myself->y() + 1);
 			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
 			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
@@ -595,12 +540,6 @@ void Game::timerUpdate()
 					break;
 				}
 			}
-//			if (finalMoveDown == true) {
-//				moveDown = !haveWall;
-
-//				goto C;
-//			}
-//			haveWall = false;
 			collisionCheckBlock.setPos(myself->x() - 1, myself->y() + 1);
 			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
 			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
@@ -617,7 +556,6 @@ void Game::timerUpdate()
 			haveWallB = false;
 
 
-//			C:
 			//MOVE UP
 			collisionCheckBlock.setPos(myself->x(), myself->y() - 1);
 			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
@@ -635,12 +573,6 @@ void Game::timerUpdate()
 					break;
 				}
 			}
-//			if (finalMoveUp == true) {
-//				moveUp = !haveWall;
-
-//				goto D;
-//			}
-//			haveWall = false;
 
 			collisionCheckBlock.setPos(myself->x() - 1, myself->y() - 1);
 			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
@@ -655,36 +587,8 @@ void Game::timerUpdate()
 			}
 			haveWallA = false;
 			haveWallB = false;
-//			D:
 			movePlayer(moveUp, moveDown, moveLeft, moveRight);
 			return;
-//			finalMoveUp = moveUp;
-//			finalMoveDown = moveDown;
-//			finalMoveLeft = moveLeft;
-//			finalMoveRight = moveRight;
-
-
-			//			if (myself->x() > (*it)->x()) {
-			//				if (myself->x() - (*it)->x() <= 32) {
-			//					moveLeft = false;
-			//				}
-			//			}
-			//			if (myself->x() < (*it)->x()) {
-			//				if ((*it)->x() - myself->x()<= 32) {
-			//					moveRight = false;
-			//				}
-			//			}
-			//			if (myself->y() > (*it)->y()) {
-			//				if (myself->y() - (*it)->y() <= 32) {
-			//					moveUp = false;
-			//				}
-			//			}
-			//			if (myself->y() < (*it)->y()) {
-			//				if ((*it)->y() - myself->y()<= 32) {
-			//					moveDown = false;
-			//				}
-			//			}
-
 			qDebug("hitwall");
 		}
 	}
