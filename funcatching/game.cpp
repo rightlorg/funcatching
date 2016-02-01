@@ -9,14 +9,30 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	   QString mapPathTemp, int gameTypeTemp):
 	QObject(parent_readypage)
 {
-	moveDown	= false;
-	moveLeft	= false;
-	moveUp		= false;
-	moveRight	= false;
-	finalMoveDown	= false;
-	finalMoveLeft	= false;
-	finalMoveUp	= false;
-	finalMoveRight	= false;
+//	moveDown	= false;
+//	MoveLeft	= false;
+//	MoveUp		= false;
+//	MoveRight	= false;
+//	finalMoveDown	= false;
+//	finalMoveLeft	= false;
+//	finalMoveUp	= false;
+//	finalMoveRight	= false;
+
+	moveRight.finalMoveDirect= None;
+	moveUp.finalMoveDirect	= None;
+	moveDown.finalMoveDirect = None;
+	moveLeft.finalMoveDirect = None;
+
+	moveRight.moveDirect	= None;
+	moveUp.moveDirect	= None;
+	moveDown.moveDirect	= None;
+	moveLeft.moveDirect	= None;
+
+	moveRight.time.start();
+	moveUp.time.start();
+	moveDown.time.start();
+	moveLeft.time.start();
+
 
 	gameType	= gameTypeTemp;
 	mapPath		= mapPathTemp;
@@ -309,26 +325,38 @@ void Game::onKeyPressed(QKeyEvent *event)
 	case Qt::Key_Up:
 	case Qt::Key_W:
 		//		setYPos(-PACE);
-		KeyUpTick.start();
-		finalMoveUp = true;
+//		KeyUpTick.start();
+		moveUp.time.restart();
+		moveUp.finalMoveDirect	= Up;
+
+//		finalMoveUp = true;
 		break;
 	case Qt::Key_Left:
 	case Qt::Key_A:
 		//		setXPos(-PACE);
-		keyLeftTick.start();
-		finalMoveLeft = true;
+//		keyLeftTick.start();
+		moveLeft.time.restart();
+		moveLeft.finalMoveDirect = Left;
+
+//		finalMoveLeft = true;
 		break;
 	case Qt::Key_Down:
 	case Qt::Key_S:
 		//		setYPos(PACE);
-		keyDownTick.start();
-		finalMoveDown = true;
+//		keyDownTick.start();
+		moveDown.time.restart();
+		moveDown.finalMoveDirect = Down;
+
+//		finalMoveDown = true;
 		break;
 	case Qt::Key_Right:
 	case Qt::Key_D:
 		//		setXPos(PACE);
-		keyRightTick.start();
-		finalMoveRight = true;
+//		keyRightTick.start();
+		moveRight.time.restart();
+		moveRight.finalMoveDirect= Right;
+
+//		finalMoveRight = true;
 		break;
 	case Qt::Key_E:
 		//add something here
@@ -370,6 +398,7 @@ void Game::onKeyReleased(QKeyEvent *event)
 	case Qt::Key_Right:
 	case Qt::Key_D:
 		keyRightTick.stop();
+		keyRightTick.
 		//		setXPos(PACE);
 		finalMoveRight = false;
 		break;

@@ -21,6 +21,7 @@
 #include <QEvent>
 #include <QKeyEvent>
 #include <QTimer>
+#include <QTime>
 #include "map.h"
 #include "readypage.h"
 #include "mainwindow.h"
@@ -29,7 +30,16 @@
 
 #define PACE 1			// It can only be 1
 #define PACE_PER_SECOND 20	//move n pixels in a second
+#define DEFAULT_MOVING_SPEED 20
 #define FPS 20
+
+struct Moving
+{
+	QTime time;
+	int pressedTime;
+	int moveDirect;
+	int finalMoveDirect;
+};
 
 class Game : public QObject
 {
@@ -40,6 +50,7 @@ public:
 	void exitGame();
 	~Game();
 	enum Camp{Catcher,Hider,None};
+	enum MoveDirection{Up, Down, Left, Right, None};
 	enum GameType{SinglePlayer,Multiplayer};
 	//    bool isInitOK();		//Check if readinitmap and loadmap faild in Game
 	bool loadMap();
@@ -90,20 +101,24 @@ private:
 	QTimer gameTick;
 	QTimer flashTick;
 	QTimer moveTick;
-	QTimer keyLeftTick,keyRightTick,keyDownTick,KeyUpTick;
 	bool haveWallA, haveWallB;
 	QGraphicsPixmapItem collisionCheckBlock;
 	//    QPointF myselfPos;
 
+	Moving moveRight;
+	Moving moveLeft;
+	Moving moveUp;
+	Moving moveDown;
+	quint8 moveSpeed = ;
 	//move
-	bool finalMoveRight;
-	bool finalMoveLeft;
-	bool finalMoveUp;
-	bool finalMoveDown;
-	bool moveRight;
-	bool moveLeft;
-	bool moveUp;
-	bool moveDown;
+//	bool finalMoveRight;
+//	bool finalMoveLeft;
+//	bool finalMoveUp;
+//	bool finalMoveDown;
+//	bool moveRight;
+//	bool moveLeft;
+//	bool moveUp;
+//	bool moveDown;
 
 
 	//    enum Action {Left, Right, Up, Down, Pause};
