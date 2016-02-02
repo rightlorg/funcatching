@@ -81,7 +81,7 @@ bool Game::loadMap()
 {
 	if(gameType == SinglePlayer) {
 		map = new Map(NULL, mapPath);
-		if (!map->readInitMapFile()) {
+		if (!map->readIniMapFile()) {
 			return false;
 			//			readypage->back();
 			//		delete this;

@@ -8,12 +8,12 @@ Map::Map(QObject *parent, QString path) :
 	qDebug() << path;
 	QDir dir(path);
 	QStringList filter;
-	filter << "*.initmap";
+	filter << "*.inimap";
 	dir.setNameFilters(filter);
 	dir.setSorting(QDir::Name);
 	mapCount = 0;
-	initMapFileName << dir.entryList();
-	initMapFileName[0] = dir.absoluteFilePath(initMapFileName[0]);
+	iniMapFileName << dir.entryList();
+	iniMapFileName[0] = dir.absoluteFilePath(iniMapFileName[0]);
 	//将文件名转换成文件的绝对路径
 	//	for(int i = 0; i < floorPath.size(); i++)
 	//	{
@@ -232,9 +232,9 @@ unsigned short Map::blockStatus(int x, int y, int z)
 	return map[z][y][x].status;
 }
 
-bool Map::readInitMapFile() // Path is a initmap file name
+bool Map::readIniMapFile() // Path is a initmap file name
 {
-	QFile file(initMapFileName[0]);
+	QFile file(iniMapFileName[0]);
 	if(!file.open(QIODevice::ReadOnly))
 	{
 		QMessageBox::warning(NULL,tr("Saving initial settings"),tr("failed to read settings"));
@@ -299,7 +299,7 @@ bool Map::isMap(QString filename) // Path is a map file name
 }
 
 //initmappath is a dirname and mapPath is a filename
-bool Map::saveInitMap(QString initmapPath, QList<MapImformations> inputMapImformation)
+bool Map::saveIniMap(QString initmapPath, QList<MapImformations> inputMapImformation)
 {
 	QFile file(initmapPath);
 	bool ok = true;

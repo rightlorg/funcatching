@@ -51,9 +51,9 @@ public:
 	QPoint getSpawnPoint(int floor);
 	bool isInitMap(QString filename);
 	unsigned short blockStatus(int x, int y, int z);
-	bool readInitMapFile();
+	bool readIniMapFile();
 	bool isMap(QString filename);
-	bool saveInitMap(QString initmapPath, QList<MapImformations> inputMapImformation);
+	bool saveIniMap(QString initmapPath, QList<MapImformations> inputMapImformation);
 	QList<MapImformations> getMapImformations();
 signals:
 
@@ -65,7 +65,7 @@ private:
 //	QStringList floorPath;					//每层地图文件名
 	quint8 mapCount;//有多少个地图文件
 	QList<MapImformations> mapImform; //每层地图的地图信
-	QStringList initMapFileName;
+	QStringList iniMapFileName;
 
 
 };
