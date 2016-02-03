@@ -40,6 +40,7 @@ struct Moving
 	int pressedTime;
 	int moveDirect;
 	int finalMoveDirect;
+	quint8 totalCount, movedCount;
 };
 
 class Game : public QObject
@@ -90,9 +91,9 @@ private:
 	MainWindow *mainwindow;
 	QGraphicsScene scene;
 	QGraphicsView view;
-	QString player_name;
+	QString player_name;					//not changed
 	QMap<unsigned short, storing_player *>player;
-	QList<QPixmap> player_headImages;
+	QList<QPixmap> player_headImages;			//not changed
 	unsigned short player_index;
 	QList<QList<QPixmap> > texture;
 	void initSceneBackground();

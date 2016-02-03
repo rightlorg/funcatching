@@ -9,15 +9,6 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	   QString mapPathTemp, int gameTypeTemp):
 	QObject(parent_readypage)
 {
-//	moveDown	= false;
-//	MoveLeft	= false;
-//	MoveUp		= false;
-//	MoveRight	= false;
-//	finalMoveDown	= false;
-//	finalMoveLeft	= false;
-//	finalMoveUp	= false;
-//	finalMoveRight	= false;
-
 	moveRight.finalMoveDirect= NoDirect;
 	moveUp.finalMoveDirect	= NoDirect;
 	moveDown.finalMoveDirect = NoDirect;
@@ -33,6 +24,10 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	moveDown.time.start();
 	moveLeft.time.start();
 
+	moveRight.totalCount = 0, moveRight.movedCount = 0, moveRight.pressedTime = 0;
+	moveUp.totalCount = 0, moveUp.movedCount = 0, moveUp.pressedTime = 0;
+	moveDown.totalCount = 0, moveDown.movedCount = 0, moveDown.pressedTime = 0;
+	moveLeft.totalCount = 0, moveLeft.movedCount = 0, moveLeft.pressedTime = 0;
 
 	gameType	= gameTypeTemp;
 	mapPath		= mapPathTemp;
@@ -226,8 +221,8 @@ void Game::initGame()
 {
 	paintBlocks(0);
 	initPlayer(gameType);
-
-	gameTick.start(1000 / GAME_TICK);
+	flashTick.start(1000 / FPS);
+//	gameTick.start(1000 / GAME_TICK);
 
 }
 
@@ -311,7 +306,10 @@ void Game::movePlayer(bool up, bool down, bool left, bool right)
 
 void Game::onKeyPressed(QKeyEvent *event)
 {
+	qDebug() << "pressed";
 	qDebug() << myself.pos();
+	qDebug() << myself.getRealPos();
+
 	if (event->isAutoRepeat())
 	{
 		event->ignore();
@@ -325,6 +323,7 @@ void Game::onKeyPressed(QKeyEvent *event)
 //		KeyUpTick.start();
 		moveUp.time.restart();
 		moveUp.finalMoveDirect	= Up;
+		moveTick.start(1000 / moveSpeed);
 
 
 //		finalMoveUp = true;
@@ -335,6 +334,7 @@ void Game::onKeyPressed(QKeyEvent *event)
 //		keyLeftTick.start();
 		moveLeft.time.restart();
 		moveLeft.finalMoveDirect = Left;
+		moveTick.start(1000 / moveSpeed);
 
 //		finalMoveLeft = true;
 		break;
@@ -344,6 +344,7 @@ void Game::onKeyPressed(QKeyEvent *event)
 //		keyDownTick.start();
 		moveDown.time.restart();
 		moveDown.finalMoveDirect = Down;
+		moveTick.start(1000 / moveSpeed);
 
 //		finalMoveDown = true;
 		break;
@@ -353,6 +354,7 @@ void Game::onKeyPressed(QKeyEvent *event)
 //		keyRightTick.start();
 		moveRight.time.restart();
 		moveRight.finalMoveDirect= Right;
+		moveTick.start(1000 / moveSpeed);
 
 //		finalMoveRight = true;
 		break;
@@ -478,17 +480,111 @@ void Game::getFirst()
 
 void Game::move()
 {
-	//Collision Check
 	bool _moveUp = false;
 	bool _moveDown = false;
 	bool _moveLeft = false;
 	bool _moveRight = false;
+	bool _finalMoveUp = false;
+	bool _finalMoveDown = false;
+	bool _finalMoveLeft = false;
+	bool _finalMoveRight = false;
+	bool isFinishedUp = false;
+	bool isFinishedDown = false;
+	bool isFinishedLeft = false;
+	bool isFinishedRight = false;
+
 	haveWallA = false;
 	haveWallB = false;
 
+	quint8 _moveingCount;
+
+	// MOVE UP
+	_moveingCount = (quint8)(moveUp.time.elapsed() * (PACE_PER_SECOND / 1000));
+	qDebug() << _moveingCount;
+	if (moveUp.finalMoveDirect == Up) {
+		if (_moveingCount < moveUp.totalCount)
+		moveUp.totalCount += _moveingCount;
+		else
+		moveUp.totalCount = _moveingCount;
+	}
+	if (moveUp.totalCount - moveUp.movedCount > 0) {
+		moveUp.movedCount++;
+		_finalMoveUp = true;
+	} else {
+		moveUp.totalCount = 0;
+		moveUp.movedCount = 0;
+		isFinishedUp = true;
+	}
+
+	// MOVE RIGHT
+	_moveingCount = (quint8)(moveRight.time.elapsed() * (PACE_PER_SECOND / 1000));
+	qDebug() << _moveingCount;
+
+	if (moveRight.finalMoveDirect == Right) {
+		if (_moveingCount < moveRight.totalCount)
+		moveRight.totalCount += _moveingCount;
+		else
+		moveRight.totalCount = _moveingCount;
+	}
+	if (moveRight.totalCount - moveRight.movedCount > 0) {
+		moveRight.movedCount++;
+		_finalMoveRight = true;
+	} else {
+		moveRight.totalCount = 0;
+		moveRight.movedCount = 0;
+		isFinishedRight = true;
+	}
+
+	// MOVE DOWN
+	_moveingCount = (quint8)(moveDown.time.elapsed() * (PACE_PER_SECOND / 1000));
+	qDebug() << _moveingCount;
+
+	if (moveDown.finalMoveDirect == Down) {
+		if (_moveingCount < moveDown.totalCount)
+		moveDown.totalCount += _moveingCount;
+		else
+		moveDown.totalCount = _moveingCount;
+	}
+	if (moveDown.totalCount - moveDown.movedCount > 0) {
+		moveDown.movedCount++;
+		_finalMoveDown = true;
+	} else {
+		moveDown.totalCount = 0;
+		moveDown.movedCount = 0;
+		isFinishedDown = true;
+	}
+
+	// MOVE LEFT
+	_moveingCount = (quint8)(moveLeft.time.elapsed() * (PACE_PER_SECOND / 1000));
+	qDebug() << _moveingCount;
+
+	if (moveLeft.finalMoveDirect == Left) {
+		if (_moveingCount < moveLeft.totalCount)
+		moveLeft.totalCount += _moveingCount;
+		else
+		moveLeft.totalCount = _moveingCount;
+	}
+	if (moveLeft.totalCount - moveLeft.movedCount > 0) {
+		moveLeft.movedCount++;
+		_finalMoveLeft = true;
+	} else {
+		moveLeft.totalCount = 0;
+		moveLeft.movedCount = 0;
+		isFinishedLeft = true;
+	}
+
+	if (isFinishedUp && isFinishedDown
+		&& isFinishedLeft
+		&& isFinishedRight) {
+			moveTick.stop();
+			return;
+		}
+
+	//Collision Check
 	QList<QGraphicsItem*> hits = myself.collidingItems(Qt::IntersectsItemBoundingRect);
 	QList<QGraphicsItem*> hitsChecking;
 	QList<QGraphicsItem*>::iterator it, itChecking;
+
 	for (it = hits.begin(); it < hits.end(); ++it) {
 		if ((*it)->data(66) == 1) {
 			//MOVE RIGHT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -518,7 +614,7 @@ void Game::move()
 
 				}
 			}
-			if (moveRight.finalMoveDirect == Right) {
+			if (_finalMoveRight == true) {
 				_moveRight = !(haveWallA && haveWallB);
 			}
 			haveWallA = false;
@@ -549,7 +645,7 @@ void Game::move()
 
 				}
 			}
-			if (moveLeft.finalMoveDirect == Left) {
+			if (_finalMoveLeft == true) {
 				_moveLeft = !(haveWallA && haveWallB);
 			}
 			haveWallA = false;
@@ -580,7 +676,7 @@ void Game::move()
 
 				}
 			}
-			if (moveDown.finalMoveDirect == Down) {
+			if (_finalMoveDown == true) {
 				_moveDown = !(haveWallA && haveWallB);
 			}
 			haveWallA = false;
@@ -613,19 +709,18 @@ void Game::move()
 					break;
 				}
 			}
-			if (moveUp.finalMoveDirect == Up) {
+			if (_finalMoveUp == true) {
 				_moveUp = !(haveWallA && haveWallB);
 			}
 			haveWallA = false;
 			haveWallB = false;
-			movePlayer(_moveUp, _moveDown, _moveLeft, _moveRight);		//move if there is a wall
+			movePlayer(_moveUp, _moveDown, _moveLeft, _moveRight);
 			return;
 			qDebug("hitwall");
 		}
 	}
 	//	qDebug();
-	movePlayer((moveUp.finalMoveDirect == Up), (moveDown.finalMoveDirect == Down),
-		   (moveLeft.finalMoveDirect == Left), (moveRight.finalMoveDirect == Right));		//move strait if there is no wall
+	movePlayer(_finalMoveUp, _finalMoveDown, _finalMoveLeft, _finalMoveRight);
 
 }
 
