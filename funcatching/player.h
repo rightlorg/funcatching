@@ -1,26 +1,34 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <QObject>
 #include <QImage>
 #include <QString>
 #include <QSettings>
 #include <QGraphicsPixmapItem>
 
 
-class Player : public QObject, public QGraphicsPixmapItem
+class Player :public QGraphicsPixmapItem
 {
-	Q_OBJECT
 public:
-	explicit Player(QObject *parent = 0, QString *name = 0, QImage *image = 0);
+	Player(QString *name = 0);
 	void readHeadImage();
+	~Player();
 
-signals:
+	QPointF getRealPos() const;
+	void setRealPos(const QPointF &value);
 
-public slots:
+	quint8 getFloor() const;
+	void setFloor(const quint8 &value);
+
+	QString getPlayerName() const;
+
+	QPixmap getHeadImage() const;
+	void setHeadImage(const QPixmap &value);		//Must use this func when init a new player
 
 private:
-	QImage *headImage;
+	QPixmap headImage;
+	QPointF realPos;		//current pos were player at
+	quint8 floor;		//current floor were player at
 	QString playerName;
 };
 

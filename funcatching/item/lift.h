@@ -3,7 +3,7 @@
 
 #include <QGraphicsPixmapItem>
 
-class Lift : public QGraphicsItem
+class Lift : public QGraphicsPixmapItem
 {
 public:
 	Lift();

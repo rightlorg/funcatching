@@ -3,7 +3,7 @@
 
 #include <QGraphicsPixmapItem>
 
-class Door : public QGraphicsItem
+class Door : public QGraphicsPixmapItem
 {
 public:
 	Door();

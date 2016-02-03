@@ -3,7 +3,7 @@
 
 #include <QGraphicsPixmapItem>
 
-class Stair : public QGraphicsItem
+class Stair : public QGraphicsPixmapItem
 {
 public:
 	Stair();

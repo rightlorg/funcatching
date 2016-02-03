@@ -3,7 +3,7 @@
 
 #include <QGraphicsItem>
 
-class Window : public QGraphicsItem
+class Window : public QGraphicsPixmapItem
 {
 public:
 	Window();

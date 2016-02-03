@@ -26,6 +26,7 @@
 #include "readypage.h"
 #include "mainwindow.h"
 #include "storing_player.h"
+#include "player.h"
 
 
 #define PACE 1			// It can only be 1
@@ -49,8 +50,8 @@ public:
 		      QString mapPathTemp, int gameTypeTemp);
 	void exitGame();
 	~Game();
-	enum Camp{Catcher,Hider,None};
-	enum MoveDirection{Up, Down, Left, Right, None};
+	enum Camp{Catcher, Hider, Neutral};
+	enum MoveDirection{Up, Down, Left, Right, NoDirect};
 	enum GameType{SinglePlayer,Multiplayer};
 	//    bool isInitOK();		//Check if readinitmap and loadmap faild in Game
 	bool loadMap();
@@ -66,8 +67,9 @@ protected:
 private slots:
 	void firstDataSubmit();
 	void getFirst();
+	void move();
 	void gameMenu();
-	void timerUpdate();
+	void reflash();
 
 private:
 	void connectServer();
@@ -79,8 +81,8 @@ private:
 	//    void handleKeyPressed(QKeyEvent *event);
 
 	void getHeadPic(int gametype);
-	void setXPos(int x_pos);
-	void setYPos(int y_pos);
+	void setRealXPos(int x_pos);
+	void setRealYPos(int y_pos);
 	QTcpSocket tcpSocket;
 	Map *map;
 	ReadyPage *readypage;
@@ -89,8 +91,6 @@ private:
 	QGraphicsScene scene;
 	QGraphicsView view;
 	QString player_name;
-	QGraphicsPixmapItem *myself;
-	QPixmap myself_headImage;
 	QMap<unsigned short, storing_player *>player;
 	QList<QPixmap> player_headImages;
 	unsigned short player_index;
@@ -103,13 +103,14 @@ private:
 	QTimer moveTick;
 	bool haveWallA, haveWallB;
 	QGraphicsPixmapItem collisionCheckBlock;
-	//    QPointF myselfPos;
 
 	Moving moveRight;
 	Moving moveLeft;
 	Moving moveUp;
 	Moving moveDown;
-	quint8 moveSpeed = ;
+	quint8 moveSpeed = DEFAULT_MOVING_SPEED;
+	Player myself;
+
 	//move
 //	bool finalMoveRight;
 //	bool finalMoveLeft;
