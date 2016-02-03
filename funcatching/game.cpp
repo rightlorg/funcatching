@@ -489,7 +489,6 @@ void Game::move()
 	QList<QGraphicsItem*> hits = myself.collidingItems(Qt::IntersectsItemBoundingRect);
 	QList<QGraphicsItem*> hitsChecking;
 	QList<QGraphicsItem*>::iterator it, itChecking;
-
 	for (it = hits.begin(); it < hits.end(); ++it) {
 		if ((*it)->data(66) == 1) {
 			//MOVE RIGHT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -519,7 +518,7 @@ void Game::move()
 
 				}
 			}
-			if (finalMoveRight == true) {
+			if (moveRight.finalMoveDirect == Right) {
 				_moveRight = !(haveWallA && haveWallB);
 			}
 			haveWallA = false;
@@ -550,7 +549,7 @@ void Game::move()
 
 				}
 			}
-			if (finalMoveLeft == true) {
+			if (moveLeft.finalMoveDirect == Left) {
 				_moveLeft = !(haveWallA && haveWallB);
 			}
 			haveWallA = false;
@@ -581,7 +580,7 @@ void Game::move()
 
 				}
 			}
-			if (finalMoveDown == true) {
+			if (moveDown.finalMoveDirect == Down) {
 				_moveDown = !(haveWallA && haveWallB);
 			}
 			haveWallA = false;
@@ -614,7 +613,7 @@ void Game::move()
 					break;
 				}
 			}
-			if (finalMoveUp == true) {
+			if (moveUp.finalMoveDirect == Up) {
 				_moveUp = !(haveWallA && haveWallB);
 			}
 			haveWallA = false;
@@ -625,7 +624,8 @@ void Game::move()
 		}
 	}
 	//	qDebug();
-	movePlayer(finalMoveUp, finalMoveDown, finalMoveLeft, finalMoveRight);		//move strait if there is no wall
+	movePlayer((moveUp.finalMoveDirect == Up), (moveDown.finalMoveDirect == Down),
+		   (moveLeft.finalMoveDirect == Left), (moveRight.finalMoveDirect == Right));		//move strait if there is no wall
 
 }
 
@@ -637,17 +637,17 @@ void Game::gameMenu()
 
 void Game::reflash()
 {
-	myself.setPos(myself.realPos);
+	myself.setPos(myself.getRealPos());
 	scene.setSceneRect(myself.pos().rx(), myself.pos().ry(), 32, 32);
 	scene.setSceneRect(myself.pos().rx(), myself.pos().ry(), 32, 32);
 }
 
 void Game::setRealXPos(int x_pos)
 {
-	myself.setRealPos(QPointF(myself.getRealPos.rx() + x_pos, myself.getRealPos.ry()));
+	myself.setRealPos(QPointF(myself.getRealPos().rx() + x_pos, myself.getRealPos().ry()));
 }
 
 void Game::setRealYPos(int y_pos)
 {
-	myself.setRealPos(QPointF(myself.getRealPos.rx(), myself.getRealPos.ry() + y_pos));
+	myself.setRealPos(QPointF(myself.getRealPos().rx(), myself.getRealPos().ry() + y_pos));
 }

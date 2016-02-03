@@ -35,7 +35,7 @@ QString Player::getPlayerName() const
 	return playerName;
 }
 
-QImage Player::getHeadImage() const
+QPixmap Player::getHeadImage() const
 {
 	return headImage;
 }
