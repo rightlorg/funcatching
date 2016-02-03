@@ -30,9 +30,9 @@
 
 
 #define PACE 1			// It can only be 1
-#define PACE_PER_SECOND 20	//move n pixels in a second
-#define DEFAULT_MOVING_SPEED 20
-#define FPS 20
+#define PACE_PER_SECOND 60	//move n pixels in a second
+#define DEFAULT_MOVING_SPEED 30
+#define FPS 40
 
 struct Moving
 {

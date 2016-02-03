@@ -200,6 +200,7 @@ void Game::initPlayer(int gametype)
 	case SinglePlayer:
 		getHeadPic(SinglePlayer);
 		myself.setPos(spawnPoint.rx() * 32 + 3, spawnPoint.ry() * 32 + 3);
+		myself.setRealPos(QPointF(spawnPoint.rx() * 32 + 3, spawnPoint.ry() * 32 + 3));
 		scene.addItem(&myself);
 		break;
 	case Multiplayer:
@@ -222,6 +223,7 @@ void Game::initGame()
 	paintBlocks(0);
 	initPlayer(gameType);
 	flashTick.start(1000 / FPS);
+
 //	gameTick.start(1000 / GAME_TICK);
 
 }
@@ -306,15 +308,15 @@ void Game::movePlayer(bool up, bool down, bool left, bool right)
 
 void Game::onKeyPressed(QKeyEvent *event)
 {
-	qDebug() << "pressed";
-	qDebug() << myself.pos();
-	qDebug() << myself.getRealPos();
 
 	if (event->isAutoRepeat())
 	{
 		event->ignore();
 		return;
 	}
+	qDebug() << "pressed";
+	qDebug() << myself.pos();
+	qDebug() << myself.getRealPos();
 
 	switch (event->key()) {
 	case Qt::Key_Up:
@@ -369,12 +371,13 @@ void Game::onKeyPressed(QKeyEvent *event)
 
 void Game::onKeyReleased(QKeyEvent *event)
 {
-	qDebug("release");
 	if (event->isAutoRepeat())
 	{
 		event->ignore();
 		return;
 	}
+	qDebug("release");
+
 	switch (event->key()) {
 	case Qt::Key_Up:
 	case Qt::Key_W:
@@ -480,6 +483,7 @@ void Game::getFirst()
 
 void Game::move()
 {
+	qDebug() << "move";
 	bool _moveUp = false;
 	bool _moveDown = false;
 	bool _moveLeft = false;
@@ -504,6 +508,8 @@ void Game::move()
 	if (moveUp.finalMoveDirect == Up) {
 		if (_moveingCount < moveUp.totalCount)
 		moveUp.totalCount += _moveingCount;
+		else if (_moveingCount == 0)
+			_finalMoveUp = true;					//MAY CAUSE PROBELEM
 		else
 		moveUp.totalCount = _moveingCount;
 	}
@@ -522,9 +528,11 @@ void Game::move()
 
 	if (moveRight.finalMoveDirect == Right) {
 		if (_moveingCount < moveRight.totalCount)
-		moveRight.totalCount += _moveingCount;
+			moveRight.totalCount += _moveingCount;
+		else if (_moveingCount == 0)
+			_finalMoveRight = true;					//MAY CAUSE PROBELEM
 		else
-		moveRight.totalCount = _moveingCount;
+			moveRight.totalCount = _moveingCount;
 	}
 	if (moveRight.totalCount - moveRight.movedCount > 0) {
 		moveRight.movedCount++;
@@ -542,6 +550,8 @@ void Game::move()
 	if (moveDown.finalMoveDirect == Down) {
 		if (_moveingCount < moveDown.totalCount)
 		moveDown.totalCount += _moveingCount;
+		else if (_moveingCount == 0)
+			_finalMoveDown = true;					//MAY CAUSE PROBELEM
 		else
 		moveDown.totalCount = _moveingCount;
 	}
@@ -561,6 +571,8 @@ void Game::move()
 	if (moveLeft.finalMoveDirect == Left) {
 		if (_moveingCount < moveLeft.totalCount)
 		moveLeft.totalCount += _moveingCount;
+		else if (_moveingCount == 0)
+			_finalMoveLeft = true;					//MAY CAUSE PROBELEM
 		else
 		moveLeft.totalCount = _moveingCount;
 	}
@@ -573,12 +585,12 @@ void Game::move()
 		isFinishedLeft = true;
 	}
 
-	if (isFinishedUp && isFinishedDown
-		&& isFinishedLeft
-		&& isFinishedRight) {
-			moveTick.stop();
-			return;
-		}
+//	if (isFinishedUp && isFinishedDown
+//		&& isFinishedLeft
+//		&& isFinishedRight) {
+//			moveTick.stop();
+//			return;
+//		}
 
 	//Collision Check
 	QList<QGraphicsItem*> hits = myself.collidingItems(Qt::IntersectsItemBoundingRect);
@@ -732,6 +744,7 @@ void Game::gameMenu()
 
 void Game::reflash()
 {
+	qDebug() << "reflash";
 	myself.setPos(myself.getRealPos());
 	scene.setSceneRect(myself.pos().rx(), myself.pos().ry(), 32, 32);
 	scene.setSceneRect(myself.pos().rx(), myself.pos().ry(), 32, 32);
