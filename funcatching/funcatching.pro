@@ -25,7 +25,8 @@ HEADERS += block.h \
     item/lift.h \
     item/window.h \
     item/door.h \
-    item/stair.h
+    item/stair.h \
+    tcp_client.h
 FORMS += gotocell.ui mainwindow.ui mapeditor.ui readypage.ui settings.ui \
     initializemap.ui \
     initialmap_stackmap.ui \
@@ -48,7 +49,8 @@ SOURCES += block.cpp \
     item/lift.cpp \
     item/window.cpp \
     item/door.cpp \
-    item/stair.cpp
+    item/stair.cpp \
+    tcp_client.cpp
 RESOURCES += funcatching.qrc
 
 DISTFILES += \
