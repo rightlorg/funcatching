@@ -44,6 +44,7 @@ public:
     void paintBlocks(int floor);
     void initPlayer(int gametype);
     void initGame();
+    void reMoveAllBlocks();
 
 protected:
     bool eventFilter(QObject *object, QEvent *event);

@@ -3,7 +3,7 @@
 #include <QChar>
 #include "gamemenu.h"
 
-#define GAME_TICK 60	//Update n times per second
+#define GAME_TICK 20	//Update n times per second
 
 Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	   QString mapPathTemp, int gameTypeTemp):
@@ -229,6 +229,11 @@ void Game::initGame()
 	initPlayer(gameType);
 
 	gameTick.start(1000 / GAME_TICK);
+
+}
+
+void Game::reMoveAllBlocks()
+{
 
 }
 
