@@ -103,13 +103,6 @@ bool Map::loadMap()
 			in >> tmp;				//抛弃垃圾值
 		}
 		in >> totalColumn;
-		//Get spawn point
-		//		{
-		//			quint32 spawn_row,spawn_column;
-		//			in >> spawn_row >> spawn_column;
-		//			spawnPoint.append(QPoint(spawn_column, spawn_row));
-
-		//		}
 		{
 			QList<mapBlcok> newRow;
 			map[i].append(newRow);
@@ -137,6 +130,11 @@ bool Map::loadMap()
 mapBlcok Map::at(int x, int y, int z)
 {
 	return map[z][y][x];
+}
+
+int Map::maxFloorSize()
+{
+	return map.size();
 }
 
 int Map::mapRowSize(int floor)

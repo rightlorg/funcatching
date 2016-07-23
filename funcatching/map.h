@@ -45,6 +45,7 @@ public:
 	bool loadMap();
 	mapBlcok at(int x, int y, int z);
 	bool change(int x, int y, int z);
+	int maxFloorSize();
 	int mapRowSize(int floor);
 	int mapColumnSize(int floor);
 	int findWall(int x, int y, int z);

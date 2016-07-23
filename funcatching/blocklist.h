@@ -20,6 +20,6 @@ public:
 private:
 };
 
-extern BlockList blocklist;
+extern BlockList blockList;
 
 #endif // BLOCKLIST_H

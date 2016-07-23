@@ -6,20 +6,9 @@
 #define GAME_TICK 20	//Update n times per second
 
 Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
-	   QString mapPathTemp, int gameTypeTemp):
-	QObject(parent_readypage)
+           QString mapPathTemp, int gameTypeTemp):
+        QObject(parent_readypage)
 {
-	//	//	loadSuccess = false;
-	//	actions.insert( Qt::Key_Up, Up );
-	//        actions.insert( Qt::Key_Left, Left );
-	//        actions.insert( Qt::Key_Right, Right );
-	//        actions.insert( Qt::Key_Space, Shoot );
-	//        actions.insert( Qt::Key_Z, Teleport );
-	//        actions.insert( Qt::Key_X, Brake );
-	//        actions.insert( Qt::Key_S, Shield );
-	//        actions.insert( Qt::Key_P, Pause );
-	//        actions.insert( Qt::Key_L, Launch );
-	//        actions.insert( Qt::Key_N, NewGame );
 
 	moveDown	= false;
 	moveLeft	= false;
@@ -30,14 +19,16 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	finalMoveUp	= false;
 	finalMoveRight	= false;
 
+	floor = 0;
+
 	gameType	= gameTypeTemp;
 	mapPath		= mapPathTemp;
 	player_index	= 0;
 	readypage	= parent_readypage;
 	mainwindow	= parent_mainwindow;
-//	scene		= new QGraphicsScene(mainwindow);
+	//	scene		= new QGraphicsScene(mainwindow);
 
-//	view		= new QGraphicsView(scene, mainwindow);
+	//	view		= new QGraphicsView(scene, mainwindow);
 	view.setScene(&scene);
 	view.setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
 	view.setFocusPolicy(Qt::StrongFocus);
@@ -50,23 +41,6 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	connect(&gameTick, SIGNAL(timeout()), SLOT(timerUpdate()));
 	loadTexture();
 
-	//	if(gametype == SinglePlayer) {
-	//		map = new Map(NULL, mapPath);
-	//		if (!map->readInitMapFile()) {
-	//			readypage->back();
-	//			//		delete this;
-	//		}
-	//		if(!map->loadMap()) {
-	//			readypage->back();
-	//			//            delete this;
-	//		}
-	//		paintBlocks(0);
-	//		initPlayer(SinglePlayer);
-	//	}else {
-	//		connectServer();
-	//		connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
-	//		connect(&tcpSocket,SIGNAL(readyRead()),this,SLOT(getFirst()));
-	//	}
 	scene.installEventFilter(this);
 	view.setFocus();
 
@@ -77,8 +51,8 @@ void Game::exitGame()
 	readypage->back();
 	gameTick.stop();
 	delete map;
-//	delete scene;
-//	delete view;
+	//	delete scene;
+	//	delete view;
 	delete myself;
 	delete this;
 }
@@ -171,31 +145,43 @@ void Game::connectServer()
 	settings.endGroup();
 }
 
-void Game::paintBlocks(int floor)
+void Game::paintBlocks(int localFloor)
 {
-	int rowsize = map->mapRowSize(0);
-	int columnsize = map->mapRowSize(0);
+	int rowsize = map->mapRowSize(localFloor);
+	int columnsize = map->mapRowSize(localFloor);
 	int shadowStyle = 8;
 	for(int i = 0; i < rowsize; i++) {
 		for (int j = 0; j < columnsize; j++) {
-			if (map->at(j, i, floor).id == 0)
+			if (map->at(j, i, localFloor).id == 0)
 				continue;
-			shadowStyle = map->findWall(j, i, floor);
-			if (map->at(i, j, floor).id > texture.size())
+
+
+			//Paint stair
+			if (map->at(j, i, localFloor).id >= 202
+			        && map->at(j, i, localFloor).id <= 209) {
+				QGraphicsPixmapItem *block = new QGraphicsPixmapItem(
+				                        specialTex[map->at(j, i, localFloor).id - 200]);
+				block->setPos(32 * j, 32 * i);
+				block->setData(66, map->blockStatus(j, i, localFloor));
+				scene.addItem(block);
+				continue;
+			}
+
+			//common blocks
+			shadowStyle = map->findWall(j, i, localFloor);
+			if (map->at(j, i, localFloor).id > texture.size())
 				continue;
 			if (shadowStyle == -1)
-				shadowStyle = texture[map->at(j, i, floor).id].size() - 1;
+				shadowStyle = texture[map->at(j, i, localFloor).id].size() - 1;
 			QGraphicsPixmapItem *block = new QGraphicsPixmapItem(
-						texture[map->at(j, i, floor).id][shadowStyle]);
+			                        texture[map->at(j, i, localFloor).id][shadowStyle]);
 			block->setPos(32 * j, 32 * i);
-			block->setData(66, map->blockStatus(j, i, floor));
+			block->setData(66, map->blockStatus(j, i, localFloor));
 			scene.addItem(block);
 		}
 	}
 	scene.setSceneRect(map->getSpawnPoint(0).rx() * 32, map->getSpawnPoint(0).ry() * 32,
-			    32, 32);
-	//    scene->itemAt();
-	//    scene->setSceneRect(0,0,0,0);
+	                   32, 32);
 }
 
 void Game::initPlayer(int gametype)
@@ -234,70 +220,97 @@ void Game::initGame()
 
 void Game::reMoveAllBlocks()
 {
-
+	QList<QGraphicsItem *> itemList = scene.items();
+	for (int i = 0; i < itemList.size(); ++i) {
+		scene.removeItem(itemList[i]);
+	}
 }
 
 void Game::loadTexture()
 {
-	QDir dir(":/tex/");
-	QString tmp_str;
-	QStringList list, filter;
-
-	filter << "*.png";
-	dir.setNameFilters(filter);
-	list = dir.entryList();
-
-	//对材质列表按名称排序
 	{
-		int a = 0, b = 0, length = list.size(), m = length;
-		for (int i = 1; i < length; ++i) {
-			m -= 1;
-			for (int j = 0; j < m; ++j) {
-				tmp_str = QString(list[j][0]);
-				if (list[j][1].toAscii() == '1' || list[j][1].toAscii() == '2' ||
-						list[j][1].toAscii() == '3' || list[j][1].toAscii() == '4' ||
-						list[j][1].toAscii() == '5' || list[j][1].toAscii() == '6' ||
-						list[j][1].toAscii() == '7' || list[j][1].toAscii() == '8' ||
-						list[j][1].toAscii() == '9' || list[j][1].toAscii() == '0')
-					tmp_str.append(list[j][1]);
-				a = tmp_str.toInt();
+		QDir dir(":/tex/");
+		QString tmp_str;
+		QStringList list, filter;
 
-				tmp_str = QString(list[j + 1][0]);
-				if (list[j + 1][1].toAscii() == '1' || list[j + 1][1].toAscii() == '2' ||
-						list[j + 1][1].toAscii() == '3' || list[j + 1][1].toAscii() == '4' ||
-						list[j + 1][1].toAscii() == '5' || list[j + 1][1].toAscii() == '6' ||
-						list[j + 1][1].toAscii() == '7' || list[j + 1][1].toAscii() == '8' ||
-						list[j + 1][1].toAscii() == '9' || list[j + 1][1].toAscii() == '0')
-					tmp_str.append(list[j + 1][1]);
-				b = tmp_str.toInt();
-				if (a > b) {
-					tmp_str = list[j];
-					list[j] = list[j + 1];
-					list[j + 1] = tmp_str;
+		filter << "*.png";
+		dir.setNameFilters(filter);
+		list = dir.entryList();
+
+		//对材质列表按名称排序
+		{
+			int a = 0, b = 0, length = list.size(), m = length;
+			for (int i = 1; i < length; ++i) {
+				m -= 1;
+				for (int j = 0; j < m; ++j) {
+					tmp_str = QString(list[j][0]);
+					if (list[j][1].toAscii() == '1' || list[j][1].toAscii() == '2' ||
+					                list[j][1].toAscii() == '3' || list[j][1].toAscii() == '4' ||
+					                list[j][1].toAscii() == '5' || list[j][1].toAscii() == '6' ||
+					                list[j][1].toAscii() == '7' || list[j][1].toAscii() == '8' ||
+					                list[j][1].toAscii() == '9' || list[j][1].toAscii() == '0')
+						tmp_str.append(list[j][1]);
+					a = tmp_str.toInt();
+
+					tmp_str = QString(list[j + 1][0]);
+					if (list[j + 1][1].toAscii() == '1' || list[j + 1][1].toAscii() == '2' ||
+					                list[j + 1][1].toAscii() == '3' || list[j + 1][1].toAscii() == '4' ||
+					                list[j + 1][1].toAscii() == '5' || list[j + 1][1].toAscii() == '6' ||
+					                list[j + 1][1].toAscii() == '7' || list[j + 1][1].toAscii() == '8' ||
+					                list[j + 1][1].toAscii() == '9' || list[j + 1][1].toAscii() == '0')
+						tmp_str.append(list[j + 1][1]);
+					b = tmp_str.toInt();
+					if (a > b) {
+						tmp_str = list[j];
+						list[j] = list[j + 1];
+						list[j + 1] = tmp_str;
+					}
 				}
 			}
 		}
-	}
-	//载入材质
-	int i = 0, previous = 0;
-	{
-		QList<QPixmap> newlist;
-		texture.append(newlist);
-	}
-	foreach (QString texname, list) {
-
-		tmp_str = QString(texname[0]);
-		if (texname[1].toAscii() == '1' || texname[1].toAscii() == '2' || texname[1].toAscii() == '3' || texname[1].toAscii() == '4' || texname[1].toAscii() == '5' || texname[1].toAscii() == '6' || texname[1].toAscii() == '7' || texname[1].toAscii() == '8' || texname[1].toAscii() == '9' || texname[1].toAscii() == '0') {
-			tmp_str.append(texname[1]);
-		}
-
-		i = tmp_str.toInt();
-		if (previous != i) {
+		//载入材质
+		int i = 0, previous = 0;
+		{
 			QList<QPixmap> newlist;
 			texture.append(newlist);
-			previous = i;
 		}
-		texture[previous].append(QPixmap(dir.absoluteFilePath(texname)));
+		foreach (QString texname, list) {
+
+			tmp_str = QString(texname[0]);
+			if (texname[1].toAscii() == '1' || texname[1].toAscii() == '2' || texname[1].toAscii() == '3' || texname[1].toAscii() == '4' || texname[1].toAscii() == '5' || texname[1].toAscii() == '6' || texname[1].toAscii() == '7' || texname[1].toAscii() == '8' || texname[1].toAscii() == '9' || texname[1].toAscii() == '0') {
+				tmp_str.append(texname[1]);
+			}
+
+			i = tmp_str.toInt();
+			if (previous != i) {
+				QList<QPixmap> newlist;
+				texture.append(newlist);
+				previous = i;
+			}
+			texture[previous].append(QPixmap(dir.absoluteFilePath(texname)));
+		}
+	}
+
+
+	//Load special tex
+	{
+		QDir dir(":/item/image/");
+		QString tmp_str;
+		QStringList list, filter;
+
+		specialTex.append(QPixmap());specialTex.append(QPixmap());	//first two are empty
+		list = dir.entryList();
+		qDebug() << list;
+		dir.setNameFilters(QStringList("*.png"));
+		for (int i = 0; i < list.size(); ++i) {
+			dir.cd(list[i]);
+
+			QStringList texname = dir.entryList();
+			qDebug() << texname;
+			for (int j = 0; j < texname.size(); ++j) {
+				specialTex.append(QPixmap(dir.absoluteFilePath(texname[j])).scaled(32, 32));
+			}
+		}
 	}
 }
 
@@ -394,43 +407,6 @@ void Game::whenKeyReleased(QKeyEvent *event)
 
 }
 
-//void Game::handleKeyPressed(QKeyEvent *event)
-//{
-//	if ( event->isAutoRepeat() || !actions.contains( event->key() ) )
-//	{
-//	    event->ignore();
-//	    return;
-//	}
-//	Action a = actions[ event->key() ];
-
-//	switch (event->key()) {
-//	case Qt::Key_Up:
-//	case Qt::Key_W:
-//		setYPos(-PACE);
-//		break;
-//	case Qt::Key_Left:
-//	case Qt::Key_A:
-//		setXPos(-PACE);
-//		break;
-//	case Qt::Key_Down:
-//	case Qt::Key_S:
-//		setYPos(PACE);
-//		break;
-//	case Qt::Key_Right:
-//	case Qt::Key_D:
-//		setXPos(PACE);
-//		break;
-//	case Qt::Key_Escape:
-//		gameMenu();
-//		break;
-//	case Qt::Key_E:
-//		//add something here
-//		break;
-//	default:
-//		break;
-//	}
-//}
-
 void Game::firstDataSubmit()
 {
 	QByteArray block;
@@ -506,6 +482,45 @@ void Game::timerUpdate()
 	QList<QGraphicsItem*>::iterator it, itChecking;
 
 	for (it = hits.begin(); it < hits.end(); ++it) {
+		//check stair
+		switch ((*it)->data(66).toInt()) {
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		{
+			if (floor + 1 < map->maxFloorSize()) {
+				reMoveAllBlocks();
+				floor += 1;
+				paintBlocks(floor);
+				initPlayer(gameType);
+				myself->setPos(scene.sceneRect().x(), scene.sceneRect().y());
+
+			}
+			break;
+		}
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+		{
+			if (floor - 1 >= 0) {
+				reMoveAllBlocks();
+				floor -= 1;
+				paintBlocks(floor);
+				initPlayer(gameType);
+				myself->setPos(scene.sceneRect().x(), scene.sceneRect().y());
+
+			}
+
+			break;
+}
+
+
+		}
+
+
+
 		if ((*it)->data(66) == 1) {
 			//MOVE RIGHT
 			haveWallA = false;
@@ -525,11 +540,11 @@ void Game::timerUpdate()
 					break;
 				}
 			}
-//			if (finalMoveRight == true) {
-//				moveRight = !haveWall;
-//				goto A;
-//			}
-//			haveWall = false;
+			//			if (finalMoveRight == true) {
+			//				moveRight = !haveWall;
+			//				goto A;
+			//			}
+			//			haveWall = false;
 
 			collisionCheckBlock.setPos(myself->x() + 1, myself->y() + 1);
 			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
@@ -543,7 +558,7 @@ void Game::timerUpdate()
 			if (finalMoveRight == true) {
 				moveRight = !(haveWallA && haveWallB);
 			}
-//			A:
+			//			A:
 			haveWallA = false;
 			haveWallB = false;
 
@@ -563,12 +578,12 @@ void Game::timerUpdate()
 					break;
 				}
 			}
-//			if (finalMoveLeft == true) {
-//				moveLeft = !haveWall;
+			//			if (finalMoveLeft == true) {
+			//				moveLeft = !haveWall;
 
-//				goto B;
-//			}
-//			haveWall = false;
+			//				goto B;
+			//			}
+			//			haveWall = false;
 			collisionCheckBlock.setPos(myself->x() - 1, myself->y() + 1);
 			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
 			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
@@ -583,7 +598,7 @@ void Game::timerUpdate()
 			}
 			haveWallA = false;
 			haveWallB = false;
-//			B:
+			//			B:
 			//MOVE DOWN
 			collisionCheckBlock.setPos(myself->x(), myself->y() + 1);
 			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
@@ -600,12 +615,12 @@ void Game::timerUpdate()
 					break;
 				}
 			}
-//			if (finalMoveDown == true) {
-//				moveDown = !haveWall;
+			//			if (finalMoveDown == true) {
+			//				moveDown = !haveWall;
 
-//				goto C;
-//			}
-//			haveWall = false;
+			//				goto C;
+			//			}
+			//			haveWall = false;
 			collisionCheckBlock.setPos(myself->x() - 1, myself->y() + 1);
 			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
 			for (itChecking = hitsChecking.begin(); itChecking < hitsChecking.end(); ++itChecking) {
@@ -622,7 +637,7 @@ void Game::timerUpdate()
 			haveWallB = false;
 
 
-//			C:
+			//			C:
 			//MOVE UP
 			collisionCheckBlock.setPos(myself->x(), myself->y() - 1);
 			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
@@ -640,12 +655,12 @@ void Game::timerUpdate()
 					break;
 				}
 			}
-//			if (finalMoveUp == true) {
-//				moveUp = !haveWall;
+			//			if (finalMoveUp == true) {
+			//				moveUp = !haveWall;
 
-//				goto D;
-//			}
-//			haveWall = false;
+			//				goto D;
+			//			}
+			//			haveWall = false;
 
 			collisionCheckBlock.setPos(myself->x() - 1, myself->y() - 1);
 			hitsChecking = collisionCheckBlock.collidingItems(Qt::IntersectsItemBoundingRect);
@@ -660,13 +675,13 @@ void Game::timerUpdate()
 			}
 			haveWallA = false;
 			haveWallB = false;
-//			D:
+			//			D:
 			movePlayer(moveUp, moveDown, moveLeft, moveRight);
 			return;
-//			finalMoveUp = moveUp;
-//			finalMoveDown = moveDown;
-//			finalMoveLeft = moveLeft;
-//			finalMoveRight = moveRight;
+			//			finalMoveUp = moveUp;
+			//			finalMoveDown = moveDown;
+			//			finalMoveLeft = moveLeft;
+			//			finalMoveRight = moveRight;
 
 
 			//			if (myself->x() > (*it)->x()) {

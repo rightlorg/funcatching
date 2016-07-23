@@ -31,81 +31,83 @@
 
 class Game : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    explicit Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
-		  QString mapPathTemp, int gameTypeTemp);
-    void exitGame();
-    ~Game();
-    enum Camp{Catcher,Hider,None};
-    enum GameType{SinglePlayer,Multiplayer};
-//    bool isInitOK();		//Check if readinitmap and loadmap faild in Game
-    bool loadMap();
-    void paintBlocks(int floor);
-    void initPlayer(int gametype);
-    void initGame();
-    void reMoveAllBlocks();
+	explicit Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
+	              QString mapPathTemp, int gameTypeTemp);
+	void exitGame();
+	~Game();
+	enum Camp{Catcher,Hider,None};
+	enum GameType{SinglePlayer,Multiplayer};
+	//    bool isInitOK();		//Check if readinitmap and loadmap faild in Game
+	bool loadMap();
+	void paintBlocks(int floor);
+	void initPlayer(int gametype);
+	void initGame();
+	void reMoveAllBlocks();
 
 protected:
-    bool eventFilter(QObject *object, QEvent *event);
-//	void keyPressEvent(QKeyEvent *event);
-//	void keyReleaseEvent(QKeyEvent *event);
+	bool eventFilter(QObject *object, QEvent *event);
+	//	void keyPressEvent(QKeyEvent *event);
+	//	void keyReleaseEvent(QKeyEvent *event);
 
 private slots:
-    void firstDataSubmit();
-    void getFirst();
-    void gameMenu();
-    void timerUpdate();
+	void firstDataSubmit();
+	void getFirst();
+	void gameMenu();
+	void timerUpdate();
 
 private:
-    void connectServer();
-    void loadTexture();
-    void movePlayer(bool up, bool down, bool left, bool right);
-    void whenKeyPressed(QKeyEvent *event);
-    void whenKeyReleased(QKeyEvent *event);
+	void connectServer();
+	void loadTexture();
+	void movePlayer(bool up, bool down, bool left, bool right);
+	void whenKeyPressed(QKeyEvent *event);
+	void whenKeyReleased(QKeyEvent *event);
 
-//    void handleKeyPressed(QKeyEvent *event);
+	//    void handleKeyPressed(QKeyEvent *event);
 
-    void getHeadPic(int gametype);
-    void setXPos(int x_pos);
-    void setYPos(int y_pos);
-    QTcpSocket tcpSocket;
-    Map *map;
-    ReadyPage *readypage;
-    quint32 nextBlockSize;
-    MainWindow *mainwindow;
-    QGraphicsScene scene;
-    QGraphicsView view;
-    QString player_name;
-    QGraphicsPixmapItem *myself;
-    QPixmap myself_headImage;
-    QMap<unsigned short, storing_player *>player;
-    QList<QPixmap> player_headImages;
-    unsigned short player_index;
-    QList<QList<QPixmap> > texture;
-    void initSceneBackground();
-    int gameType;
-    QString mapPath;
-    QTimer gameTick;
-    bool haveWallA, haveWallB;
-    QGraphicsPixmapItem collisionCheckBlock;
-//    QPointF myselfPos;
+	void getHeadPic(int gametype);
+	void setXPos(int x_pos);
+	void setYPos(int y_pos);
+	QTcpSocket tcpSocket;
+	Map *map;
+	ReadyPage *readypage;
+	quint32 nextBlockSize;
+	MainWindow *mainwindow;
+	QGraphicsScene scene;
+	QGraphicsView view;
+	QString player_name;
+	QGraphicsPixmapItem *myself;
+	QPixmap myself_headImage;
+	QMap<unsigned short, storing_player *>player;
+	QList<QPixmap> player_headImages;
+	unsigned short player_index;
+	QList<QList<QPixmap> > texture;
+	QList<QPixmap> specialTex;
+	void initSceneBackground();
+	int floor;
+	int gameType;
+	QString mapPath;
+	QTimer gameTick;
+	bool haveWallA, haveWallB;
+	QGraphicsPixmapItem collisionCheckBlock;
+	//    QPointF myselfPos;
 
-    //move
+	//move
 	bool finalMoveRight;
 	bool finalMoveLeft;
 	bool finalMoveUp;
 	bool finalMoveDown;
-        bool moveRight;
+	bool moveRight;
 	bool moveLeft;
 	bool moveUp;
 	bool moveDown;
 
 
-//    enum Action {Left, Right, Up, Down, Pause};
-//    QMap<int, Action> actions;
+	//    enum Action {Left, Right, Up, Down, Pause};
+	//    QMap<int, Action> actions;
 
-//    bool loadSuccess;
+	//    bool loadSuccess;
 };
 
 #endif // GAME_H
