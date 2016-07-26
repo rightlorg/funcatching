@@ -2,6 +2,7 @@
 #include <QGLWidget>
 #include <QChar>
 #include "gamemenu.h"
+#include <QBuffer>
 
 #define GAME_TICK 20	//Update n times per second
 
@@ -143,6 +144,8 @@ void Game::connectServer()
 	QHostAddress *address = new QHostAddress(settings.value("IP").toString());
 	tcpSocket.connectToHost(*address,2048);
 	settings.endGroup();
+	connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
+
 }
 
 void Game::paintBlocks(int localFloor)
@@ -410,6 +413,7 @@ void Game::whenKeyReleased(QKeyEvent *event)
 void Game::firstDataSubmit()
 {
 	QByteArray block;
+	QBuffer buffer;
 	QDataStream out(&block,QIODevice::WriteOnly);
 
 	QSettings settings("Funcatching Project", "Funcatching");
@@ -417,10 +421,14 @@ void Game::firstDataSubmit()
 	player_name = settings.value("name").toString();
 	settings.endGroup();
 
+	buffer.open(QIODevice::ReadWrite);
+	myself_headImage.toImage().save(&buffer, "PNG");
+
 	out.setVersion(QDataStream::Qt_4_8);
-	out<<quint32(0)<<player_name;//<<headImage;
+	out << quint32(0) << player_name;
+	out << buffer.data();
 	out.device()->seek(0);
-	out<<quint32(block.size()-sizeof(quint16));
+	out<<quint32(block.size()-sizeof(quint32));
 	tcpSocket.write(block);
 
 	disconnect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));

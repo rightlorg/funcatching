@@ -34,6 +34,7 @@ private slots:
 	void on_server_clicked();
 
 private:
+	bool haveHeadImage();
 	Ui::ReadyPage *ui;
 	MainWindow *mainwindow;
 	int mapIndex;

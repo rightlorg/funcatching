@@ -45,6 +45,7 @@ public:
 	void initPlayer(int gametype);
 	void initGame();
 	void reMoveAllBlocks();
+	void connectServer();
 
 protected:
 	bool eventFilter(QObject *object, QEvent *event);
@@ -58,7 +59,7 @@ private slots:
 	void timerUpdate();
 
 private:
-	void connectServer();
+
 	void loadTexture();
 	void movePlayer(bool up, bool down, bool left, bool right);
 	void whenKeyPressed(QKeyEvent *event);
