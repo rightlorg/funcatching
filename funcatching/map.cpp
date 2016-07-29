@@ -325,5 +325,15 @@ bool Map::saveInitMap(QString initmapPath, QList<MapImformations> inputMapImform
 
 QList<MapImformations> Map::getMapImformations()
 {
-    return mapImform;
+	return mapImform;
+}
+
+bool Map::sendMap(QTcpSocket *socket)
+{
+	
+}
+
+bool Map::downloadMapFromRemote(QTcpSocket *socket)
+{
+	
 }

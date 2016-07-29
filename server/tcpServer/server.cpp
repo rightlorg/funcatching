@@ -7,6 +7,10 @@ Server::Server(QWidget *parent) :
     ui(new Ui::Server)
 {
     ui->setupUi(this);
+    if (!loadMap()) {
+	    QMessageBox::warning(NULL, tr("警告"), tr("Please restart the server"),
+	                                                          QMessageBox::Abort);
+    }
     tcpServer = new QTcpServer(this);
     // 使用了IPv4的本地主机地址，等价于QHostAddress("127.0.0.1")
     if (!tcpServer->listen(QHostAddress::LocalHost, 2048)) {
@@ -19,6 +23,8 @@ Server::Server(QWidget *parent) :
     currentClient = NULL;
     readyToReadNext = true;
 
+
+
 }
 
 Server::~Server()
@@ -26,10 +32,34 @@ Server::~Server()
 	delete ui;
 }
 
+bool Server::loadMap()
+{
+	QDir dir;
+	dir.setSorting(QDir::Time);
+	if (!dir.cd("map"))
+	{
+		dir.mkdir("map");
+		QMessageBox::warning(NULL, tr("警告"), tr("Please put the map in ./map/"),
+		                                                      QMessageBox::Abort);
+		return false;
+	}
+	map = new Map(this, dir.absoluteFilePath(dir.path()));
+	if (!map->readInitMapFile()) {
+		return false;
+	}
+	if(!map->loadMap()) {
+		return false;
+	}
+	mapPath = dir.entryList();
+	qDebug() << mapPath;
+	
+
+}
+
 void Server::nextConnection()
 {
 	if (currentClient != NULL) {
-		disconnect(currentClient, SIGNAL(readyRead()), this, SLOT(readMessage()));
+		disconnect(currentClient, SIGNAL(readyRead()), this, SLOT(exchangeData()));
 	}
 	currentClient = NULL;
 	currentClient = tcpServer->nextPendingConnection();
@@ -38,7 +68,7 @@ void Server::nextConnection()
 		return;
 	}
 	blockSize = 0;
-	connect(currentClient, SIGNAL(readyRead()), this, SLOT(readMessage()));
+	connect(currentClient, SIGNAL(readyRead()), this, SLOT(exchangeData()));
 
 }
 
@@ -61,8 +91,9 @@ void Server::sendMessage()
     ui->label->setText("send message successful!!!");
 }
 
-void Server::readMessage()
+void Server::exchangeData()
 {
+	//getting player's imformation
 	QDataStream in(currentClient);
 	// 设置数据流版本，这里要和服务器端相同
 	in.setVersion(QDataStream::Qt_4_8);
@@ -84,7 +115,12 @@ void Server::readMessage()
 	Player newplayer;
 	newplayer.playerName = playername;
 	newplayer.playerImage = playerimage;
+	newplayer.socket = currentClient;
 	playerList.append(newplayer);
+
+	//map
+	map->sendMap(currentClient);
+
 	nextConnection();
 
 }

@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QtNetwork>
 #include <QList>
+#include "../../funcatching/map.h"
+
 
 class QTcpServer;
 
@@ -15,6 +17,7 @@ struct Player
 {
 	QString playerName;
 	QImage playerImage;
+	QTcpSocket *socket;
 };
 
 class Server : public QDialog
@@ -33,12 +36,14 @@ private:
     int totalClientNum;
     bool readyToReadNext;
     QList<Player> playerList;
+    Map *map;
+    bool loadMap();
 
 //    QTcpSocket *tcpSocketReciver;
 
 private slots:
     void sendMessage();
-    void readMessage();
+    void exchangeData();
     void readingController();
     void addTotalClientNum();
     void nextConnection();

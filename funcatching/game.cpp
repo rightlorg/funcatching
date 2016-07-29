@@ -67,16 +67,12 @@ Game::~Game()
 bool Game::loadMap()
 {
 	if(gameType == SinglePlayer) {
-		map = new Map(NULL, mapPath);
+		map = new Map(this, mapPath);
 		if (!map->readInitMapFile()) {
 			return false;
-			//			readypage->back();
-			//		delete this;
 		}
 		if(!map->loadMap()) {
 			return false;
-			//			readypage->back();
-			//            delete this;
 		}
 		//		paintBlocks(0);
 		//		initPlayer(SinglePlayer);
@@ -379,7 +375,7 @@ void Game::whenKeyReleased(QKeyEvent *event)
 
 	switch (event->key()) {
 	case Qt::Key_Up:
-	case Qt::Key_W:
+	case Qt::Key_W:())
 		//		setYPos(-PACE);
 		finalMoveUp = false;
 		break;
