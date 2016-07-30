@@ -55,10 +55,16 @@ void ReadyPage::on_go_clicked()
 {
     if (mapIndex != -1)
 	{
+	    if (!haveHeadImage()) {
+		    QMessageBox::warning(NULL, tr("警告"), tr("No head image"),
+		                                        QMessageBox::Abort);
+		    return;
+
+	    }
 		if (!dir.exists(maps[mapIndex]))
 		{
 			QMessageBox::warning(NULL, tr("警告"), tr("文件不存在"),
-											QMessageBox::Abort);
+			                                QMessageBox::Abort);
 			return;
 		}
 		this->hide();
@@ -95,5 +101,19 @@ void ReadyPage::on_server_clicked()
 			Game *game = new Game(this, mainwindow, "", Game::Multiplayer);
 			if (game == NULL)
 				this->show();
+			game->connectServer();
 	}
+}
+
+bool ReadyPage::haveHeadImage()
+{
+	QSettings settings("Funcatching Project", "Funcatching");
+	settings.beginGroup("HeadImage");
+	QString path = settings.value("head_image", "").toString();
+	QFile a(path);
+	settings.endGroup();
+
+	if(!a.exists())
+		return false;
+	return true;
 }

@@ -43,7 +43,7 @@ void Settings::on_setnameButton_clicked()
 	QSettings settings("Funcatching Project", "Funcatching");
 	settings.beginGroup("Player Name");
 	settings.setValue("name", QInputDialog::getText(this, tr("Enter your name"), tr("Enter your name"),
-                                            QLineEdit::Normal,settings.value("name").toString().isEmpty()?"hehe":settings.value("name").toString(), &ok));
+	                                    QLineEdit::Normal,settings.value("name").toString().isEmpty()?"hehe":settings.value("name").toString(), &ok));
 	settings.endGroup();
 }
 

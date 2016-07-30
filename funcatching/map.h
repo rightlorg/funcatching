@@ -19,6 +19,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QPoint>
+#include <QtNetwork>
 
 struct mapBlcok
 {
@@ -45,6 +46,7 @@ public:
 	bool loadMap();
 	mapBlcok at(int x, int y, int z);
 	bool change(int x, int y, int z);
+	int maxFloorSize();
 	int mapRowSize(int floor);
 	int mapColumnSize(int floor);
 	int findWall(int x, int y, int z);
@@ -55,6 +57,8 @@ public:
 	bool isMap(QString filename);
 	bool saveInitMap(QString initmapPath, QList<MapImformations> inputMapImformation);
 	QList<MapImformations> getMapImformations();
+	bool sendMap(QTcpSocket *socket);
+	bool downloadMapFromRemote(QTcpSocket *socket);
 signals:
 
 public slots:
