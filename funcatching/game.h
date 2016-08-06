@@ -24,6 +24,7 @@
 #include "map.h"
 #include "readypage.h"
 #include "mainwindow.h"
+#include "server.h"
 #include "storing_player.h"
 
 
@@ -52,11 +53,17 @@ protected:
 	//	void keyPressEvent(QKeyEvent *event);
 	//	void keyReleaseEvent(QKeyEvent *event);
 
+signals:
+	void sigGetMap();
 private slots:
-	void firstDataSubmit();
-	void getFirst();
+	void initMultiPlayerGame();
+	void getMap();
 	void gameMenu();
 	void timerUpdate();
+	void getFirst();	//get all player's imformation
+	void waitForgetFirst();
+	void getTotalMapNum();
+
 
 private:
 
@@ -66,17 +73,21 @@ private:
 	void whenKeyReleased(QKeyEvent *event);
 
 	//    void handleKeyPressed(QKeyEvent *event);
-
+	void firstDataSubmit();
 	void getHeadPic(int gametype);
 	void setXPos(int x_pos);
 	void setYPos(int y_pos);
 	QTcpSocket tcpSocket;
 	Map *map;
+	Server *server;
 	ReadyPage *readypage;
-	quint32 nextBlockSize;
+	//blockSize -> getTotalMapNum();
+	//nextBlockSize -> getFirst();
+	quint32 nextBlockSize, blockSize;
 	MainWindow *mainwindow;
 	QGraphicsScene scene;
 	QGraphicsView view;
+	quint64 totalRemoteMapNum;
 	QString player_name;
 	QGraphicsPixmapItem *myself;
 	QPixmap myself_headImage;

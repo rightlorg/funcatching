@@ -25,11 +25,13 @@ HEADERS += block.h \
     item/lift.h \
     item/window.h \
     item/door.h \
-    item/stair.h
+    item/stair.h \
+    server.h
 FORMS += gotocell.ui mainwindow.ui mapeditor.ui readypage.ui settings.ui \
     initializemap.ui \
     initialmap_stackmap.ui \
-    gamemenu.ui
+    gamemenu.ui \
+    server.ui
 SOURCES += block.cpp \
            blocklist.cpp \
            game.cpp \
@@ -48,7 +50,8 @@ SOURCES += block.cpp \
     item/lift.cpp \
     item/window.cpp \
     item/door.cpp \
-    item/stair.cpp
+    item/stair.cpp \
+    server.cpp
 RESOURCES += funcatching.qrc
 
 DISTFILES += \

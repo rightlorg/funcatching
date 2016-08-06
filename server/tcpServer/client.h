@@ -16,9 +16,13 @@ class Client : public QDialog
     Q_OBJECT
 
 public:
-    explicit Client(QWidget *parent = 0, QTcpSocket *socket = 0, QString mapFolder = "");
+    explicit Client(QWidget *parent = 0, QTcpSocket *socket = 0, QString filePath = "");
     ~Client();
+	void startTransfer();
 
+
+signals:
+	void done();
 private:
     Ui::Client *ui;
     QTcpSocket *tcpClient;
@@ -30,18 +34,12 @@ private:
     QString fileName;  // 保存文件路径
     QByteArray outBlock;  // 数据缓冲区，即存放每次要发送的数据块
 
-    QString mapFolderName;
 
 private slots:
-    void openFile();
-    void send();
-    void startTransfer();
     void updateClientProgress(qint64);
     void displayError(QAbstractSocket::SocketError);
 
 
-    void on_openButton_clicked();
-    void on_sendButton_clicked();
 };
 
 #endif // CLIENT_H

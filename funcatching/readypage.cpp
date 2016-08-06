@@ -39,7 +39,7 @@ void ReadyPage::addMap()
 											QMessageBox::Abort);
 		return;
 	}
-	maps = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+	maps = dir.entryList(QDir::AllEntries | QDir::NoDotAndDotDot);
 	for(int i  = 0; i < maps.size(); i++)
 	{
 		new QListWidgetItem(maps[i], ui->listWidget);
@@ -102,6 +102,8 @@ void ReadyPage::on_server_clicked()
 			if (game == NULL)
 				this->show();
 			game->connectServer();
+
+
 	}
 }
 

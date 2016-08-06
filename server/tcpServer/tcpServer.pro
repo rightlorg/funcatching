@@ -14,8 +14,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        server.cpp
+        server.cpp \
+    client.cpp
 
-HEADERS  += server.h
+HEADERS  += server.h \
+    client.h
 
-FORMS    += server.ui
+FORMS    += server.ui \
+    client.ui

@@ -2,6 +2,7 @@
 #include "ui_server.h"
 #include <QtNetwork>
 
+
 Server::Server(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Server)
@@ -18,10 +19,12 @@ Server::Server(QWidget *parent) :
         close();
     }
     connect(tcpServer, SIGNAL(newConnection()), this, SLOT(readingController()));
+//    connect(this, SIGNAL(currentDataExchangeDone()), SLOT(nextConnection()));
         totalClientNum = 0;
     blockSize = 0;
     currentClient = NULL;
     readyToReadNext = true;
+    mapSent = 0;sendMapClient = NULL;
 
 
 
@@ -34,7 +37,7 @@ Server::~Server()
 
 bool Server::loadMap()
 {
-	QDir dir;
+	QDir dir("./");
 	dir.setSorting(QDir::Time);
 	if (!dir.cd("map"))
 	{
@@ -43,17 +46,20 @@ bool Server::loadMap()
 		                                                      QMessageBox::Abort);
 		return false;
 	}
-	map = new Map(this, dir.absoluteFilePath(dir.path()));
-	if (!map->readInitMapFile()) {
-		return false;
+//	map = new Map(this, dir.path());
+//	if (!map->readInitMapFile()) {
+//		return false;
+//	}
+//	if(!map->loadMap()) {
+//		return false;
+//	}
+	mapPath = dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
+	for (int i = 0; i < mapPath.size(); ++i) {
+		mapPath[i] = dir.absoluteFilePath(mapPath[i]);
 	}
-	if(!map->loadMap()) {
-		return false;
-	}
-	mapPath = dir.entryList();
 	qDebug() << mapPath;
 	
-
+	return  true;
 }
 
 void Server::nextConnection()
@@ -68,27 +74,51 @@ void Server::nextConnection()
 		return;
 	}
 	blockSize = 0;
+	mapSent = 0;
 	connect(currentClient, SIGNAL(readyRead()), this, SLOT(exchangeData()));
 
 }
 
+void Server::sendTotalMapNum()
+{
+	QByteArray block;
+	QBuffer imageBuffer;
+	QDataStream out(&block,QIODevice::WriteOnly);
+
+
+	out.setVersion(QDataStream::Qt_4_8);
+	out << quint64(0) << quint64(mapPath.size());
+	out.device()->seek(0);
+	out<<quint64(block.size()-sizeof(quint64));
+	currentClient->write(block);
+	emit sendTotalMapNumDone();
+
+}
+
+void Server::sendNextMap()
+{
+	disconnect(currentClient, SIGNAL(bytesWritten(qint64)), this, SLOT(sendNextMap()));
+	if (sendMapClient != NULL) {
+		disconnect(sendMapClient, SIGNAL(done()), this, SLOT(sendNextMap()));
+		delete sendMapClient;
+	}
+	sendMapClient = new Client(this, currentClient, mapPath[mapSent]);
+	connect(sendMapClient, SIGNAL(done()), this, SLOT(sendNextMap()));
+	if (sendMapClient == NULL) {
+		QMessageBox::warning(NULL, tr("警告"),
+				     tr("Faild to send map, Please restart the server"),
+				QMessageBox::Abort);
+	}
+	sendMapClient->startTransfer();
+
+	mapSent++;
+	if (mapSent == mapPath.size()) {
+		nextConnection();
+	}
+}
+
 void Server::sendMessage()
 {
-	QTcpSocket *clientConnection = tcpServer->nextPendingConnection();
-
-    // 用于暂存我们要发送的数据
-    QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    // 设置数据流的版本，客户端和服务器端使用的版本要相同
-    out.setVersion(QDataStream::Qt_4_0);
-    out << (quint16)0;
-    out << tr("hello TCP!!!");
-    out.device()->seek(0);
-    out << (quint16)(block.size() - sizeof(quint16));
-    // 获取已经建立的连接的套接字
-    clientConnection->write(block);
-    // 发送数据成功后，显示提示
-    ui->label->setText("send message successful!!!");
 }
 
 void Server::exchangeData()
@@ -118,10 +148,13 @@ void Server::exchangeData()
 	newplayer.socket = currentClient;
 	playerList.append(newplayer);
 
-	//map
-	map->sendMap(currentClient);
+	connect(currentClient, SIGNAL(bytesWritten(qint64)), this, SLOT(sendNextMap()));
+	sendTotalMapNum();
 
-	nextConnection();
+	//map
+//	map->sendMap(currentClient);
+
+//	nextConnection();
 
 }
 

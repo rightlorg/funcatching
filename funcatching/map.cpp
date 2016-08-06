@@ -14,11 +14,8 @@ Map::Map(QObject *parent, QString path) :
 	mapCount = 0;
 	initMapFileName << dir.entryList();
 	initMapFileName[0] = dir.absoluteFilePath(initMapFileName[0]);
-	//将文件名转换成文件的绝对路径
-	//	for(int i = 0; i < floorPath.size(); i++)
-	//	{
-	//		floorPath[i] = dir.absoluteFilePath(floorPath[i]);
-	//	}
+	mapFloder = path;
+
 
 }
 
@@ -326,6 +323,17 @@ bool Map::saveInitMap(QString initmapPath, QList<MapImformations> inputMapImform
 QList<MapImformations> Map::getMapImformations()
 {
 	return mapImform;
+}
+
+void Map::regenerateInitMapFile()
+{
+	QDir dir(mapFloder);
+	for (int i = 0; i < mapImform.size(); ++i) {
+		QString mapName = mapImform[i].filePath.right(mapImform[i].filePath.size()
+					    - mapImform[i].filePath.lastIndexOf('/') - 1);
+		qDebug() << mapName;
+		mapImform[i].filePath = dir.absoluteFilePath(mapName);
+	}
 }
 
 bool Map::sendMap(QTcpSocket *socket)

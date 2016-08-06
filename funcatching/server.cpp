@@ -2,10 +2,12 @@
 #include "ui_server.h"
 #include <QtNetwork>
 
-Server::Server(QWidget *parent, QTcpSocket *socket) :
+Server::Server(QWidget *parent, QTcpSocket *socket, quint32 totalMapNumT) :
     QDialog(parent),
     ui(new Ui::Server)
 {
+	totalMapNum = totalMapNumT;
+	filerecived = 0;
 	totalBytes = 0;
 	bytesReceived = 0;
 	fileNameSize = 0;
@@ -27,8 +29,8 @@ Server::~Server()
 }
 
 // 开启监听
-void Server::start()
-{
+//void Server::start()
+//{
 //    if (!tcpServer.listen(QHostAddress::LocalHost, 6666)) {
 //        qDebug() << tcpServer.errorString();
 //        close();
@@ -37,7 +39,7 @@ void Server::start()
 //    ui->startButton->setEnabled(false);
 //    ui->serverStatusLabel->setText(tr("监听"));
 //    ui->serverProgressBar->reset();
-}
+//}
 
 // 接收连接
 //void Server::acceptConnection()
@@ -56,7 +58,7 @@ void Server::start()
 void Server::updateServerProgress()
 {
     QDataStream in(socketConnection);
-    in.setVersion(QDataStream::Qt_4_0);
+    in.setVersion(QDataStream::Qt_4_8);
     // 如果接收到的数据小于16个字节，保存到来的文件头结构
     if (bytesReceived <= sizeof(qint64)*2) {
 	if((socketConnection->bytesAvailable() >= sizeof(qint64)*2)
@@ -94,22 +96,30 @@ void Server::updateServerProgress()
 
     // 接收数据完成时
     if (bytesReceived == totalBytes) {
-	socketConnection->close();
+//	socketConnection->close();
         localFile->close();
-        ui->startButton->setEnabled(true);
+	QDir dir;
+	dir.cd("map");
+	dir.mkdir("remotemap");
+	QFile::copy(localFile->fileName(), "./map/remotemap/" + localFile->fileName());
         ui->serverStatusLabel->setText(tr("接收文件 %1 成功！")
                                        .arg(fileName));
+	filerecived++;
+	if (filerecived == totalMapNum) {
+		emit done();
+	}
+
     }
+
 }
 
 // 显示错误
 void Server::displayError(QAbstractSocket::SocketError socketError)
 {
     qDebug() << socketConnection->errorString();
-    socketConnection->close();
+//    socketConnection->close();
     ui->serverProgressBar->reset();
     ui->serverStatusLabel->setText(tr("服务端就绪"));
-    ui->startButton->setEnabled(true);
 }
 
 // 开始监听按钮

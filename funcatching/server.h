@@ -17,7 +17,7 @@ class Server : public QDialog
     Q_OBJECT
 
 public:
-    explicit Server(QWidget *parent = 0, QTcpSocket *socket = 0);
+    explicit Server(QWidget *parent = 0, QTcpSocket *socket = 0, quint32 totalMapNumT = 0);
     ~Server();
 
 private:
@@ -29,13 +29,15 @@ private:
     QString fileName;      // 存放文件名
     QFile *localFile;      // 本地文件
     QByteArray inBlock;    // 数据缓冲区
+    quint32 totalMapNum, filerecived;
 
 private slots:
 //    void start();
 //    void acceptConnection();
     void updateServerProgress();
     void displayError(QAbstractSocket::SocketError socketError);
-
+signals:
+    void done();
 //    void on_startButton_clicked();
 };
 

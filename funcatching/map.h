@@ -57,6 +57,7 @@ public:
 	bool isMap(QString filename);
 	bool saveInitMap(QString initmapPath, QList<MapImformations> inputMapImformation);
 	QList<MapImformations> getMapImformations();
+	void regenerateInitMapFile();
 	bool sendMap(QTcpSocket *socket);
 	bool downloadMapFromRemote(QTcpSocket *socket);
 signals:
@@ -70,6 +71,7 @@ private:
 	quint8 mapCount;//有多少个地图文件
 	QList<MapImformations> mapImform; //每层地图的地图信
 	QStringList initMapFileName;
+	QString mapFloder;
 
 
 };

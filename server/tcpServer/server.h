@@ -5,6 +5,7 @@
 #include <QtNetwork>
 #include <QList>
 #include "../../funcatching/map.h"
+#include "client.h"
 
 
 class QTcpServer;
@@ -28,6 +29,9 @@ public:
     explicit Server(QWidget *parent = 0);
     ~Server();
 
+signals:
+	void currentDataExchangeDone();
+	void sendTotalMapNumDone();
 private:
     Ui::Server *ui;
     QTcpServer *tcpServer;
@@ -37,6 +41,9 @@ private:
     bool readyToReadNext;
     QList<Player> playerList;
     Map *map;
+    Client *sendMapClient;
+    QStringList mapPath;
+    int mapSent;
     bool loadMap();
 
 //    QTcpSocket *tcpSocketReciver;
@@ -47,6 +54,8 @@ private slots:
     void readingController();
     void addTotalClientNum();
     void nextConnection();
+    void sendTotalMapNum();
+    void sendNextMap();
 
 
 };

@@ -74,13 +74,16 @@ bool Game::loadMap()
 		if(!map->loadMap()) {
 			return false;
 		}
-		//		paintBlocks(0);
-		//		initPlayer(SinglePlayer);
-	}/*else {
-		connectServer();
-		connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
-		connect(&tcpSocket,SIGNAL(readyRead()),this,SLOT(getFirst()));
-	}*/
+	} else {
+		map = new Map(this, "./map/remotemap");
+		if (!map->readInitMapFile()) {
+			return false;
+		}
+		map->regenerateInitMapFile();
+		if (!map->loadMap()) {
+			return false;
+		}
+	}
 	return true;
 }
 
@@ -140,7 +143,7 @@ void Game::connectServer()
 	QHostAddress *address = new QHostAddress(settings.value("IP").toString());
 	tcpSocket.connectToHost(*address,2048);
 	settings.endGroup();
-	connect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
+	connect(&tcpSocket,SIGNAL(connected()),this,SLOT(initMultiPlayerGame()));
 
 }
 
@@ -194,11 +197,11 @@ void Game::initPlayer(int gametype)
 		scene.addItem(myself);
 		break;
 	case Multiplayer:
-		for (int i = 0; i < player_headImages.size(); ++i) {
-			QGraphicsPixmapItem *newplayer = new QGraphicsPixmapItem(player_headImages[i]);
-			newplayer->setPos(spawnPoint.rx() * 32 + 3, spawnPoint.ry() * 32 + 3);
-			scene.addItem(newplayer);
-		}
+//		for (int i = 0; i < player_headImages.size(); ++i) {
+//			QGraphicsPixmapItem *newplayer = new QGraphicsPixmapItem(player_headImages[i]);
+//			newplayer->setPos(spawnPoint.rx() * 32 + 3, spawnPoint.ry() * 32 + 3);
+//			scene.addItem(newplayer);
+//		}
 
 		break;
 	default:
@@ -375,7 +378,7 @@ void Game::whenKeyReleased(QKeyEvent *event)
 
 	switch (event->key()) {
 	case Qt::Key_Up:
-	case Qt::Key_W:())
+	case Qt::Key_W:
 		//		setYPos(-PACE);
 		finalMoveUp = false;
 		break;
@@ -409,7 +412,7 @@ void Game::whenKeyReleased(QKeyEvent *event)
 void Game::firstDataSubmit()
 {
 	QByteArray block;
-	QBuffer buffer;
+	QBuffer imageBuffer;
 	QDataStream out(&block,QIODevice::WriteOnly);
 
 	QSettings settings("Funcatching Project", "Funcatching");
@@ -417,17 +420,43 @@ void Game::firstDataSubmit()
 	player_name = settings.value("name").toString();
 	settings.endGroup();
 
-	buffer.open(QIODevice::ReadWrite);
-	myself_headImage.toImage().save(&buffer, "PNG");
+	imageBuffer.open(QIODevice::ReadWrite);
+	myself_headImage.toImage().save(&imageBuffer, "PNG");
 
 	out.setVersion(QDataStream::Qt_4_8);
 	out << quint32(0) << player_name;
-	out << buffer.data();
+	out << imageBuffer.data();
 	out.device()->seek(0);
 	out<<quint32(block.size()-sizeof(quint32));
 	tcpSocket.write(block);
+}
 
-	disconnect(&tcpSocket,SIGNAL(connected()),this,SLOT(firstDataSubmit()));
+void Game::initMultiPlayerGame()
+{
+	disconnect(&tcpSocket,SIGNAL(connected()),this,SLOT(initMultiPlayerGame()));
+	//send player's imformation
+	firstDataSubmit();
+	connect(&tcpSocket, SIGNAL(readyRead()), this, SLOT(getTotalMapNum()));
+	connect(this, SIGNAL(sigGetMap()),SLOT(getMap()));
+//	//get map
+
+//	if (!loadMap()) {
+//		exitGame();
+//	} else {
+//		initGame();
+//	}
+
+
+
+}
+
+void Game::getMap()
+{
+	disconnect(this, SIGNAL(sigGetMap()), this, SLOT(getMap()));
+
+	server = new Server(NULL, &tcpSocket, totalRemoteMapNum);
+	connect(server, SIGNAL(done()), this, SLOT(waitForgetFirst()));
+
 }
 
 void initHeadPic()
@@ -462,6 +491,16 @@ void Game::getFirst()
 		player.insert(i,newPlayer);
 		//        player_headImages->append(player_image);
 	}
+	disconnect(&tcpSocket, SIGNAL(readyRead()), this, SLOT(getFirst()));
+
+}
+
+void Game::waitForgetFirst()
+{
+	disconnect(server, SIGNAL(done()), this, SLOT(waitForgetFirst()));
+	delete server;
+	connect(&tcpSocket, SIGNAL(readyRead()), this, SLOT(getFirst()));
+
 }
 
 void Game::gameMenu()
@@ -727,4 +766,25 @@ void Game::setYPos(int y_pos)
 {
 	myself->setPos(myself->pos().rx(), myself->pos().ry() + y_pos);
 	scene.setSceneRect(myself->pos().rx(), myself->pos().ry(), 32, 32);
+}
+
+void Game::getTotalMapNum()
+{
+	QDataStream in(&tcpSocket);
+	// 设置数据流版本，这里要和服务器端相同
+	in.setVersion(QDataStream::Qt_4_8);
+	// 如果是刚开始接收数据`
+	if (blockSize == 0) {
+		//判断接收的数据是否大于两字节，也就是文件的大小信息所占的空间
+		//如果是则保存到blockSize变量中，否则直接返回，继续接收数据
+		if(tcpSocket.bytesAvailable() < (int)sizeof(quint64)) return;
+		in >> blockSize;
+	}
+	// 如果没有得到全部的数据，则返回，继续接收数据
+	if(tcpSocket.bytesAvailable() < blockSize) return;
+	// 将接收到的数据存放到变量中
+	in >> totalRemoteMapNum;
+	disconnect(&tcpSocket, SIGNAL(readyRead()), this, SLOT(getTotalMapNum()));
+	emit sigGetMap();
+
 }
