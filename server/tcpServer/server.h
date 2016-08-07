@@ -35,7 +35,7 @@ signals:
 private:
     Ui::Server *ui;
     QTcpServer *tcpServer;
-    quint32 blockSize;
+    qint32 blockSize;
     QTcpSocket *currentClient;
     int totalClientNum;
     bool readyToReadNext;

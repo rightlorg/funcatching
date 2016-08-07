@@ -83,11 +83,11 @@ private:
 	ReadyPage *readypage;
 	//blockSize -> getTotalMapNum();
 	//nextBlockSize -> getFirst();
-	quint32 nextBlockSize, blockSize;
+	qint32 nextBlockSize, blockSize;
 	MainWindow *mainwindow;
 	QGraphicsScene scene;
 	QGraphicsView view;
-	quint64 totalRemoteMapNum;
+	qint32 totalRemoteMapNum;
 	QString player_name;
 	QGraphicsPixmapItem *myself;
 	QPixmap myself_headImage;

@@ -61,40 +61,45 @@ void Client::startTransfer()
     // 返回outBolock的开始，用实际的大小信息代替两个qint64(0)空间
     sendOut << totalBytes << qint64((outBlock.size() - sizeof(qint64)*2));
     // 发送完文件头结构后剩余数据的大小
-    qDebug() << outBlock.size();
-    bytesToWrite = totalBytes - tcpClient->write(outBlock);
-
-    ui->clientStatusLabel->setText(tr("已连接"));
+//    qDebug() << outBlock.size();
+//    bytesToWrite = totalBytes - tcpClient->write(outBlock);
+	tcpClient->write(outBlock);
     outBlock.resize(0);
 }
 
 // 发送数据，并更新进度条
 void Client::updateClientProgress(qint64 numBytes)
 {
-    // 已经发送数据的大小
-    bytesWritten += (int)numBytes;
-    // 如果已经发送了数据
-    if (bytesToWrite > 0) {
-        // 每次发送payloadSize大小的数据，这里设置为64KB，如果剩余的数据不足64KB，
-        // 就发送剩余数据的大小
-        outBlock = localFile->read(qMin(bytesToWrite, payloadSize));
-        // 发送完一次数据后还剩余数据的大小
-        bytesToWrite -= (int)tcpClient->write(outBlock);
-        // 清空发送缓冲区
-        outBlock.resize(0);
-    } else { // 如果没有发送任何数据，则关闭文件
-        localFile->close();
-    }
-    // 更新进度条
-    ui->clientProgressBar->setMaximum(totalBytes);
-    ui->clientProgressBar->setValue(bytesWritten);
-    // 如果发送完毕
-    if(bytesWritten == totalBytes) {
-        ui->clientStatusLabel->setText(tr("传送文件 %1 成功").arg(fileName));
-        localFile->close();
+	outBlock = localFile->read(localFile->size());
+	tcpClient->write(outBlock);
+	outBlock.resize(0);
+	localFile->close();
 	emit done();
+
+//    // 已经发送数据的大小
+//    bytesWritten += (int)numBytes;
+//    // 如果已经发送了数据
+//    if (bytesToWrite > 0) {
+//        // 每次发送payloadSize大小的数据，这里设置为64KB，如果剩余的数据不足64KB，
+//        // 就发送剩余数据的大小
+//        outBlock = localFile->read(qMin(bytesToWrite, payloadSize));
+//        // 发送完一次数据后还剩余数据的大小
+//        bytesToWrite -= (int)tcpClient->write(outBlock);
+//        // 清空发送缓冲区
+//        outBlock.resize(0);
+//    } else { // 如果没有发送任何数据，则关闭文件
+//        localFile->close();
+//    }
+//    // 更新进度条
+//    ui->clientProgressBar->setMaximum(totalBytes);
+//    ui->clientProgressBar->setValue(bytesWritten);
+//    // 如果发送完毕
+//    if(bytesWritten == totalBytes) {
+//        ui->clientStatusLabel->setText(tr("传送文件 %1 成功").arg(fileName));
+//        localFile->close();
+//	emit done();
 //        tcpClient->close();
-    }
+//    }
 }
 
 // 显示错误

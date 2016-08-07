@@ -21,6 +21,7 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	finalMoveRight	= false;
 
 	floor = 0;
+	blockSize = 0;
 
 	gameType	= gameTypeTemp;
 	mapPath		= mapPathTemp;
@@ -424,10 +425,10 @@ void Game::firstDataSubmit()
 	myself_headImage.toImage().save(&imageBuffer, "PNG");
 
 	out.setVersion(QDataStream::Qt_4_8);
-	out << quint32(0) << player_name;
+	out << qint32(0) << player_name;
 	out << imageBuffer.data();
 	out.device()->seek(0);
-	out<<quint32(block.size()-sizeof(quint32));
+	out<<qint32(block.size()-sizeof(qint32));
 	tcpSocket.write(block);
 }
 
@@ -777,13 +778,14 @@ void Game::getTotalMapNum()
 	if (blockSize == 0) {
 		//判断接收的数据是否大于两字节，也就是文件的大小信息所占的空间
 		//如果是则保存到blockSize变量中，否则直接返回，继续接收数据
-		if(tcpSocket.bytesAvailable() < (int)sizeof(quint64)) return;
+		if(tcpSocket.bytesAvailable() < (int)sizeof(qint32)) return;
 		in >> blockSize;
 	}
 	// 如果没有得到全部的数据，则返回，继续接收数据
 	if(tcpSocket.bytesAvailable() < blockSize) return;
 	// 将接收到的数据存放到变量中
 	in >> totalRemoteMapNum;
+			blockSize = 0;
 	disconnect(&tcpSocket, SIGNAL(readyRead()), this, SLOT(getTotalMapNum()));
 	emit sigGetMap();
 
