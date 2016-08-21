@@ -45,6 +45,7 @@ private:
     QStringList mapPath;
     int mapSent;
     bool loadMap();
+    void sendAllPlayer();
 
 //    QTcpSocket *tcpSocketReciver;
 
@@ -58,6 +59,7 @@ private slots:
     void sendNextMap();
 
 
+    void on_pushButton_clicked();
 };
 
 #endif // SERVER_H

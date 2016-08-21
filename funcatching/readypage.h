@@ -32,6 +32,7 @@ private slots:
 	void on_go_clicked();
 
 	void on_server_clicked();
+	void startRemoteGame();
 
 private:
 	bool haveHeadImage();

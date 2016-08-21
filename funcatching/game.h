@@ -30,6 +30,12 @@
 
 #define PACE 1          // It can only be 1
 
+struct Player
+{
+	QString playerName;
+	QImage playerImage;
+};
+
 class Game : public QObject
 {
 	Q_OBJECT
@@ -55,6 +61,7 @@ protected:
 
 signals:
 	void sigGetMap();
+	void sigGetFirst();
 private slots:
 	void initMultiPlayerGame();
 	void getMap();
@@ -63,6 +70,7 @@ private slots:
 	void getFirst();	//get all player's imformation
 	void waitForgetFirst();
 	void getTotalMapNum();
+
 
 
 private:
@@ -84,6 +92,7 @@ private:
 	//blockSize -> getTotalMapNum();
 	//nextBlockSize -> getFirst();
 	qint32 nextBlockSize, blockSize;
+	qint64 getFirstBlockSize;
 	MainWindow *mainwindow;
 	QGraphicsScene scene;
 	QGraphicsView view;
@@ -92,6 +101,7 @@ private:
 	QGraphicsPixmapItem *myself;
 	QPixmap myself_headImage;
 	QMap<unsigned short, storing_player *>player;
+	QList<Player> playerList;
 	QList<QPixmap> player_headImages;
 	unsigned short player_index;
 	QList<QList<QPixmap> > texture;

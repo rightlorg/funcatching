@@ -20,6 +20,7 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	finalMoveUp	= false;
 	finalMoveRight	= false;
 
+	getFirstBlockSize = 0;
 	floor = 0;
 	blockSize = 0;
 
@@ -87,11 +88,6 @@ bool Game::loadMap()
 	}
 	return true;
 }
-
-//bool Game::isInitOK()
-//{
-//	return loadSuccess;
-//}
 
 bool Game::eventFilter(QObject *object, QEvent *event)
 {
@@ -331,7 +327,7 @@ void Game::movePlayer(bool up, bool down, bool left, bool right)
 
 void Game::whenKeyPressed(QKeyEvent *event)
 {
-	qDebug() << myself->pos();
+//	qDebug() << myself->pos();
 	if (event->isAutoRepeat())
 	{
 		event->ignore();
@@ -468,31 +464,61 @@ void initHeadPic()
 void Game::getFirst()
 {
 	QDataStream in(&tcpSocket);
+	// 设置数据流版本，这里要和服务器端相同
 	in.setVersion(QDataStream::Qt_4_8);
-
-	while(nextBlockSize==0){
-		in >> nextBlockSize;
-		if(nextBlockSize<tcpSocket.bytesAvailable())
-			break;
+	// 如果是刚开始接收数据`
+	if (getFirstBlockSize == 0) {
+		//判断接收的数据是否大于两字节，也就是文件的大小信息所占的空间
+		//如果是则保存到blockSize变量中，否则直接返回，继续接收数据
+		if(tcpSocket.bytesAvailable() < (int)sizeof(qint64)) return;
+		in >> getFirstBlockSize;
 	}
-	unsigned short player_index;
-	bool identity;
-	unsigned short x,y,z;
-	QString player_name;
-	QImage *player_image = new QImage;
+	// 如果没有得到全部的数据，则返回，继续接收数据
+	if(tcpSocket.bytesAvailable() < getFirstBlockSize) return;
+	// 将接收到的数据存放到变量中
+	qint64 playerNum;
+	in >> playerNum;
 
-	in >> player_index;
-	for(int i=0;i<=player_index;i++){
-		in >>/* player_image >>*/ player_name >>identity >> x >> y >> z;
-		storing_player *newPlayer = new storing_player;
-		newPlayer->identety = identity;
-		newPlayer->x = x;
-		newPlayer->y = y;
-		newPlayer->z = z;
-		player.insert(i,newPlayer);
-		//        player_headImages->append(player_image);
+	for (int i = 0; i < playerNum - 1; ++i) {
+		QString playername;
+		QByteArray a;
+		QImage playerimage;
+		in >> playername >> a;
+		playerimage.loadFromData(a);
+		Player newplayer;
+		newplayer.playerName = playername;
+		newplayer.playerImage = playerimage;
+		playerList.append(newplayer);
+
 	}
+
+//	QDataStream in(&tcpSocket);
+//	in.setVersion(QDataStream::Qt_4_8);
+
+//	while(nextBlockSize==0){
+//		in >> nextBlockSize;
+//		if(nextBlockSize<tcpSocket.bytesAvailable())
+//			break;
+//	}
+//	unsigned short player_index;
+//	bool identity;
+//	unsigned short x,y,z;
+//	QString player_name;
+//	QImage *player_image = new QImage;
+
+//	in >> player_index;
+//	for(int i=0;i<=player_index;i++){
+//		in >>/* player_image >>*/ player_name >>identity >> x >> y >> z;
+//		storing_player *newPlayer = new storing_player;
+//		newPlayer->identety = identity;
+//		newPlayer->x = x;
+//		newPlayer->y = y;
+//		newPlayer->z = z;
+//		player.insert(i,newPlayer);
+//		//        player_headImages->append(player_image);
+//	}
 	disconnect(&tcpSocket, SIGNAL(readyRead()), this, SLOT(getFirst()));
+	emit sigGetFirst();
 
 }
 

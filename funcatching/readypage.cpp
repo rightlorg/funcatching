@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <game.h>
 
+ Game *game;
 
 ReadyPage::ReadyPage(MainWindow *parent) :
 	QWidget(parent),
@@ -68,7 +69,7 @@ void ReadyPage::on_go_clicked()
 			return;
 		}
 		this->hide();
-		Game *game = new Game(this, mainwindow, dir.absoluteFilePath(maps[mapIndex]), Game::SinglePlayer);
+		game = new Game(this, mainwindow, dir.absoluteFilePath(maps[mapIndex]), Game::SinglePlayer);
 		if (!game->loadMap()) {
 			delete game;
 			this->show();
@@ -102,7 +103,15 @@ void ReadyPage::on_server_clicked()
 			if (game == NULL)
 				this->show();
 			game->connectServer();
+			connect(game, SIGNAL(sigGetFirst()), this, SLOT(startRemoteGame()));
 
+
+	}
+}
+
+void ReadyPage::startRemoteGame()
+{
+	if (!game->loadMap()) {
 
 	}
 }

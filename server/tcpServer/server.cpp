@@ -62,6 +62,38 @@ bool Server::loadMap()
 	return  true;
 }
 
+void Server::sendAllPlayer()
+{
+	QTcpSocket *tempSocket;
+
+	for (int i = 0; i < playerList.size(); ++i) {
+		tempSocket = playerList[i].socket;
+		QByteArray block;
+		QDataStream out(&block,QIODevice::WriteOnly);
+		out.setVersion(QDataStream::Qt_4_8);
+
+		out << qint64(0) << qint64(playerList.size());
+		for (int j = 0; j < playerList.size(); ++j) {
+			if (j == i) {
+				continue;
+			}
+			QBuffer imageBuffer;
+			imageBuffer.open(QIODevice::ReadWrite);
+			playerList[j].playerImage.save(&imageBuffer, "PNG");
+
+
+			out << playerList[j].playerName;
+			out << imageBuffer.data();
+
+		}
+		out.device()->seek(0);
+		out<<qint64(block.size()-sizeof(qint64));
+
+		tempSocket->write(block);
+
+	}
+}
+
 void Server::nextConnection()
 {
 	if (currentClient != NULL) {
@@ -82,7 +114,6 @@ void Server::nextConnection()
 void Server::sendTotalMapNum()
 {
 	QByteArray block;
-	QBuffer imageBuffer;
 	QDataStream out(&block,QIODevice::WriteOnly);
 
 	qDebug() << mapPath.size();
@@ -177,3 +208,8 @@ void Server::addTotalClientNum()
 	totalClientNum++;
 }
 
+
+void Server::on_pushButton_clicked()
+{
+	sendAllPlayer();
+}
