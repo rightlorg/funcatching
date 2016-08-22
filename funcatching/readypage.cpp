@@ -6,7 +6,6 @@
 #include <QDebug>
 #include <game.h>
 
- Game *game;
 
 ReadyPage::ReadyPage(MainWindow *parent) :
 	QWidget(parent),
@@ -14,8 +13,10 @@ ReadyPage::ReadyPage(MainWindow *parent) :
 {
 	ui->setupUi(this);
 	ip = "";
+	game = NULL;
 	mainwindow = parent;
 	mapIndex = -1;		//There are no maps
+	game = NULL;
 	addMap();
 }
 
@@ -69,12 +70,12 @@ void ReadyPage::on_go_clicked()
 			return;
 		}
 		this->hide();
-		game = new Game(this, mainwindow, dir.absoluteFilePath(maps[mapIndex]), Game::SinglePlayer);
-		if (!game->loadMap()) {
-			delete game;
+		Game *gameTemp = new Game(this, mainwindow, dir.absoluteFilePath(maps[mapIndex]), Game::SinglePlayer);
+		if (!gameTemp->loadMap()) {
+			delete gameTemp;
 			this->show();
 		} else {
-			game->initGame();
+			gameTemp->initGame();
 		}
 	}
 }
@@ -99,20 +100,25 @@ void ReadyPage::on_server_clicked()
 	settings.endGroup();
 	if (ok) {
 			this->hide();
-			Game *game = new Game(this, mainwindow, "", Game::Multiplayer);
-			if (game == NULL)
+			Game *gameTemp = new Game(this, mainwindow, "", Game::Multiplayer);
+			if (gameTemp == NULL)
 				this->show();
-			game->connectServer();
-			connect(game, SIGNAL(sigGetFirst()), this, SLOT(startRemoteGame()));
-
+			gameTemp->connectServer();
+			connect(gameTemp, SIGNAL(sigGetFirst()), this, SLOT(startRemoteGame()));
+			game = reinterpret_cast<int *>(gameTemp);
 
 	}
 }
 
 void ReadyPage::startRemoteGame()
 {
-	if (!game->loadMap()) {
-
+	Game *gameTemp = reinterpret_cast<Game *>(game);
+	if (!gameTemp->loadMap()) {
+		delete gameTemp;
+		game = NULL;
+		this->show();
+	} else {
+		gameTemp->initGame();
 	}
 }
 

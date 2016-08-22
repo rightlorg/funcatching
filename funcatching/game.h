@@ -34,6 +34,9 @@ struct Player
 {
 	QString playerName;
 	QImage playerImage;
+	qint64 id;
+	QGraphicsPixmapItem *item;
+	QPointF pos;
 };
 
 class Game : public QObject
@@ -70,11 +73,13 @@ private slots:
 	void getFirst();	//get all player's imformation
 	void waitForgetFirst();
 	void getTotalMapNum();
+	void writeDatagram();
+	void processPendingDatagram();
 
 
 
 private:
-
+QHostAddress *address;
 	void loadTexture();
 	void movePlayer(bool up, bool down, bool left, bool right);
 	void whenKeyPressed(QKeyEvent *event);
@@ -106,9 +111,11 @@ private:
 	unsigned short player_index;
 	QList<QList<QPixmap> > texture;
 	QList<QPixmap> specialTex;
+	QUdpSocket udpSocket;
 	void initSceneBackground();
 	int floor;
 	int gameType;
+	qint64 myId;
 	QString mapPath;
 	QTimer gameTick;
 	bool haveWallA, haveWallB;

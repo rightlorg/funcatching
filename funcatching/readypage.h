@@ -37,6 +37,7 @@ private slots:
 private:
 	bool haveHeadImage();
 	Ui::ReadyPage *ui;
+	int *game;
 	MainWindow *mainwindow;
 	int mapIndex;
 	QDir dir;

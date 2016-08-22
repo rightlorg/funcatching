@@ -3,12 +3,13 @@
 #include <QChar>
 #include "gamemenu.h"
 #include <QBuffer>
+#include <QImageReader>
 
 #define GAME_TICK 20	//Update n times per second
 
 Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
-           QString mapPathTemp, int gameTypeTemp):
-        QObject(parent_readypage)
+	   QString mapPathTemp, int gameTypeTemp):
+	QObject(parent_readypage)
 {
 
 	moveDown	= false;
@@ -43,10 +44,9 @@ Game::Game(ReadyPage *parent_readypage, MainWindow *parent_mainwindow,
 	initSceneBackground();
 	connect(&gameTick, SIGNAL(timeout()), SLOT(timerUpdate()));
 	loadTexture();
-
+	myId = 0;
 	scene.installEventFilter(this);
 	view.setFocus();
-
 }
 
 void Game::exitGame()
@@ -135,9 +135,13 @@ void Game::getHeadPic(int gametype)
 
 void Game::connectServer()
 {
+	connect(&gameTick, SIGNAL(timeout()), this, SLOT(writeDatagram()));
+	udpSocket.bind(2049, QUdpSocket::ShareAddress);
+	connect(&udpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagram()));
+
 	QSettings settings("Funcatching Project", "Funcatching");
 	settings.beginGroup("IP Address");
-	QHostAddress *address = new QHostAddress(settings.value("IP").toString());
+	address = new QHostAddress(settings.value("IP").toString());
 	tcpSocket.connectToHost(*address,2048);
 	settings.endGroup();
 	connect(&tcpSocket,SIGNAL(connected()),this,SLOT(initMultiPlayerGame()));
@@ -157,9 +161,9 @@ void Game::paintBlocks(int localFloor)
 
 			//Paint stair
 			if (map->at(j, i, localFloor).id >= 202
-			        && map->at(j, i, localFloor).id <= 209) {
+					&& map->at(j, i, localFloor).id <= 209) {
 				QGraphicsPixmapItem *block = new QGraphicsPixmapItem(
-				                        specialTex[map->at(j, i, localFloor).id - 200]);
+							specialTex[map->at(j, i, localFloor).id - 200]);
 				block->setPos(32 * j, 32 * i);
 				block->setData(66, map->blockStatus(j, i, localFloor));
 				scene.addItem(block);
@@ -173,14 +177,14 @@ void Game::paintBlocks(int localFloor)
 			if (shadowStyle == -1)
 				shadowStyle = texture[map->at(j, i, localFloor).id].size() - 1;
 			QGraphicsPixmapItem *block = new QGraphicsPixmapItem(
-			                        texture[map->at(j, i, localFloor).id][shadowStyle]);
+						texture[map->at(j, i, localFloor).id][shadowStyle]);
 			block->setPos(32 * j, 32 * i);
 			block->setData(66, map->blockStatus(j, i, localFloor));
 			scene.addItem(block);
 		}
 	}
 	scene.setSceneRect(map->getSpawnPoint(0).rx() * 32, map->getSpawnPoint(0).ry() * 32,
-	                   32, 32);
+			   32, 32);
 }
 
 void Game::initPlayer(int gametype)
@@ -194,11 +198,19 @@ void Game::initPlayer(int gametype)
 		scene.addItem(myself);
 		break;
 	case Multiplayer:
-//		for (int i = 0; i < player_headImages.size(); ++i) {
-//			QGraphicsPixmapItem *newplayer = new QGraphicsPixmapItem(player_headImages[i]);
-//			newplayer->setPos(spawnPoint.rx() * 32 + 3, spawnPoint.ry() * 32 + 3);
-//			scene.addItem(newplayer);
-//		}
+		for (int i = 0; i < playerList.size(); ++i) {
+			//load remote
+			playerList[i].item = new
+				QGraphicsPixmapItem(QPixmap::fromImage(playerList[i].playerImage));
+			playerList[i].item->setPos(spawnPoint.rx() * 32 + 3, spawnPoint.ry() * 32 + 3);
+			scene.addItem(playerList[i].item);
+		}
+		//load myself
+		getHeadPic(SinglePlayer);
+		myself = new QGraphicsPixmapItem(myself_headImage);
+		myself->setPos(spawnPoint.rx() * 32 + 3, spawnPoint.ry() * 32 + 3);
+		scene.addItem(myself);
+
 
 		break;
 	default:
@@ -244,19 +256,19 @@ void Game::loadTexture()
 				for (int j = 0; j < m; ++j) {
 					tmp_str = QString(list[j][0]);
 					if (list[j][1].toAscii() == '1' || list[j][1].toAscii() == '2' ||
-					                list[j][1].toAscii() == '3' || list[j][1].toAscii() == '4' ||
-					                list[j][1].toAscii() == '5' || list[j][1].toAscii() == '6' ||
-					                list[j][1].toAscii() == '7' || list[j][1].toAscii() == '8' ||
-					                list[j][1].toAscii() == '9' || list[j][1].toAscii() == '0')
+							list[j][1].toAscii() == '3' || list[j][1].toAscii() == '4' ||
+							list[j][1].toAscii() == '5' || list[j][1].toAscii() == '6' ||
+							list[j][1].toAscii() == '7' || list[j][1].toAscii() == '8' ||
+							list[j][1].toAscii() == '9' || list[j][1].toAscii() == '0')
 						tmp_str.append(list[j][1]);
 					a = tmp_str.toInt();
 
 					tmp_str = QString(list[j + 1][0]);
 					if (list[j + 1][1].toAscii() == '1' || list[j + 1][1].toAscii() == '2' ||
-					                list[j + 1][1].toAscii() == '3' || list[j + 1][1].toAscii() == '4' ||
-					                list[j + 1][1].toAscii() == '5' || list[j + 1][1].toAscii() == '6' ||
-					                list[j + 1][1].toAscii() == '7' || list[j + 1][1].toAscii() == '8' ||
-					                list[j + 1][1].toAscii() == '9' || list[j + 1][1].toAscii() == '0')
+							list[j + 1][1].toAscii() == '3' || list[j + 1][1].toAscii() == '4' ||
+							list[j + 1][1].toAscii() == '5' || list[j + 1][1].toAscii() == '6' ||
+							list[j + 1][1].toAscii() == '7' || list[j + 1][1].toAscii() == '8' ||
+							list[j + 1][1].toAscii() == '9' || list[j + 1][1].toAscii() == '0')
 						tmp_str.append(list[j + 1][1]);
 					b = tmp_str.toInt();
 					if (a > b) {
@@ -327,7 +339,7 @@ void Game::movePlayer(bool up, bool down, bool left, bool right)
 
 void Game::whenKeyPressed(QKeyEvent *event)
 {
-//	qDebug() << myself->pos();
+	//	qDebug() << myself->pos();
 	if (event->isAutoRepeat())
 	{
 		event->ignore();
@@ -408,6 +420,7 @@ void Game::whenKeyReleased(QKeyEvent *event)
 
 void Game::firstDataSubmit()
 {
+	getHeadPic(SinglePlayer);
 	QByteArray block;
 	QBuffer imageBuffer;
 	QDataStream out(&block,QIODevice::WriteOnly);
@@ -422,7 +435,8 @@ void Game::firstDataSubmit()
 
 	out.setVersion(QDataStream::Qt_4_8);
 	out << qint32(0) << player_name;
-	out << imageBuffer.data();
+	out << qint64(imageBuffer.data().size());
+	block.append(imageBuffer.data());
 	out.device()->seek(0);
 	out<<qint32(block.size()-sizeof(qint32));
 	tcpSocket.write(block);
@@ -435,13 +449,13 @@ void Game::initMultiPlayerGame()
 	firstDataSubmit();
 	connect(&tcpSocket, SIGNAL(readyRead()), this, SLOT(getTotalMapNum()));
 	connect(this, SIGNAL(sigGetMap()),SLOT(getMap()));
-//	//get map
+	//	//get map
 
-//	if (!loadMap()) {
-//		exitGame();
-//	} else {
-//		initGame();
-//	}
+	//	if (!loadMap()) {
+	//		exitGame();
+	//	} else {
+	//		initGame();
+	//	}
 
 
 
@@ -476,47 +490,56 @@ void Game::getFirst()
 	// 如果没有得到全部的数据，则返回，继续接收数据
 	if(tcpSocket.bytesAvailable() < getFirstBlockSize) return;
 	// 将接收到的数据存放到变量中
+	in >> myId;
 	qint64 playerNum;
 	in >> playerNum;
 
 	for (int i = 0; i < playerNum - 1; ++i) {
 		QString playername;
-		QByteArray a;
 		QImage playerimage;
-		in >> playername >> a;
-		playerimage.loadFromData(a);
+		qint64 imageBufferSize, playerid;
+		in >> playerid >> playername >> imageBufferSize;
+		QByteArray a =  tcpSocket.read(imageBufferSize);
+		QBuffer buffer(&a);
+		buffer.open(QIODevice::ReadOnly);
+		QImageReader reader(&buffer,"PNG");
+		playerimage = reader.read();
+		if (playerimage.isNull()) {
+			qDebug() << "fail to read headimage";
+		}
 		Player newplayer;
+		newplayer.id = playerid;
 		newplayer.playerName = playername;
 		newplayer.playerImage = playerimage;
 		playerList.append(newplayer);
 
 	}
 
-//	QDataStream in(&tcpSocket);
-//	in.setVersion(QDataStream::Qt_4_8);
+	//	QDataStream in(&tcpSocket);
+	//	in.setVersion(QDataStream::Qt_4_8);
 
-//	while(nextBlockSize==0){
-//		in >> nextBlockSize;
-//		if(nextBlockSize<tcpSocket.bytesAvailable())
-//			break;
-//	}
-//	unsigned short player_index;
-//	bool identity;
-//	unsigned short x,y,z;
-//	QString player_name;
-//	QImage *player_image = new QImage;
+	//	while(nextBlockSize==0){
+	//		in >> nextBlockSize;
+	//		if(nextBlockSize<tcpSocket.bytesAvailable())
+	//			break;
+	//	}
+	//	unsigned short player_index;
+	//	bool identity;
+	//	unsigned short x,y,z;
+	//	QString player_name;
+	//	QImage *player_image = new QImage;
 
-//	in >> player_index;
-//	for(int i=0;i<=player_index;i++){
-//		in >>/* player_image >>*/ player_name >>identity >> x >> y >> z;
-//		storing_player *newPlayer = new storing_player;
-//		newPlayer->identety = identity;
-//		newPlayer->x = x;
-//		newPlayer->y = y;
-//		newPlayer->z = z;
-//		player.insert(i,newPlayer);
-//		//        player_headImages->append(player_image);
-//	}
+	//	in >> player_index;
+	//	for(int i=0;i<=player_index;i++){
+	//		in >>/* player_image >>*/ player_name >>identity >> x >> y >> z;
+	//		storing_player *newPlayer = new storing_player;
+	//		newPlayer->identety = identity;
+	//		newPlayer->x = x;
+	//		newPlayer->y = y;
+	//		newPlayer->z = z;
+	//		player.insert(i,newPlayer);
+	//		//        player_headImages->append(player_image);
+	//	}
 	disconnect(&tcpSocket, SIGNAL(readyRead()), this, SLOT(getFirst()));
 	emit sigGetFirst();
 
@@ -538,6 +561,7 @@ void Game::gameMenu()
 
 void Game::timerUpdate()
 {
+
 	//	qDebug("timer");
 	//	QGraphicsPixmapItem *hit
 	moveUp = false;
@@ -584,7 +608,7 @@ void Game::timerUpdate()
 			}
 
 			break;
-}
+		}
 
 
 		}
@@ -811,8 +835,54 @@ void Game::getTotalMapNum()
 	if(tcpSocket.bytesAvailable() < blockSize) return;
 	// 将接收到的数据存放到变量中
 	in >> totalRemoteMapNum;
-			blockSize = 0;
+	blockSize = 0;
 	disconnect(&tcpSocket, SIGNAL(readyRead()), this, SLOT(getTotalMapNum()));
 	emit sigGetMap();
+
+}
+
+void Game::writeDatagram()
+{
+	QByteArray datagram;
+	QDataStream out(&datagram,QIODevice::WriteOnly);
+	out.setVersion(QDataStream::Qt_4_8);
+	out << myId;
+	out << myself->pos();
+
+	udpSocket.writeDatagram(datagram.data(), datagram.size(),
+			      *address, 2049);
+
+}
+
+void Game::processPendingDatagram()
+{
+	// 拥有等待的数据报
+	while(udpSocket.hasPendingDatagrams())
+	{
+	    QByteArray datagram;
+	    qint64 playerId;
+	    QPointF playerPos;
+	    // 让datagram的大小为等待处理的数据报的大小，这样才能接收到完整的数据
+	    datagram.resize(udpSocket.pendingDatagramSize());
+	    // 接收数据报，将其存放到datagram中
+	    udpSocket.readDatagram(datagram.data(), datagram.size());
+
+	    QDataStream in(&datagram, QIODevice::ReadOnly);
+	    while (!in.atEnd()) {
+		    in >> playerId >> playerPos;
+		    for (int i = 0; i < playerList.size(); ++i) {
+			    if (myId == playerId) {
+				    myself->setPos(playerPos);
+			    }
+			    if (playerList[i].id == playerId) {
+				    playerList[i].pos = playerPos;
+				    playerList[i].item->setPos(playerPos);
+				    break;
+			    }
+		    }
+
+	    }
+	}
+
 
 }

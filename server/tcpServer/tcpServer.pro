@@ -15,10 +15,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         server.cpp \
-    client.cpp
+    client.cpp \
+    map.cpp
 
 HEADERS  += server.h \
-    client.h
+    client.h \
+    map.h
 
 FORMS    += server.ui \
     client.ui

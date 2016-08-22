@@ -4,9 +4,12 @@
 #include <QDialog>
 #include <QtNetwork>
 #include <QList>
-#include "../../funcatching/map.h"
+#include "map.h"
 #include "client.h"
+#include <QPointF>
+#include <QTimer>
 
+#define GAME_TICK 20
 
 class QTcpServer;
 
@@ -19,6 +22,8 @@ struct Player
 	QString playerName;
 	QImage playerImage;
 	QTcpSocket *socket;
+	QHostAddress address;
+	QPointF pos;
 };
 
 class Server : public QDialog
@@ -42,19 +47,26 @@ private:
     QList<Player> playerList;
     Map *map;
     Client *sendMapClient;
+    QUdpSocket *udpSocket;
     QStringList mapPath;
+    QTimer timer;
+    QPoint spawnPoint;
     int mapSent;
     bool loadMap();
     void sendAllPlayer();
-
+void writeDatagrame();
 //    QTcpSocket *tcpSocketReciver;
 
 private slots:
     void sendMessage();
     void exchangeData();
+    void startUdpTimer();
+
     void readingController();
     void addTotalClientNum();
+    void processPendingDatagram();
     void nextConnection();
+    void timerUpdate();
     void sendTotalMapNum();
     void sendNextMap();
 

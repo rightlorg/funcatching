@@ -1,6 +1,8 @@
 #include "server.h"
 #include "ui_server.h"
 #include <QtNetwork>
+#include <QImageReader>
+
 
 
 Server::Server(QWidget *parent) :
@@ -18,6 +20,11 @@ Server::Server(QWidget *parent) :
 		qDebug() << tcpServer->errorString();
 		close();
 	}
+	udpSocket = new QUdpSocket(this);
+	udpSocket->bind(2049, QUdpSocket::ShareAddress);
+	connect(udpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagram()));
+	connect(udpSocket, SIGNAL(readyRead()), this, SLOT(startUdpTimer()));
+
 	connect(tcpServer, SIGNAL(newConnection()), this, SLOT(readingController()));
 	//    connect(this, SIGNAL(currentDataExchangeDone()), SLOT(nextConnection()));
 	totalClientNum = 0;
@@ -33,6 +40,15 @@ Server::Server(QWidget *parent) :
 Server::~Server()
 {
 	delete ui;
+}
+
+void Server::startUdpTimer()
+{
+	disconnect(udpSocket, SIGNAL(readyRead()), this, SLOT(startUdpTimer()));
+	connect(&timer, SIGNAL(timeout()), SLOT(timerUpdate()));
+	timer.start(1000 / GAME_TICK);
+
+
 }
 
 bool Server::loadMap()
@@ -53,6 +69,14 @@ bool Server::loadMap()
 	//	if(!map->loadMap()) {
 	//		return false;
 	//	}
+	map = new Map(this, dir.path());
+	if (!map->readInitMapFile()) {
+		return false;
+	}
+	if(!map->loadMap()) {
+		return false;
+	}
+	spawnPoint = map->getSpawnPoint(0);
 	mapPath = dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
 	for (int i = 0; i < mapPath.size(); ++i) {
 		mapPath[i] = dir.absoluteFilePath(mapPath[i]);
@@ -72,7 +96,9 @@ void Server::sendAllPlayer()
 		QDataStream out(&block,QIODevice::WriteOnly);
 		out.setVersion(QDataStream::Qt_4_8);
 
-		out << qint64(0) << qint64(playerList.size());
+		out << qint64(0) ;
+		 out << qint64(i) ;//myplayer Id
+		out<<qint64(playerList.size());
 		for (int j = 0; j < playerList.size(); ++j) {
 			if (j == i) {
 				continue;
@@ -81,17 +107,37 @@ void Server::sendAllPlayer()
 			imageBuffer.open(QIODevice::ReadWrite);
 			playerList[j].playerImage.save(&imageBuffer, "PNG");
 
-
+			out << qint64(j);	// playerId
 			out << playerList[j].playerName;
-			out << imageBuffer.data();
+			out << qint64(imageBuffer.data().size());
+			block.append(imageBuffer.data());
+//			out.device()->seek(block.size());
 
 		}
 		out.device()->seek(0);
 		out<<qint64(block.size()-sizeof(qint64));
 
 		tempSocket->write(block);
-
+		disconnect(currentClient, SIGNAL(readyRead()), this, SLOT(exchangeData()));
 	}
+}
+
+void Server::writeDatagrame()
+{
+	for (int j = 0; j < playerList.size(); ++j) {
+		QByteArray datagram;
+		QDataStream out(&datagram,QIODevice::WriteOnly);
+		out.setVersion(QDataStream::Qt_4_8);
+		for (int i = 0; i < playerList.size(); ++i) {
+			out << qint64(i);
+			out << playerList[i].pos;
+
+		}
+		udpSocket->writeDatagram(datagram.data(), datagram.size(),
+				      playerList[j].address, 2049);
+	}
+
+
 }
 
 void Server::nextConnection()
@@ -109,6 +155,11 @@ void Server::nextConnection()
 	mapSent = 0;
 	connect(currentClient, SIGNAL(readyRead()), this, SLOT(exchangeData()));
 
+}
+
+void Server::timerUpdate()
+{
+	writeDatagrame();
 }
 
 void Server::sendTotalMapNum()
@@ -174,14 +225,27 @@ void Server::exchangeData()
 		if(currentClient->bytesAvailable() < blockSize) return;
 		// 将接收到的数据存放到变量中
 		QString playername;
-		QByteArray a;
-		QImage playerimage;
-		in >> playername >> a;
-		playerimage.loadFromData(a);
+
+		qint64 imageBufferSize;
+		in >> playername >> imageBufferSize;
+		QByteArray a =  currentClient->read(imageBufferSize);
+		QBuffer buffer(&a);
+		    buffer.open(QIODevice::ReadOnly);
+		    QImageReader reader(&buffer,"PNG");
+		     QImage playerimage = reader.read();
+		     if (playerimage.isNull()) {
+			     qDebug() << "fail to read headimage";
+		     }
 		Player newplayer;
 		newplayer.playerName = playername;
 		newplayer.playerImage = playerimage;
 		newplayer.socket = currentClient;
+		newplayer.address = currentClient->peerAddress();
+		newplayer.pos.setX(spawnPoint.rx() * 32 + 3);
+		newplayer.pos.setY(spawnPoint.ry() * 32 + 3);
+
+
+
 		playerList.append(newplayer);
 	}
 	connect(currentClient, SIGNAL(bytesWritten(qint64)), this, SLOT(sendNextMap()));
@@ -206,6 +270,25 @@ void Server::readingController()
 void Server::addTotalClientNum()
 {
 	totalClientNum++;
+}
+
+void Server::processPendingDatagram()
+{
+	// 拥有等待的数据报
+	while(udpSocket->hasPendingDatagrams())
+	{
+	    QByteArray datagram;
+	    qint64 playerId;
+	    QPointF playerPos;
+	    // 让datagram的大小为等待处理的数据报的大小，这样才能接收到完整的数据
+	    datagram.resize(udpSocket->pendingDatagramSize());
+	    // 接收数据报，将其存放到datagram中
+	    udpSocket->readDatagram(datagram.data(), datagram.size());
+	    QDataStream in(&datagram, QIODevice::ReadOnly);
+	    in >> playerId >> playerPos;
+	    playerList[playerId].pos = playerPos;
+	}
+
 }
 
 
