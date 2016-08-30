@@ -34,6 +34,7 @@ private slots:
 	void on_server_clicked();
 	void startRemoteGame();
 
+
 private:
 	bool haveHeadImage();
 	Ui::ReadyPage *ui;

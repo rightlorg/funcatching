@@ -120,6 +120,7 @@ void ReadyPage::startRemoteGame()
 	} else {
 		gameTemp->initGame();
 	}
+
 }
 
 bool ReadyPage::haveHeadImage()
