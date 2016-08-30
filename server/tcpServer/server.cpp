@@ -16,7 +16,7 @@ Server::Server(QWidget *parent) :
 	}
 	tcpServer = new QTcpServer(this);
 	// 使用了IPv4的本地主机地址，等价于QHostAddress("127.0.0.1")
-	if (!tcpServer->listen(QHostAddress::LocalHost, 2048)) {
+	if (!tcpServer->listen(QHostAddress::Any, 2048)) {
 		qDebug() << tcpServer->errorString();
 		close();
 	}
